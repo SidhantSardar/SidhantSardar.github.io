@@ -12,6 +12,11 @@ const {
   description = 'Sidhant Sardar designs web apps in Figma, builds CMS websites in Webflow, and is learning to build interfaces in code.',
   active = 'home',
 } = Astro.props;
+
+// Google Analytics 4 — property "Sidhant Sardar Portfolio (sidhantsardar.com)".
+// Only loaded in production builds, so local development doesn't count as traffic.
+const GA_ID = 'G-T6MXDPD6Q5';
+const analytics = import.meta.env.PROD;
 ---
 <!doctype html>
 <html lang="en" data-theme="light">
@@ -29,6 +34,17 @@ const {
         if (m) m.setAttribute('content', t === 'dark' ? '#000000' : '#FFFFFF');
       })();
     </script>
+    {analytics && (
+      <>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}></script>
+        <script is:inline define:vars={{ GA_ID }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){ dataLayer.push(arguments); }
+          gtag('js', new Date());
+          gtag('config', GA_ID);
+        </script>
+      </>
+    )}
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
