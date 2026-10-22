@@ -1,0 +1,155 @@
+---
+import Base from '../layouts/Base.astro';
+import LayerStack from '../components/LayerStack.astro';
+import Gap from '../components/Gap.astro';
+
+const sites = [
+  {
+    slug: 'altrum-website', n: '01', name: 'AltrumAI', url: 'https://www.altrum.ai/', domain: 'altrum.ai',
+    line: 'Marketing site for an enterprise AI control platform.',
+    chips: ['Webflow', 'CMS', 'Messaging'], shot: '/sites/altrum.jpg',
+  },
+  {
+    slug: 'aligne-ai', n: '02', name: 'Aligne AI', url: 'https://www.aligne.ai/', domain: 'aligne.ai',
+    line: 'Responsible AI consultancy. Four CMS collections the team runs alone.',
+    chips: ['Webflow', 'CMS', 'SEO'], shot: '/sites/aligne.jpg',
+  },
+  {
+    slug: 'world-of-gears', n: '03', name: 'World of Gears', url: 'https://www.worldofgears.com/', domain: 'worldofgears.com',
+    line: 'Sustainability consultancy working across 17 countries.',
+    chips: ['Webflow', 'CMS', 'Content'], shot: '/sites/wog.jpg',
+  },
+];
+---
+<Base active="home">
+  <!-- HERO + ABOUT: who I am, the moment the page opens -->
+  <header class="hero" id="about">
+    <div class="in">
+      <div class="intro">
+        <div class="intro-id" data-reveal>
+          <div class="avatar corners" data-portrait>
+            <img class="portrait-img" src="/sidhant.jpg" alt="Sidhant Sardar at his desk" width="800" height="1000" fetchpriority="high" />
+            <span class="dims">96 × 112</span>
+          </div>
+          <div class="intro-name">
+            <b>Sidhant Sardar</b>
+            <span>Cares about the 4px nobody else notices.</span>
+            <span class="status mono"><i></i>Open to projects</span>
+          </div>
+        </div>
+        <span class="spec" data-reveal>Frame / Hero · <b>1240 × 720</b> · H1 <b>66/64</b></span>
+        <h1 data-split>Figma & Webflow expert. <span class="soft">Becoming a</span> design engineer.</h1>
+        <p class="lede" data-reveal>I've designed the <b>AltrumAI web app</b> since 2023 and built <b>Webflow</b> websites for AI and sustainability companies. Now I write the code too, so designs ship exactly as drawn.</p>
+        <div class="facts" data-stagger>
+          <div><b>2023 →</b><span>Web app UX in Figma</span></div>
+          <div><b data-count="3">3</b><span>Live Webflow websites</span></div>
+          <div><b class="accent">Now</b><span>Learning code with Claude Code</span></div>
+        </div>
+        <div class="cta" data-reveal>
+          <a class="btn primary magnetic" href="/portfolio">View portfolio <span class="ar">→</span></a>
+          <a class="btn magnetic" href="#contact">Get in touch <span class="ar">↓</span></a>
+        </div>
+      </div>
+      <LayerStack />
+    </div>
+  </header>
+
+  <Gap size={120} />
+
+  <!-- WEBSITES -->
+  <section id="websites">
+    <div class="in">
+      <div class="section-head">
+        <span class="spec" data-reveal>Section / Websites · <b>3 items</b> · gap <b>96</b></span>
+        <h2 data-split>Websites</h2>
+      </div>
+      <div class="sites">
+        {sites.map((s, i) => (
+          <article class="site">
+            <div class="site-visual corners" data-tilt>
+              <div class="measure-x"><span>{i === 0 ? '1440 desktop' : i === 1 ? 'CMS · 4 collections' : 'CMS · 3 collections'}</span></div>
+              <div class="browser">
+                <div class="bar"><i></i><i></i><i></i><span>{s.domain}</span></div>
+                <div class="shot">
+                  <img src={s.shot} alt={`${s.name} homepage hero`} width="1440" height="900" loading="lazy" />
+                  <span class="shade"></span>
+                  <span class="ann">hero · 1440 × 900</span>
+                </div>
+                </div>
+              </div>
+            </div>
+            <div class="site-text" data-stagger>
+              <span class="n">{s.n} / 03</span>
+              <h3>{s.name}</h3>
+              <p>{s.line}</p>
+              <div class="chips">{s.chips.map((c) => <span class="chip">{c}</span>)}</div>
+              <div class="site-links">
+                <a class="link-arrow" href={s.url} target="_blank" rel="noopener">Visit site <span class="ar">↗</span></a>
+                <a class="link-arrow" href={`/work/${s.slug}/`}>How I built it <span class="ar">→</span></a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Gap size={120} />
+
+  <!-- WEB APP -->
+  <section id="web-app">
+    <div class="in">
+      <div class="section-head">
+        <span class="spec" data-reveal>Section / Figma experience · <b>2023 → now</b></span>
+        <h2 data-split>The AltrumAI web app</h2>
+      </div>
+      <div class="app-card corners" data-reveal>
+        <div class="app-top">
+          <div>
+            <h3>One place for a company to see, check and control every AI system it uses.</h3>
+            <p>I've designed its UX and UI in Figma since 2023.</p>
+          </div>
+          <a class="btn primary magnetic" href="/portfolio">See UX case studies <span class="ar">→</span></a>
+        </div>
+        <div class="pipeline" id="pipeline">
+          <div class="pipe">
+            <span class="flowdot"></span><div class="node"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></div>
+            <b>Register</b><span>List every AI system in use</span>
+          </div>
+          <div class="pipe">
+            <span class="flowdot"></span><div class="node"><svg viewBox="0 0 24 24"><path d="M5 6h14v9H9l-4 4z"/><path d="M9 10h6"/></svg></div>
+            <b>Assess</b><span>Answer a guided risk check</span>
+          </div>
+          <div class="pipe">
+            <span class="flowdot"></span><div class="node"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+            <b>Control</b><span>Apply guardrails and policies</span>
+          </div>
+          <div class="pipe">
+            <span class="flowdot"></span><div class="node"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16"/><path d="M8 15l3-4 3 2 4-6"/></svg></div>
+            <b>Monitor</b><span>Track usage, cost and risk</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Gap size={96} />
+
+  <!-- CONTACT -->
+  <div class="in" id="contact">
+    <div class="contact">
+      <span class="spec" data-reveal>Section / Contact</span>
+      <h2 data-split>Let's design something that ships.</h2>
+      <div class="mail"><a href="mailto:sidhantsardar93@gmail.com" style="text-decoration:none"><code>sidhantsardar93@gmail.com</code></a><button id="copy">Copy</button></div>
+    </div>
+  </div>
+</Base>
+
+<script>
+  document.getElementById('copy')!.addEventListener('click', async (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    try { await navigator.clipboard.writeText('sidhantsardar93@gmail.com'); btn.textContent = 'Copied'; }
+    catch { btn.textContent = 'Select it'; }
+    setTimeout(() => (btn.textContent = 'Copy'), 1800);
+  });
+</script>

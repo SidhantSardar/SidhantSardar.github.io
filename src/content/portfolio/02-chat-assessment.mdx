@@ -1,0 +1,56 @@
+---
+title: An assessment that feels like a conversation
+summary: A long risk questionnaire, redesigned as a guided chat.
+problem: "Risk assessments had dozens of questions. As a form, people gave up halfway."
+solution: "A guided chat: one question at a time, one-tap answers, and progress always in view."
+order: 2
+mini: chat
+snapshot:
+  - { label: Users, value: Risk + compliance teams }
+  - { label: Pattern, value: Chat + progress panel }
+  - { label: Goal, value: Finish the assessment }
+---
+import Wire from '../../components/Wire.astro';
+import Flow from '../../components/Flow.astro';
+import ProtoFlow from '../../components/ProtoFlow.astro';
+import LogicPanel from '../../components/LogicPanel.astro';
+
+<div class="two">
+  <figure class="fig"><div class="canvas"><Wire variant="form" label="The usual way · one form" meta="every field at once" /></div><figcaption><b>Fig 1</b>Every question at once. No sense of progress.</figcaption></figure>
+  <figure class="fig"><div class="canvas"><Wire variant="chat" label="After · conversation" meta="1 question at a time" /></div><figcaption><b>Fig 2</b>One question at a time, quick-answer chips, and a progress panel on the right.</figcaption></figure>
+</div>
+
+<figure class="fig">
+  <div class="canvas">
+    <Flow steps={[
+      { k: 'Ask', title: 'One question', note: 'Plain language' },
+      { k: 'Answer', title: 'Chip or text', note: 'One tap for common answers' },
+      { k: 'Track', title: 'Progress panel', note: 'Sections tick off' },
+      { k: 'Finish', title: 'Result', note: 'Summary first', acc: true },
+    ]} />
+  </div>
+  <figcaption><b>Fig 3</b>The loop the user repeats until the assessment is done.</figcaption>
+</figure>
+
+<figure class="fig">
+  <div class="canvas">
+    <div class="proto-logic">
+      <ProtoFlow conditionalOn={0} frames={[
+        { name: 'Assessment / Chat', variant: 'chat', hot: { el: '.m-pill.on', label: 'Chip / Selected' } },
+        { name: 'Result / Summary', variant: 'summary', hot: { el: '.m-btn', label: 'Button / Secondary' } },
+        { name: 'Result / Detailed', variant: 'detail' },
+      ]} />
+      <LogicPanel trigger="click · Answer chip" rules={[
+        { kind: 'if', cond: '#answered < #total', actions: ['Set #answered to #answered + 1', 'Show "Next question"'] },
+        { kind: 'else', actions: ['Navigate to "Result / Summary"'] },
+      ]} />
+    </div>
+  </div>
+  <figcaption><b>Prototype</b>Every answer moves a counter. When it reaches the total, the chat hands over to the result.</figcaption>
+</figure>
+
+<div class="callouts">
+  <div><b>1 question</b><span>On screen at a time</span></div>
+  <div><b>Chips</b><span>For the most common answers</span></div>
+  <div><b>Always visible</b><span>How much is left</span></div>
+</div>

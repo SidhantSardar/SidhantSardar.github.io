@@ -1,0 +1,47 @@
+---
+// A Figma-style interaction panel: the trigger, then conditional rules that read
+// variables (#name) and set them or navigate. Mirrors Figma's "Conditional" action.
+interface Rule {
+  kind: 'if' | 'else if' | 'else';
+  cond?: string;
+  actions: string[];
+}
+interface Props {
+  title?: string;
+  trigger: string;
+  rules: Rule[];
+}
+const { title = 'Conditional', trigger, rules } = Astro.props;
+
+// Split a line into tokens: #variables become chips, "strings" and operators get their own colour.
+const tokens = (line: string) =>
+  line.match(/"[^"]*"|#[\w-]+|==|!=|<=|>=|[<>+]|\S+/g)!.map((t) => ({
+    t,
+    k: t.startsWith('#') ? 'var' : t.startsWith('"') ? 'str' : /^(==|!=|<=|>=|<|>|\+)$/.test(t) ? 'op' : /^\d+$/.test(t) ? 'num' : /^(Set|Navigate|Open|Show|to)$/.test(t) ? 'kw' : 'txt',
+  }));
+---
+<div class="logic" data-logic>
+  <div class="logic-head">
+    <span class="logic-title"><svg viewBox="0 0 24 24" class="ico-cond"><path d="M3 12h7M10 12l8-6M10 12l8 6" /></svg>{title}</span>
+    <span class="logic-tools" aria-hidden="true"><i>⧉</i><i>+</i><i>×</i></span>
+  </div>
+  <div class="logic-trigger"><span class="kw">On</span> {trigger}</div>
+  <div class="logic-body">
+    {rules.map((r) => (
+      <div class="rule">
+        <div class="rule-cond">
+          <span class="if">{r.kind}</span>
+          {r.cond && tokens(r.cond).map((x) => x.k === 'var' ? <span class="vchip">{x.t}</span> : <span class={x.k}>{x.t}</span>)}
+        </div>
+        <div class="rule-actions">
+          {r.actions.map((a) => (
+            <div class="act">
+              <svg viewBox="0 0 24 24" class="ico-hex"><path d="M12 3l7.8 4.5v9L12 21l-7.8-4.5v-9z" /><circle cx="12" cy="12" r="2" /></svg>
+              {tokens(a).map((x) => x.k === 'var' ? <span class="vchip">{x.t}</span> : <span class={x.k}>{x.t}</span>)}
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>

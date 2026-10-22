@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Wire from '../../components/Wire.astro';
+import Releases from '../../components/Releases.astro';
+import Gap from '../../components/Gap.astro';
+
+const cases = (await getCollection('portfolio')).sort((a, b) => a.data.order - b.data.order);
+---
+<Base title="Portfolio · Sidhant Sardar" description="UX case studies from the AltrumAI web app, designed in Figma from 2023 to now." active="portfolio">
+  <div class="in">
+    <header class="page-head">
+      <span class="spec">Page / Portfolio · <b>{cases.length} case studies</b></span>
+      <h1>Portfolio</h1>
+      <p class="sum">UX case studies from the AltrumAI web app. I've designed it in Figma since 2023. Each study is one problem and how I solved it, shown in screens and diagrams.</p>
+      <div class="snap">
+        <div><span>Product</span><b>AI governance web app</b></div>
+        <div><span>My role</span><b>UX + UI designer</b></div>
+        <div><span>Tool</span><b>Figma</b></div>
+        <div><span>Timeline</span><b>2023 → now</b></div>
+      </div>
+    </header>
+
+    <figure class="fig">
+      <div class="canvas"><Releases /></div>
+      <figcaption><b>Fig 0</b>The user's journey through the product. Each case study solves one stage.</figcaption>
+    </figure>
+  </div>
+
+  <Gap size={72} />
+
+  <section>
+    <div class="in">
+      <div class="section-head">
+        <span class="spec">Grid / 2 col · gap <b>24</b></span>
+        <h2>Case studies</h2>
+      </div>
+      <div class="case-grid">
+        {cases.map((c) => (
+          <a class="case" href={`/portfolio/${c.id}/`}>
+            <div class="mini"><Wire variant={c.data.mini} ann={false} /></div>
+            <div class="case-body">
+              <span class="n">Case study {String(c.data.order).padStart(2, '0')}</span>
+              <h3>{c.data.title}</h3>
+              <p>{c.data.problem}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+      <p class="mono muted" style="margin-top:32px">Screens are redrawn with sample data. No real customer data is shown.</p>
+    </div>
+  </section>
+
+  <Gap size={72} />
+</Base>

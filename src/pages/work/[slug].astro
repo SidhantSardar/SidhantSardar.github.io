@@ -1,0 +1,53 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+  return work.map((entry, i) => ({
+    params: { slug: entry.id },
+    props: { entry, next: work[(i + 1) % work.length] },
+  }));
+}
+
+const { entry, next } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+---
+<Base title={`${d.title} · Sidhant Sardar`} description={d.summary}>
+  <div class="in">
+    <header class="page-head">
+      <a class="back" href="/#websites">← Websites</a>
+      <span class="spec">Case study / Website · <b>Webflow</b></span>
+      <span class="eyebrow">{d.eyebrow}</span>
+      <h1>{d.title}</h1>
+      <p class="sum">{d.summary}</p>
+      <div class="snap">{d.snapshot.map((s) => <div><span>{s.label}</span><b>{s.value}</b></div>)}</div>
+    </header>
+
+    {d.structure && (
+      <figure class="fig" style="margin:24px 0 48px">
+        <div class="canvas">
+          <div class="flow">
+            {d.structure.map((s, i) => (
+              <>
+                {i > 0 && <span class="ar">·</span>}
+                <div class={`st ${i === 0 ? 'acc' : ''}`}><span class="k">Collection</span><b>{s.name}</b><span>{s.detail}</span></div>
+              </>
+            ))}
+          </div>
+        </div>
+        <figcaption><b>{d.structureTitle ?? 'Structure'}</b>{d.structureNote ?? 'Each collection has its own template, so new content never needs new design.'}</figcaption>
+      </figure>
+    )}
+
+    <article class="prose"><Content /></article>
+
+    {d.url && <p style="margin-bottom:48px"><a class="btn primary" href={d.url} target="_blank" rel="noopener">Visit live site ↗</a></p>}
+
+    <div class="next">
+      <span class="eyebrow">Next website</span>
+      <a href={`/work/${next.id}/`}><span class="eyebrow">{next.data.eyebrow}</span><b>{next.data.title} →</b></a>
+    </div>
+  </div>
+</Base>

@@ -1,0 +1,209 @@
+---
+// Light, realistic mock-ups of the web app's key screens.
+// Redrawn from the structure of the Figma file. All names and numbers are illustrative sample data.
+type Variant =
+  | 'onboarding' | 'registry' | 'chat' | 'summary' | 'detail' | 'review'
+  | 'config-guided' | 'config-independent' | 'dashboard' | 'home-before' | 'home-after' | 'system' | 'form';
+
+interface Props { variant: Variant; label?: string; meta?: string; ann?: boolean }
+const { variant, label, meta, ann = true } = Astro.props;
+
+const navItems = ['Home', 'AI systems', 'Assessments', 'Guardrails', 'Usage'];
+const navOn: Record<Variant, number> = {
+  onboarding: -1, form: -1, registry: 1, system: 1, chat: 2, summary: 2, detail: 2, review: 2,
+  'config-guided': 3, 'config-independent': 3, dashboard: 4, 'home-before': 0, 'home-after': 0,
+};
+const full = variant === 'onboarding' || variant === 'form';
+
+const systems = [
+  { n: 'Customer support chatbot', o: 'Operations', r: 'Medium', s: 'Active' },
+  { n: 'Loan triage model', o: 'Credit', r: 'High', s: 'In review' },
+  { n: 'Document summariser', o: 'Legal', r: 'Low', s: 'Active' },
+  { n: 'Fraud alert scoring', o: 'Risk', r: 'High', s: 'Draft' },
+];
+const risk = (r: string) => (r === 'High' ? 'hi' : r === 'Medium' ? 'md' : 'lo');
+const controls = ['PII redaction', 'Human approval step', 'Prompt-injection filter', 'Topic restrictions', 'Output logging'];
+const guided = [true, true, true, false, true];
+---
+<div class="mock-wrap">
+  {label && <div class="wire-label"><b>{label}</b>{meta && <span>{meta}</span>}</div>}
+  <div class={`mock ${full ? 'full' : ''}`}>
+    {!full && (
+      <aside class="m-side">
+        <span class="m-logo"><i></i>Workspace</span>
+        {navItems.map((n, i) => <span class={`m-nav ${i === navOn[variant] ? 'on' : ''}`}>{n}</span>)}
+        <span class="m-user"><i>P</i>Priya S.</span>
+      </aside>
+    )}
+    <div class="m-main">
+      {variant === 'onboarding' && (
+        <>
+          <div class="m-steps">
+            <span class="on"><i>1</i>Organisation</span><b></b>
+            <span><i>2</i>Account</span><b></b>
+            <span><i>3</i>First AI system</span>
+          </div>
+          <div class="m-card m-narrow">
+            <span class="m-h">Tell us about your organisation</span>
+            <span class="m-sub">We use this to tailor your risk checks.</span>
+            <label class="m-field"><span>Organisation name</span><em>Northwind Bank</em></label>
+            <label class="m-field"><span>Industry</span><em>Financial services <s>▾</s></em></label>
+            <label class="m-field"><span>Team size</span><em>250 – 1,000 <s>▾</s></em></label>
+            <div class="m-row m-between"><span class="m-meta">Step 1 of 3</span><span class="m-btn">Continue →</span></div>
+          </div>
+          {ann && <span class="ann" style="right:5%;top:46%">max-w 480</span>}
+        </>
+      )}
+
+      {variant === 'form' && (
+        <>
+          <span class="m-h">AI risk questionnaire</span>
+          <span class="m-sub">Section 1 of 9 · every question on one page</span>
+          {['Describe the purpose of the system', 'What data does it use?', 'Who is affected by its outputs?', 'Is any personal data processed?', 'Who can override a decision?'].map((q, i) => (
+            <label class="m-field"><span>{i + 1}. {q}</span><em class="empty"></em></label>
+          ))}
+          {ann && <span class="ann" style="right:4%;top:6%">scroll · scroll · scroll</span>}
+        </>
+      )}
+
+      {(variant === 'registry' || variant === 'system') && (
+        <>
+          <div class="m-row m-between"><div class="m-col"><span class="m-h">AI systems</span><span class="m-sub">4 systems · 2 need review</span></div><span class="m-btn">+ Add AI system</span></div>
+          <div class="m-table">
+            <div class="m-tr m-th"><span>Name</span><span>Owner</span><span>Risk</span><span>Status</span></div>
+            {systems.map((s) => (
+              <div class="m-tr"><span class="m-strong">{s.n}</span><span>{s.o}</span><span><i class={`m-chip ${risk(s.r)}`}>{s.r}</i></span><span>{s.s}</span></div>
+            ))}
+          </div>
+          {ann && <span class="ann" style="right:3%;bottom:6%">row 48</span>}
+        </>
+      )}
+
+      {variant === 'chat' && (
+        <div class="m-split">
+          <div class="m-chat">
+            <span class="m-sub">Assessment · Loan triage model</span>
+            <div class="m-bub">Does this system make decisions about customers?</div>
+            <div class="m-bub me">Yes</div>
+            <div class="m-bub">Can a person review a decision before it's final?</div>
+            <div class="m-chips"><i class="m-pill">Always</i><i class="m-pill on">Sometimes</i><i class="m-pill">Never</i></div>
+            <div class="m-input">Type an answer…<span class="m-send">↑</span></div>
+          </div>
+          <div class="m-card m-progress">
+            <span class="m-strong">Progress · 3 of 5</span>
+            {['Purpose', 'Data', 'Decisions', 'Oversight', 'Security'].map((x, i) => (
+              <span class={`m-check ${i < 2 ? 'done' : i === 2 ? 'now' : ''}`}><i></i>{x}</span>
+            ))}
+          </div>
+          {ann && <span class="ann" style="left:24%;bottom:4%">1 tap answers</span>}
+        </div>
+      )}
+
+      {variant === 'summary' && (
+        <>
+          <div class="m-row m-between"><div class="m-col"><span class="m-h">Loan triage model</span><span class="m-sub">Assessment result · Summary</span></div><span class="m-btn ghost">View details</span></div>
+          <div class="m-tiles">
+            <div class="m-tile acc"><b>High</b><span>Risk level</span></div>
+            <div class="m-tile"><b>14</b><span>Findings</span></div>
+            <div class="m-tile"><b>3</b><span>Actions needed</span></div>
+          </div>
+          <div class="m-card">
+            <span class="m-strong">Top actions</span>
+            <span class="m-li"><i class="m-chip hi">High</i>Add a human review step</span>
+            <span class="m-li"><i class="m-chip md">Med</i>Log every model decision</span>
+            <span class="m-li"><i class="m-chip md">Med</i>Document training data</span>
+          </div>
+          {ann && <span class="ann" style="right:3%;top:34%">answer first</span>}
+        </>
+      )}
+
+      {variant === 'detail' && (
+        <>
+          <div class="m-col"><span class="m-h">Loan triage model</span><span class="m-sub">Assessment result · Detailed</span></div>
+          <div class="m-acc open">
+            <div class="m-row m-between"><span class="m-strong">Human oversight</span><i class="m-chip hi">High</i></div>
+            <span class="m-sub"><b>Evidence:</b> decisions are final without review.</span>
+            <span class="m-sub"><b>Recommended:</b> add an approval step for declines.</span>
+          </div>
+          {[['Data quality', 'Medium'], ['Transparency', 'Low'], ['Security', 'Low']].map(([t, r]) => (
+            <div class="m-acc"><div class="m-row m-between"><span class="m-strong">{t}</span><i class={`m-chip ${risk(r)}`}>{r}</i></div></div>
+          ))}
+          {ann && <span class="ann" style="right:3%;bottom:4%">evidence per finding</span>}
+        </>
+      )}
+
+      {variant === 'review' && (
+        <>
+          <div class="m-banner">Read-only · Submitted by Priya S. for approval</div>
+          <div class="m-col"><span class="m-h">Loan triage model</span><span class="m-sub">Assessment · 14 findings</span></div>
+          <div class="m-card">
+            <span class="m-li"><i class="m-chip hi">High</i>Human oversight</span>
+            <span class="m-li"><i class="m-chip md">Med</i>Data quality</span>
+            <span class="m-li"><i class="m-chip lo">Low</i>Transparency</span>
+          </div>
+          <div class="m-row m-end"><span class="m-btn ghost">Request changes</span><span class="m-btn">Approve</span></div>
+          {ann && <span class="ann" style="right:3%;top:4%">locked</span>}
+        </>
+      )}
+
+      {(variant === 'config-guided' || variant === 'config-independent') && (
+        <>
+          <div class="m-row m-between"><div class="m-col"><span class="m-h">Guardrails</span><span class="m-sub">Loan triage model</span></div>{variant === 'config-guided' && <span class="m-btn">Apply all</span>}</div>
+          {variant === 'config-guided'
+            ? <div class="m-banner acc">4 controls recommended from your assessment</div>
+            : <div class="m-banner">Starting from scratch · nothing selected</div>}
+          <div class="m-card">
+            {controls.map((c, i) => {
+              const on = variant === 'config-guided' && guided[i];
+              return <span class="m-li m-between"><span>{c}{on && <em class="m-rec">Recommended</em>}</span><i class={`m-toggle ${on ? 'on' : ''}`}></i></span>;
+            })}
+          </div>
+          {ann && <span class="ann" style="right:3%;bottom:4%">{variant === 'config-guided' ? 'pre-filled' : 'blank start'}</span>}
+        </>
+      )}
+
+      {variant === 'home-before' && (
+        <div class="m-empty">
+          <span class="m-h">Welcome, Priya</span>
+          <span class="m-ico">+</span>
+          <span class="m-strong">Add your first AI system</span>
+          <span class="m-sub">Risk, guardrails and usage will show up here.</span>
+          <span class="m-btn">+ Add AI system</span>
+          {ann && <span class="ann" style="right:4%;bottom:6%">1 next step</span>}
+        </div>
+      )}
+
+      {variant === 'home-after' && (
+        <>
+          <div class="m-col"><span class="m-h">Good morning, Priya</span><span class="m-sub">2 systems need your attention</span></div>
+          <div class="m-tiles">
+            <div class="m-tile"><b>8</b><span>AI systems</span></div>
+            <div class="m-tile"><b>5</b><span>Assessed</span></div>
+            <div class="m-tile acc"><b>2</b><span>Need action</span></div>
+          </div>
+          <div class="m-card">
+            <span class="m-li m-between"><span>Loan triage model</span><i class="m-chip hi">Review</i></span>
+            <span class="m-li m-between"><span>Fraud alert scoring</span><i class="m-chip md">Assess</i></span>
+          </div>
+          {ann && <span class="ann" style="right:3%;top:4%">progress view</span>}
+        </>
+      )}
+
+      {variant === 'dashboard' && (
+        <>
+          <div class="m-row m-between"><div class="m-col"><span class="m-h">Dashboard</span><span class="m-sub">Last 30 days</span></div><span class="m-btn ghost">Export</span></div>
+          <div class="m-tiles">
+            <div class="m-tile"><b>24</b><span>AI systems</span></div>
+            <div class="m-tile"><b>6</b><span>High risk</span></div>
+            <div class="m-tile acc"><b>1.2M</b><span>Tokens / month</span></div>
+          </div>
+          <div class="m-split">
+            <div class="m-card"><span class="m-strong">Usage · 8 weeks</span><div class="m-bars">{[40, 55, 35, 70, 60, 85, 50, 92].map((h, i) => <i class={i === 7 ? 'on' : ''} style={`height:${h}%`}></i>)}</div></div>
+            <div class="m-card"><span class="m-strong">Top cost</span><span class="m-li m-between"><span>Support chatbot</span><b>42%</b></span><span class="m-li m-between"><span>Summariser</span><b>27%</b></span><span class="m-li m-between"><span>Other</span><b>31%</b></span></div>
+          </div>
+          {ann && <span class="ann" style="right:3%;top:4%">cost + usage</span>}
+        </>
+      )}
+    </div>
+  </div>
+</div>

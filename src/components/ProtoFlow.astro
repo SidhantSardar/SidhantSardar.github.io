@@ -1,0 +1,37 @@
+---
+// A Figma-style prototype board: named frames on a canvas, joined by prototype wires
+// that start at a hotspot (the thing you click) and land on the next frame.
+// Wires are drawn by src/scripts/motion.ts so they follow the real layout at any width.
+import type { ComponentProps } from 'astro/types';
+import Wire from './Wire.astro';
+
+type Variant = ComponentProps<typeof Wire>['variant'];
+interface Frame {
+  name: string;
+  variant: Variant;
+  /** The element you click to go to the next frame (a selector inside the mock), and its component name. */
+  hot?: { el: string; label?: string };
+}
+interface Props {
+  frames: Frame[];
+  /** Index of the wire that carries a conditional (shows the ⑂ node on it). */
+  conditionalOn?: number;
+}
+const { frames, conditionalOn } = Astro.props;
+---
+<div class="proto" data-proto data-conditional={conditionalOn ?? ''} style={`--n:${frames.length}`}>
+  <svg class="proto-wires" aria-hidden="true"></svg>
+  <div class="proto-frames">
+    {frames.map((f, i) => (
+      <div class="pframe" data-i={i} data-hot={i < frames.length - 1 ? f.hot?.el : undefined} data-hot-label={f.hot?.label}>
+        <span class="pframe-name"><i class="pframe-ico"></i>{f.name}</span>
+        <div class="pframe-body">
+          <Wire variant={f.variant} ann={false} />
+          {f.hot && i < frames.length - 1 && (
+            <span class="hotspot">{f.hot.label && <em class="inst-tag"><i class="ci-instance"></i>{f.hot.label}</em>}</span>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>

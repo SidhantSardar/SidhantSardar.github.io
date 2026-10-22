@@ -1,0 +1,64 @@
+---
+title: Two paths to the same guardrails
+summary: Beginners start from their assessment. Experts start from scratch. Both end in the same controls.
+problem: "Guardrails need expertise. Beginners didn't know where to start; experts didn't want hand-holding."
+solution: "Two ways in, one shared screen: start from your assessment's recommendations, or from scratch."
+order: 4
+mini: config-guided
+snapshot:
+  - { label: Users, value: Risk teams · AI owners }
+  - { label: Paths, value: Assessment-based · independent }
+  - { label: Goal, value: Controls that match the risk }
+---
+import Wire from '../../components/Wire.astro';
+import Flow from '../../components/Flow.astro';
+import ProtoFlow from '../../components/ProtoFlow.astro';
+import LogicPanel from '../../components/LogicPanel.astro';
+
+<figure class="fig">
+  <div class="canvas">
+    <div style="display:grid;gap:14px;min-width:max-content">
+      <Flow steps={[
+        { k: 'Path A', title: 'Assessment result', note: 'Risks found' },
+        { k: 'Auto', title: 'Recommended controls', note: 'Pre-filled' },
+        { k: 'Review', title: 'Accept or edit', note: 'One list' },
+        { k: 'Result', title: 'Guardrails on', note: 'Same for both', acc: true },
+      ]} />
+      <Flow steps={[
+        { k: 'Path B', title: 'Independent setup', note: 'For experts' },
+        { k: 'Manual', title: 'Pick controls', note: 'Blank start' },
+        { k: 'Review', title: 'Check the list', note: 'Same screen' },
+        { k: 'Result', title: 'Guardrails on', note: 'Same for both', acc: true },
+      ]} />
+    </div>
+  </div>
+  <figcaption><b>Fig 1</b>Two entry points, one shared review screen, one result.</figcaption>
+</figure>
+
+<div class="two">
+  <figure class="fig"><div class="canvas"><Wire variant="config-guided" label="Assessment-based" meta="pre-filled" /></div><figcaption><b>Fig 2</b>Recommendations arrive switched on, with the reason on top.</figcaption></figure>
+  <figure class="fig"><div class="canvas"><Wire variant="config-independent" label="Independent" meta="blank start" /></div><figcaption><b>Fig 3</b>Same list, same toggles. Nothing pre-selected.</figcaption></figure>
+</div>
+
+<figure class="fig">
+  <div class="canvas">
+    <div class="proto-logic">
+      <ProtoFlow conditionalOn={0} frames={[
+        { name: 'Result / Summary', variant: 'summary', hot: { el: '.m-btn', label: 'Button / Secondary' } },
+        { name: 'Guardrails / Recommended', variant: 'config-guided', hot: { el: '.m-btn', label: 'Button / Primary' } },
+        { name: 'Home / Progress', variant: 'home-after' },
+      ]} />
+      <LogicPanel trigger="open · Guardrails" rules={[
+        { kind: 'if', cond: '#source == "assessment"', actions: ['Set #controls to #recommended', 'Show "Recommended banner"'] },
+        { kind: 'else', actions: ['Set #controls to "none"'] },
+      ]} />
+    </div>
+  </div>
+  <figcaption><b>Prototype</b>The same Guardrails screen, filled or empty depending on where the user came from.</figcaption>
+</figure>
+
+<div class="callouts">
+  <div><b>2 entry points</b><span>Guided or expert</span></div>
+  <div><b>1 review screen</b><span>Less to design, build and learn</span></div>
+  <div><b>Apply all</b><span>One action for recommended controls</span></div>
+</div>

@@ -1,0 +1,21 @@
+---
+// The user's journey through the web app, one goal per stage.
+const stages = [
+  { k: '01', t: 'Set up', s: 'Organisation · first system' },
+  { k: '02', t: 'Assess', s: 'Guided risk check' },
+  { k: '03', t: 'Review', s: 'Results · approval' },
+  { k: '04', t: 'Control', s: 'Guardrails · policies' },
+  { k: '05', t: 'Monitor', s: 'Dashboard · cost · usage', now: true },
+];
+---
+<div class="releases" data-releases>
+  <span class="progress"></span>
+  {stages.map((r) => (
+    <div class={`rel ${r.now ? 'now' : ''}`}>
+      <span class="dot"></span>
+      <span class="k">{r.k}</span>
+      <b>{r.t}</b>
+      <span>{r.s}</span>
+    </div>
+  ))}
+</div>

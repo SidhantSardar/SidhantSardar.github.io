@@ -1,0 +1,24 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const posts = (await getCollection('writing')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+<Base title="Writing · Sidhant Sardar" description="Notes on Figma, Webflow and learning to code as a designer.">
+  <div class="in">
+    <header class="page-head">
+      <span class="eyebrow">Writing</span>
+      <h1>Learning in public.</h1>
+      <p class="sum">Notes on UX in Figma, CMS builds in Webflow, and what changes when a designer starts writing code.</p>
+    </header>
+    <div class="posts" style="margin-bottom:80px">
+      {posts.map((p) => (
+        <a class="post" href={`/writing/${p.id}/`}>
+          <span class="mono">{p.data.draft ? 'Draft' : p.data.date.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })} · {p.data.topic}</span>
+          <h3>{p.data.title}</h3>
+          <span class="mono">{p.data.minutes} min</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</Base>

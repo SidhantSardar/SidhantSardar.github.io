@@ -1,0 +1,56 @@
+---
+title: From sign-up to the first AI system
+summary: Three short steps instead of one long setup form.
+problem: "New admins faced one long setup form before they could do anything useful."
+solution: "Three short steps, with the first AI system added during setup, so the product is useful on day one."
+order: 1
+mini: onboarding
+snapshot:
+  - { label: Users, value: Org admins }
+  - { label: Screens, value: Onboarding · org · add system }
+  - { label: Goal, value: First system in minutes }
+---
+import Wire from '../../components/Wire.astro';
+import Flow from '../../components/Flow.astro';
+import ProtoFlow from '../../components/ProtoFlow.astro';
+import LogicPanel from '../../components/LogicPanel.astro';
+
+<figure class="fig">
+  <div class="canvas">
+    <Flow steps={[
+      { k: 'Step 1', title: 'Organisation', note: 'Name, sector, size' },
+      { k: 'Step 2', title: 'Account', note: 'Admin details' },
+      { k: 'Step 3', title: 'First system', note: 'Name + purpose', acc: true },
+      { k: 'Done', title: 'Home', note: 'Next step shown' },
+    ]} />
+  </div>
+  <figcaption><b>Fig 1</b>One job per step. The first AI system is part of setup, so the product is useful on day one.</figcaption>
+</figure>
+
+<div class="two">
+  <figure class="fig"><div class="canvas"><Wire variant="onboarding" label="Onboarding" meta="1440 · centred" /></div><figcaption><b>Fig 2</b>Narrow, centred form. A visible stepper shows how much is left.</figcaption></figure>
+  <figure class="fig"><div class="canvas"><Wire variant="system" label="Add AI system" meta="in-app" /></div><figcaption><b>Fig 3</b>After setup, the same "Add system" action lives in the main list.</figcaption></figure>
+</div>
+
+<figure class="fig">
+  <div class="canvas">
+    <div class="proto-logic">
+      <ProtoFlow conditionalOn={0} frames={[
+        { name: 'Onboarding / Step 1', variant: 'onboarding', hot: { el: '.m-btn', label: 'Button / Primary' } },
+        { name: 'Home / Empty', variant: 'home-before', hot: { el: '.m-btn', label: 'Button / Primary' } },
+        { name: 'AI systems', variant: 'system' },
+      ]} />
+      <LogicPanel trigger="click · Continue" rules={[
+        { kind: 'if', cond: '#step < 3', actions: ['Set #step to #step + 1'] },
+        { kind: 'else', actions: ['Navigate to "Home / Empty"', 'Set #onboarded to true'] },
+      ]} />
+    </div>
+  </div>
+  <figcaption><b>Prototype</b>One Continue button, one variable. The same frame shows all three steps until setup is done.</figcaption>
+</figure>
+
+<div class="callouts">
+  <div><b>3 steps</b><span>Instead of one long form</span></div>
+  <div><b>1 system</b><span>Added during setup</span></div>
+  <div><b>0 dead ends</b><span>Every screen has a next step</span></div>
+</div>

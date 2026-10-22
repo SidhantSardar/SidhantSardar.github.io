@@ -1,0 +1,57 @@
+---
+title: One design system for the whole product
+summary: A guide page and shared components kept a growing product consistent.
+problem: "Every new feature added screens, and each one drifted a little from the last."
+solution: "A guide page and shared Figma components, so one change updates the whole product."
+order: 6
+mini: registry
+snapshot:
+  - { label: Scope, value: Whole product }
+  - { label: Pages, value: Guide · screens · email }
+  - { label: Parts, value: Nav · profile · icons · status }
+  - { label: Goal, value: Reuse before redraw }
+---
+import Wire from '../../components/Wire.astro';
+import Flow from '../../components/Flow.astro';
+import VariablesTable from '../../components/VariablesTable.astro';
+import ComponentSet from '../../components/ComponentSet.astro';
+
+<figure class="fig">
+  <div class="canvas">
+    <Flow steps={[
+      { k: 'Page', title: 'Guide', note: 'Rules + usage', acc: true },
+      { k: 'Page', title: 'Components', note: 'Nav, profile, icons, status' },
+      { k: 'Page', title: 'Screens', note: 'Grouped by feature' },
+      { k: 'Page', title: 'Email', note: 'Transactional templates' },
+    ]} />
+  </div>
+  <figcaption><b>Fig 1</b>How the Figma file is organised. Developers read the guide before the screens.</figcaption>
+</figure>
+
+<figure class="fig">
+  <div class="canvas">
+    <div style="display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:16px;min-width:560px">
+      <div class="wire" style="aspect-ratio:1;min-width:0;display:grid;place-items:center"><div style="display:grid;gap:6px;justify-items:center"><span style="width:34px;height:34px;border-radius:50%;background:var(--line-2)"></span><span class="mono muted">Avatar</span></div></div>
+      <div class="wire" style="aspect-ratio:1;min-width:0;display:grid;place-items:center"><div style="display:grid;gap:6px;width:70%"><div class="ln"></div><div class="ln m"></div><div class="ln s"></div><span class="mono muted">Profile menu</span></div></div>
+      <div class="wire" style="aspect-ratio:1;min-width:0;display:grid;place-items:center"><div style="display:grid;gap:6px;justify-items:center"><span style="width:56px;height:16px;border-radius:4px;border:1px solid var(--accent)"></span><span class="mono muted">Status</span></div></div>
+      <div class="wire" style="aspect-ratio:1;min-width:0;display:grid;place-items:center"><div style="display:grid;grid-template-columns:repeat(3,14px);gap:8px">{[0,1,2,3,4,5].map(() => <span style="width:14px;height:14px;border:1px solid var(--line-2);border-radius:3px"></span>)}</div></div>
+    </div>
+  </div>
+  <figcaption><b>Fig 2</b>Shared parts: avatar, profile menu, status dropdown and an icon set planned for dark mode.</figcaption>
+</figure>
+
+<figure class="fig">
+  <div class="canvas"><ComponentSet name="Button" /></div>
+  <figcaption><b>Components</b>One component set holds every variant. Screens use instances, so a change to the set updates them all.</figcaption>
+</figure>
+
+<figure class="fig">
+  <div class="canvas"><VariablesTable /></div>
+  <figcaption><b>Variables</b>Colours live as variables with a Light and a Dark mode. These are the real tokens behind this website's theme switch.</figcaption>
+</figure>
+
+<div class="callouts">
+  <div><b>Guide first</b><span>Rules before screens</span></div>
+  <div><b>Change once</b><span>Updates every screen</span></div>
+  <div><b>Dark mode</b><span>Planned from the icon set up</span></div>
+</div>

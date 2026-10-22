@@ -1,0 +1,33 @@
+---
+// A Figma component set: the dashed purple-style frame that holds every variant
+// of one component, with its properties listed beside it.
+interface Props {
+  name?: string;
+}
+const { name = 'Button' } = Astro.props;
+const types = ['Primary', 'Secondary'];
+const states = ['Default', 'Hover', 'Disabled'];
+---
+<div class="cset" data-cset>
+  <div class="cset-main">
+    <span class="cset-name"><i class="ci-main"></i>{name}</span>
+    <div class="cset-box">
+      {types.map((t) =>
+        states.map((s) => (
+          <div class="cvar">
+            <span class="cvar-label">Type={t}, State={s}</span>
+            <span class={`cbtn ${t.toLowerCase()} ${s.toLowerCase()}`}>Add AI system</span>
+          </div>
+        ))
+      )}
+    </div>
+  </div>
+  <aside class="cprops">
+    <span class="cprops-title"><i class="ci-main"></i>{name}</span>
+    <div class="cprop"><span>Type</span><em>Primary <s>▾</s></em></div>
+    <div class="cprop"><span>State</span><em>Default <s>▾</s></em></div>
+    <div class="cprop"><span>Label</span><em>Add AI system</em></div>
+    <div class="cprop"><span>Icon</span><i class="ctoggle on"></i></div>
+    <span class="cprops-foot">6 variants · 2 properties</span>
+  </aside>
+</div>

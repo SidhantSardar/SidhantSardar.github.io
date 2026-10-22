@@ -1,0 +1,6 @@
+---
+// Visible spacing marker between sections, like a redline in Figma.
+interface Props { size?: number }
+const { size = 120 } = Astro.props;
+---
+<div class="gap" style={`--h:${size}px`} aria-hidden="true"><span>{size}</span></div>

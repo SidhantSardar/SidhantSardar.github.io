@@ -1,0 +1,39 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const cases = (await getCollection('portfolio')).sort((a, b) => a.data.order - b.data.order);
+  return cases.map((entry, i) => ({
+    params: { slug: entry.id },
+    props: { entry, next: cases[(i + 1) % cases.length], total: cases.length },
+  }));
+}
+
+const { entry, next, total } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+---
+<Base title={`${d.title} · Sidhant Sardar`} description={d.summary} active="portfolio">
+  <div class="in">
+    <header class="page-head">
+      <a class="back" href="/portfolio">← Portfolio</a>
+      <span class="spec">Case study <b>{String(d.order).padStart(2, '0')} / {String(total).padStart(2, '0')}</b> · UX · Figma</span>
+      <h1>{d.title}</h1>
+      <p class="sum">{d.summary}</p>
+      <div class="snap">{d.snapshot.map((s) => <div><span>{s.label}</span><b>{s.value}</b></div>)}</div>
+    </header>
+
+    <div class="ps" data-reveal>
+      <div><span class="k">Problem</span><p>{d.problem}</p></div>
+      <div class="sol"><span class="k">How I solved it</span><p>{d.solution}</p></div>
+    </div>
+
+    <div class="case-flow"><Content /></div>
+
+    <div class="next">
+      <span class="eyebrow">Next case study</span>
+      <a href={`/portfolio/${next.id}/`}><span class="eyebrow">Case study {String(next.data.order).padStart(2, '0')}</span><b>{next.data.title} →</b></a>
+    </div>
+  </div>
+</Base>

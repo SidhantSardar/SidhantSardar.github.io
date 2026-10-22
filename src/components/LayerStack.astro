@@ -1,0 +1,61 @@
+---
+// Hero art: one interface as a hand of four tall cards, from grid to code.
+// Animated by src/scripts/motion.ts (GSAP): hover fans the hand; hovering a card pulls it out
+// and reveals that card's own description at its foot.
+const steps = [
+  { k: '01', t: 'Grid', c: '6 columns, 24px gutters. Every element snaps to it.' },
+  { k: '02', t: 'Wireframe', c: 'Structure in Figma. Boxes before colour.' },
+  { k: '03', t: 'UI', c: 'Type, colour and states. Built in Webflow.' },
+  { k: '04', t: 'Code', c: 'The same design, written as components with Claude Code.' },
+];
+---
+<div class="hero-art">
+  <div class="stage" id="stage" role="button" tabindex="0" aria-label="Four design layers held like playing cards. Hover or tap to fan them out.">
+    <div class="tilt" id="tilt">
+      <div class="stack" id="stack">
+        <div class="layer l-grid" data-layer="0">
+          <span class="ltag">01 · Grid <b>6 col</b></span>
+          <div class="cols">{Array.from({ length: 6 }).map(() => <i></i>)}</div>
+          <span class="sheen"></span>
+          <div class="info"><span>{steps[0].k}</span><b>{steps[0].t}</b><p>{steps[0].c}</p></div>
+        </div>
+        <div class="layer l-wire" data-layer="1">
+          <span class="ltag">02 · Wireframe <b>Figma</b></span>
+          <span class="w" style="left:8%;top:12%;width:30%;height:3.5%"></span>
+          <span class="w" style="left:8%;top:19%;width:84%;height:14%"></span>
+          <span class="dim" style="left:8%;top:34%">560</span>
+          <span class="w" style="left:8%;top:38%;width:32%;height:5%"></span>
+          <span class="w" style="left:8%;top:47%;width:40%;height:22%"></span>
+          <span class="w" style="left:52%;top:47%;width:40%;height:22%"></span>
+          <span class="sheen"></span>
+          <div class="info"><span>{steps[1].k}</span><b>{steps[1].t}</b><p>{steps[1].c}</p></div>
+        </div>
+        <div class="layer l-ui" data-layer="2">
+          <span class="ltag">03 · UI <b>Webflow</b></span>
+          <span class="u" style="left:8%;top:12%;width:24%;height:3%"></span>
+          <span class="u ttl" style="left:8%;top:19%">Design it.<br />Build it.</span>
+          <span class="u acc" style="left:8%;top:38%;width:32%;height:5%"></span>
+          <span class="u card" style="left:8%;top:47%;width:40%;height:22%"></span>
+          <span class="u img" style="left:52%;top:47%;width:40%;height:22%"></span>
+          <span class="sheen"></span>
+          <div class="info"><span>{steps[2].k}</span><b>{steps[2].t}</b><p>{steps[2].c}</p></div>
+        </div>
+        <div class="layer l-code" data-layer="3">
+          <span class="ltag">04 · Code <b>Claude Code</b></span>
+          <div class="code">
+            <div class="cl">&lt;<span class="a">section</span> class="hero"&gt;</div>
+            <div class="cl">&nbsp;&nbsp;&lt;h1&gt;Design it.</div>
+            <div class="cl">&nbsp;&nbsp;&nbsp;&nbsp;Build it.&lt;/h1&gt;</div>
+            <div class="cl">&nbsp;&nbsp;&lt;<span class="a">Button</span> primary /&gt;</div>
+            <div class="cl">&nbsp;&nbsp;&lt;<span class="a">Grid</span> cols=&#123;2&#125;&gt;</div>
+            <div class="cl">&nbsp;&nbsp;&nbsp;&nbsp;&#123;cards.map(Card)&#125;</div>
+            <div class="cl">&nbsp;&nbsp;&lt;/<span class="a">Grid</span>&gt;</div>
+            <div class="cl">&lt;/<span class="a">section</span>&gt;</div>
+          </div>
+          <span class="sheen"></span>
+          <div class="info"><span>{steps[3].k}</span><b>{steps[3].t}</b><p>{steps[3].c}</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+---
+title: Two readers, two views of one result
+summary: Managers need the answer. Reviewers need the evidence. So every result has two views.
+problem: "One results page tried to serve managers and reviewers, and worked for neither."
+solution: "Two views of the same result, summary for decisions and detail for evidence, plus a locked view for approvers."
+order: 3
+mini: summary
+snapshot:
+  - { label: Users, value: Managers · reviewers · approvers }
+  - { label: Views, value: Summary · detail · read-only }
+  - { label: Goal, value: Right depth for each reader }
+---
+import Wire from '../../components/Wire.astro';
+import Flow from '../../components/Flow.astro';
+import ProtoFlow from '../../components/ProtoFlow.astro';
+import LogicPanel from '../../components/LogicPanel.astro';
+
+<div class="two">
+  <figure class="fig"><div class="canvas"><Wire variant="summary" label="Summary view" meta="for managers" /></div><figcaption><b>Fig 1</b>Three numbers first, then the next action.</figcaption></figure>
+  <figure class="fig"><div class="canvas"><Wire variant="detail" label="Detailed view" meta="for reviewers" /></div><figcaption><b>Fig 2</b>Every item expands to show its evidence and risk level.</figcaption></figure>
+</div>
+
+<figure class="fig">
+  <div class="canvas"><div style="max-width:620px"><Wire variant="review" label="Review result · read-only" meta="for approvers" /></div></div>
+  <figcaption><b>Fig 3</b>Approvers get a locked view. They can check work without changing it by mistake.</figcaption>
+</figure>
+
+<figure class="fig">
+  <div class="canvas">
+    <div class="proto-logic">
+      <ProtoFlow conditionalOn={0} frames={[
+        { name: 'Result / Summary', variant: 'summary', hot: { el: '.m-btn', label: 'Button / Secondary' } },
+        { name: 'Result / Detailed', variant: 'detail', hot: { el: '.m-acc.open', label: 'Accordion / Open' } },
+        { name: 'Review / Read-only', variant: 'review' },
+      ]} />
+      <LogicPanel trigger="open · Assessment result" rules={[
+        { kind: 'if', cond: '#role == "Manager"', actions: ['Open "Result / Summary"'] },
+        { kind: 'else if', cond: '#role == "Reviewer"', actions: ['Open "Result / Detailed"'] },
+        { kind: 'else', actions: ['Open "Review / Read-only"', 'Set #canEdit to false'] },
+      ]} />
+    </div>
+  </div>
+  <figcaption><b>Prototype</b>One result, three doors. A role variable decides which view opens first.</figcaption>
+</figure>
+
+<div class="callouts">
+  <div><b>Summary</b><span>Answer at a glance</span></div>
+  <div><b>Detail</b><span>Evidence for every item</span></div>
+  <div><b>Read-only</b><span>Safe review and approval</span></div>
+</div>

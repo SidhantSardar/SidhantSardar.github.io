@@ -1,0 +1,36 @@
+---
+// A Figma "Local variables" panel. Shows a colour collection with two modes,
+// using this site's own tokens, so the panel is real, not a mock.
+const collections = ['Color', 'Spacing', 'Radius', 'Type'];
+const rows = [
+  { name: 'bg/canvas', light: '#F1F0EF', dark: '#000000' },
+  { name: 'bg/surface', light: '#FFFFFF', dark: '#0E0E10' },
+  { name: 'text/primary', light: '#1A1B1E', dark: '#F3F3F5' },
+  { name: 'text/muted', light: '#5C5E66', dark: '#8B8B94' },
+  { name: 'line/default', light: '#E4E2DF', dark: '#1C1C20' },
+  { name: 'accent/primary', light: '#9747FF', dark: '#4D7CFF' },
+  { name: 'prototype/wire', light: '#0D99FF', dark: '#0D99FF' },
+];
+---
+<div class="vars" data-vars>
+  <div class="vars-head">
+    <span class="vars-title">Local variables</span>
+    <span class="vars-tools" aria-hidden="true"><i>⌕</i><i>⚙</i><i>×</i></span>
+  </div>
+  <div class="vars-grid">
+    <aside class="vars-side">
+      <span class="vars-label">Collections</span>
+      {collections.map((c, i) => <span class={`vars-col ${i === 0 ? 'on' : ''}`}>{c}<em>{[7, 8, 4, 7][i]}</em></span>)}
+    </aside>
+    <div class="vars-table">
+      <div class="vrow vhead"><span>Name</span><span>Light</span><span>Dark</span></div>
+      {rows.map((r) => (
+        <div class="vrow">
+          <span class="vname"><i class="vtype">◐</i>{r.name}</span>
+          <span class="vval"><i style={`background:${r.light}`}></i>{r.light}</span>
+          <span class="vval"><i style={`background:${r.dark}`}></i>{r.dark}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>

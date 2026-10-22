@@ -1,0 +1,50 @@
+---
+title: A home screen that grows with the user
+summary: Empty on day one, a dashboard by month three. The home screen was designed for both.
+problem: "A dashboard with no data is an empty page. New users didn't know what to do first."
+solution: "One home screen in three states, from a single next step on day one to a full cost and usage dashboard."
+order: 5
+mini: dashboard
+snapshot:
+  - { label: Users, value: Everyone }
+  - { label: States, value: Before · after · dashboard }
+  - { label: Goal, value: Always show the next step }
+---
+import Wire from '../../components/Wire.astro';
+import Flow from '../../components/Flow.astro';
+import ProtoFlow from '../../components/ProtoFlow.astro';
+import LogicPanel from '../../components/LogicPanel.astro';
+
+<div class="two">
+  <figure class="fig"><div class="canvas"><Wire variant="home-before" label="Home · before assessment" meta="day 1" /></div><figcaption><b>Fig 1</b>One clear call to action. No empty charts.</figcaption></figure>
+  <figure class="fig"><div class="canvas"><Wire variant="home-after" label="Home · after assessment" meta="week 1" /></div><figcaption><b>Fig 2</b>Progress and systems that need attention.</figcaption></figure>
+</div>
+
+<figure class="fig">
+  <div class="canvas"><div style="max-width:720px"><Wire variant="dashboard" label="AI system dashboard" meta="monitor" /></div></div>
+  <figcaption><b>Fig 3</b>Later, the same space becomes a dashboard: systems, risk, cost and usage.</figcaption>
+</figure>
+
+<figure class="fig">
+  <div class="canvas">
+    <div class="proto-logic">
+      <ProtoFlow conditionalOn={0} frames={[
+        { name: 'Home / Empty', variant: 'home-before', hot: { el: '.m-btn', label: 'Button / Primary' } },
+        { name: 'Home / Progress', variant: 'home-after', hot: { el: '.m-tile.acc', label: 'Stat tile / Highlight' } },
+        { name: 'Dashboard', variant: 'dashboard' },
+      ]} />
+      <LogicPanel trigger="load · Home" rules={[
+        { kind: 'if', cond: '#systems == 0', actions: ['Show "Home / Empty"'] },
+        { kind: 'else if', cond: '#assessed < #systems', actions: ['Show "Home / Progress"'] },
+        { kind: 'else', actions: ['Show "Dashboard"'] },
+      ]} />
+    </div>
+  </div>
+  <figcaption><b>Prototype</b>One home screen, three states, chosen by two variables.</figcaption>
+</figure>
+
+<div class="callouts">
+  <div><b>3 states</b><span>Designed for one screen</span></div>
+  <div><b>1 next step</b><span>Always visible</span></div>
+  <div><b>Cost + usage</b><span>One place to watch spend</span></div>
+</div>

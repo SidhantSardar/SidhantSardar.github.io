@@ -1,0 +1,17 @@
+---
+interface Step { k?: string; title: string; note?: string; acc?: boolean }
+interface Props { steps: Step[] }
+const { steps } = Astro.props;
+---
+<div class="flow">
+  {steps.map((s, i) => (
+    <>
+      {i > 0 && <span class="ar">→</span>}
+      <div class={`st ${s.acc ? 'acc' : ''}`}>
+        {s.k && <span class="k">{s.k}</span>}
+        <b>{s.title}</b>
+        {s.note && <span>{s.note}</span>}
+      </div>
+    </>
+  ))}
+</div>
