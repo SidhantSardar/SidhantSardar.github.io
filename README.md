@@ -1,6 +1,6 @@
 # sidhantsardar.com
 
-Portfolio of Sidhant Sardar — Figma & Webflow expert, becoming a design engineer.
+Portfolio of Sidhant Sardar — websites designed in Figma and built in Webflow or code.
 
 Designed in Figma, built with Claude Code and [Astro](https://astro.build).
 
@@ -14,7 +14,7 @@ npm run dev
 ## Content
 
 - `src/content/portfolio/` — UX case studies (MDX)
-- `src/content/work/` — website case studies
+- `src/content/work/` — website case studies (`stack` sets the label, default Webflow)
 - `src/content/writing/` — blog posts
 
 ## Deploy

@@ -18,7 +18,6 @@ structure:
   - { name: Services, detail: title · outcome · steps }
   - { name: Toolbox, detail: resource · type · file }
   - { name: Team, detail: name · role · bio }
-structureNote: Collections read from the public site. Replace with the real schema.
 ---
 
 ## Problem
@@ -33,4 +32,4 @@ ESG and human-rights due diligence is complex. Buyers need to see quickly that t
 
 ## Outcome
 
-> Add one number here: toolbox downloads, leads, or launch time.
+Live at worldofgears.com. I still work with the team on new pages and content.

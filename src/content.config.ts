@@ -1,12 +1,13 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-// Website case studies (Webflow)
+// Website case studies (Webflow or code)
 const work = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/work' }),
   schema: z.object({
     title: z.string(),
     eyebrow: z.string(),
+    stack: z.string().default('Webflow'),
     summary: z.string(),
     order: z.number(),
     url: z.string().url().optional(),

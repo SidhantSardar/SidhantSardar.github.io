@@ -1,41 +1,43 @@
 ---
-title: A CMS the marketing team runs without me
+title: From Webflow to code, with a CMS the sales team runs
 eyebrow: Aligne AI · Responsible AI consultancy
-type: webflow
-summary: Services, events, blogs and a glossary, all driven by Webflow collections, so new content never needs a designer.
-tags: [UI design, SEO]
+type: code
+stack: Astro
+summary: I first built Aligne's site in Webflow, then rebuilt it in Astro on Cloudflare. The sales team now publishes blogs, events and case studies themselves through a Git-based CMS.
+tags: [Astro, Cloudflare, Pages CMS]
 order: 2
 size: wide
-thumb: { kind: cms, labels: [Services, Events, Blogs, Glossary], tone: blue }
+thumb: { kind: cms, labels: [Blogs, Events, Case studies, Authors], tone: blue }
 url: https://www.aligne.ai/
 snapshot:
-  - { label: Role, value: Design + Webflow build }
-  - { label: Tool, value: Webflow }
+  - { label: Role, value: Design + build }
+  - { label: Stack, value: Astro · Cloudflare }
+  - { label: CMS, value: Pages CMS (Git-based) }
   - { label: Sector, value: Responsible AI }
-  - { label: Content, value: CMS-driven }
 structureTitle: CMS structure
 structure:
-  - { name: Services, detail: name · summary · CTA }
-  - { name: Events, detail: date · speaker · link }
-  - { name: Blogs, detail: author · tags · body }
-  - { name: Glossary, detail: term · definition }
-structureNote: Collections read from the public site. Replace with the real schema.
+  - { name: Blogs, detail: title · author · category · body }
+  - { name: Events, detail: date · time · format · venue }
+  - { name: Case studies, detail: client · category · body }
+  - { name: Authors, detail: name · photo }
+structureNote: Each collection is a folder of Markdown files in GitHub. Saving in the CMS makes a commit, and Cloudflare rebuilds the site.
 ---
 
 ## Problem
 
-Aligne works in a field that changes every month. The team needs to publish events, articles and definitions every week, without waiting on a designer or a developer.
+Aligne needed one site for the consultancy and its Altrum product pages, with one shared design. The sales team also needed to publish blogs, events and case studies every week without waiting on a designer or a developer.
 
 ## Process
 
-I started from the content, not the layout. I listed every type of page the team would publish, then turned each one into a Webflow collection with only the fields they actually fill in.
+I moved the site from Webflow to Astro, page by page. First came a shared design system (tokens, header, footer, sections and buttons) used by both the Aligne and Altrum pages. Then each content type became a folder of Markdown files in GitHub, edited through Pages CMS, a simple editor that sits on top of the repository.
 
 ## Key decisions
 
-1. **One template per collection.** New content never needs a new layout.
-2. **Glossary terms link from blog posts.** Readers get definitions in one click, and search engines see a well-linked site.
-3. **Shared components with the sister product site**, so both brands feel like one family.
+1. **Static-first on Cloudflare.** Pages are built ahead of time and served from Cloudflare's network, so they load fast.
+2. **A private staging site.** Changes go to staging first. Going live is a separate, approved step.
+3. **Forms, not code, for the sales team.** Pages CMS gives them a form for each blog, event, case study and author. They never touch Git or code.
+4. **One design system for two brands.** Aligne and Altrum share tokens and components, so one change updates both.
 
 ## Outcome
 
-> Add one number here: pages published since launch, organic traffic, or time to launch.
+The site is live at aligne.ai. The sales team adds blogs, events and case studies themselves, and new pages are built from the same components.
