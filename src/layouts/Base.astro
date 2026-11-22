@@ -74,9 +74,10 @@ const imageUrl = new URL(image, Astro.site).href;
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" />
   </head>
   <body>
+    <a class="skip" href="#main">Skip to content</a>
     <div class="grid-overlay" aria-hidden="true"><div class="in">{Array.from({ length: 12 }).map(() => <i></i>)}</div></div>
 
-    <nav>
+    <nav aria-label="Main">
       <div class="in">
         <a class="logo" href="/">Sidhant<span>.</span></a>
         <div class="links">
@@ -93,7 +94,9 @@ const imageUrl = new URL(image, Astro.site).href;
       </div>
     </nav>
 
-    <slot />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
 
     <footer>
       <div class="in mono">
