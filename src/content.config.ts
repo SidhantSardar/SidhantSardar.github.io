@@ -10,6 +10,7 @@ const work = defineCollection({
     stack: z.string().default('Webflow'),
     summary: z.string(),
     order: z.number(),
+    cover: z.string().optional(),
     url: z.string().url().optional(),
     snapshot: z.array(z.object({ label: z.string(), value: z.string() })),
     structure: z.array(z.object({ name: z.string(), detail: z.string() })).optional(),

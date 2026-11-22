@@ -14,7 +14,7 @@ const { entry, next, total } = Astro.props;
 const d = entry.data;
 const { Content } = await render(entry);
 ---
-<Base title={`${d.title} · Sidhant Sardar`} description={d.summary} active="portfolio">
+<Base title={`${d.title} · Sidhant Sardar`} description={d.summary} active="portfolio" image={`/og/portfolio-${entry.id}.png`} imageAlt={d.title}>
   <div class="in">
     <header class="page-head">
       <a class="back" href="/portfolio">← Portfolio</a>

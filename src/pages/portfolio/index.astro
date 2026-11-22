@@ -7,7 +7,7 @@ import Gap from '../../components/Gap.astro';
 
 const cases = (await getCollection('portfolio')).sort((a, b) => a.data.order - b.data.order);
 ---
-<Base title="Portfolio · Sidhant Sardar" description="UX case studies from the AltrumAI web app, designed in Figma from 2023 to now." active="portfolio">
+<Base title="Portfolio · Sidhant Sardar" description="UX case studies from the AltrumAI web app, designed in Figma from 2023 to now." active="portfolio" image="/og/portfolio.png" imageAlt="Portfolio: UX case studies from the AltrumAI web app">
   <div class="in">
     <header class="page-head">
       <span class="spec">Page / Portfolio · <b>{cases.length} case studies</b></span>

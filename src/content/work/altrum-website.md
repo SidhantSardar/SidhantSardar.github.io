@@ -4,6 +4,7 @@ eyebrow: AltrumAI · Product pages
 stack: Webflow → Astro
 summary: The public pages for AltrumAI, first built in Webflow and now rebuilt in code as part of aligne.ai. The web app itself has its own UX case studies in the portfolio.
 tags: [Messaging]
+cover: /sites/altrum.jpg
 order: 1
 size: half
 thumb: { kind: window, labels: [aligne.ai/altrum], tone: paper }

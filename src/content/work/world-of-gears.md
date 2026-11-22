@@ -4,6 +4,7 @@ eyebrow: World of Gears · Sustainability
 type: webflow
 summary: Service pages and a Sustainability Toolbox, built for a consultancy working in 17 countries.
 tags: [Content design]
+cover: /sites/wog.jpg
 order: 3
 size: half
 thumb: { kind: window, labels: [worldofgears.com], tone: green }

@@ -24,10 +24,11 @@ const schema = {
   url: new URL(`/work/${entry.id}/`, Astro.site).href,
   creator: { '@id': new URL('/#person', Astro.site).href },
   keywords: d.stack,
+  ...(d.cover ? { image: new URL(d.cover, Astro.site).href } : {}),
   ...(d.url ? { sameAs: d.url } : {}),
 };
 ---
-<Base title={`${d.title} · Sidhant Sardar`} description={d.summary}>
+<Base title={`${d.title} · Sidhant Sardar`} description={d.summary} image={d.cover} imageAlt={`Screenshot of the ${d.eyebrow.split(' · ')[0]} website`}>
   <JsonLd data={schema} />
   <div class="in">
     <header class="page-head">
