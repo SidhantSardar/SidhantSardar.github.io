@@ -5,7 +5,7 @@ import Analytics from '../components/Analytics.astro';
 interface Props {
   title?: string;
   description?: string;
-  active?: 'home' | 'portfolio' | 'writing';
+  active?: 'home' | 'work' | 'portfolio' | 'writing';
   /** Share image path in /public. 1200×630 or 1600×900 works on every network. */
   image?: string;
   imageAlt?: string;
@@ -68,6 +68,7 @@ const imageUrl = new URL(image, Astro.site).href;
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+    <link rel="alternate" type="application/rss+xml" title="Sidhant Sardar · Writing" href="/rss.xml" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -82,7 +83,8 @@ const imageUrl = new URL(image, Astro.site).href;
         <a class="logo" href="/">Sidhant<span>.</span></a>
         <div class="links">
           <a href="/" aria-current={active === 'home' ? 'page' : undefined}>Home</a>
-          <a href="/portfolio" aria-current={active === 'portfolio' ? 'page' : undefined}>Portfolio</a>
+          <a href="/work/" aria-current={active === 'work' ? 'page' : undefined}>Work</a>
+          <a href="/portfolio" class="hide-sm" aria-current={active === 'portfolio' ? 'page' : undefined}>Portfolio</a>
           <a href="/writing" class="hide-sm" aria-current={active === 'writing' ? 'page' : undefined}>Writing</a>
           <a href="/#contact">Contact</a>
         </div>

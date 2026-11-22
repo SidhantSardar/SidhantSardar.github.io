@@ -1,0 +1,82 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Wire from '../../components/Wire.astro';
+
+// One index for every case study. URLs stay where they were (/work/… and /portfolio/…).
+const websites = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+const ux = (await getCollection('portfolio')).sort((a, b) => a.data.order - b.data.order);
+
+type Item = { href: string; label: string; title: string; line: string; tags: string[]; cover?: string; mini?: any };
+const webTags: Record<string, string[]> = {
+  'altrum-website': ['Webflow', 'Code'],
+  'aligne-ai': ['Code', 'CMS'],
+  'world-of-gears': ['Webflow', 'CMS'],
+};
+const items: Item[] = [
+  ...websites.map((w) => ({
+    href: `/work/${w.id}/`, label: `Website · ${w.data.kind === 'client' ? 'Client project' : 'Practice project'}`,
+    title: w.data.title, line: w.data.summary, tags: webTags[w.id] ?? [], cover: w.data.cover,
+  })),
+  ...ux.map((c) => ({
+    href: `/portfolio/${c.id}/`, label: `UX case study ${String(c.data.order).padStart(2, '0')}`,
+    title: c.data.title, line: c.data.problem, tags: c.id.includes('design-system') ? ['Figma', 'Design system'] : ['Figma', 'UX'], mini: c.data.mini,
+  })),
+];
+// Only offer filters that have at least one case study behind them.
+const TAGS = ['Webflow', 'Code', 'CMS', 'Figma', 'UX', 'Design system'].filter((t) => items.some((i) => i.tags.includes(t)));
+---
+<Base title="Work · Sidhant Sardar" description="Every case study in one place: Webflow and code websites, and UX case studies designed in Figma." active="work">
+  <div class="in">
+    <header class="page-head">
+      <span class="spec">Page / Work · <b>{items.length} case studies</b></span>
+      <h1>Work</h1>
+      <p class="sum">Websites built in Webflow and in code, and UX case studies from a web app designed in Figma. Filter by what you're hiring for.</p>
+    </header>
+
+    <div class="filters" role="group" aria-label="Filter case studies">
+      <button type="button" class="chip" data-tag="" aria-pressed="true">All <span>{items.length}</span></button>
+      {TAGS.map((t) => <button type="button" class="chip" data-tag={t} aria-pressed="false">{t} <span>{items.filter((i) => i.tags.includes(t)).length}</span></button>)}
+    </div>
+    <p class="mono muted" id="filter-status" aria-live="polite">Showing all {items.length}</p>
+
+    <div class="case-grid work-grid">
+      {items.map((i) => (
+        <a class="case" href={i.href} data-tags={i.tags.join('|')}>
+          <div class="mini">
+            {i.cover ? <img src={i.cover} alt="" width="1440" height="900" loading="lazy" /> : <Wire variant={i.mini} ann={false} />}
+          </div>
+          <div class="case-body">
+            <span class="n">{i.label}</span>
+            <h2>{i.title}</h2>
+            <p>{i.line}</p>
+            <div class="chips">{i.tags.map((t) => <span class="chip">{t}</span>)}</div>
+          </div>
+        </a>
+      ))}
+    </div>
+    <div style="height:80px"></div>
+  </div>
+</Base>
+
+<script>
+  // Tiny static filter. The chosen tag lives in the URL (?tag=Webflow) so a filtered view can be shared.
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('.filters button')];
+  const cards = [...document.querySelectorAll<HTMLElement>('.work-grid .case')];
+  const status = document.getElementById('filter-status')!;
+  const apply = (tag: string) => {
+    let n = 0;
+    cards.forEach((c) => { const on = !tag || c.dataset.tags!.split('|').includes(tag); c.hidden = !on; if (on) n++; });
+    buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.tag === tag)));
+    status.textContent = tag ? `Showing ${n} tagged ${tag}` : `Showing all ${n}`;
+  };
+  buttons.forEach((b) => b.addEventListener('click', () => {
+    const tag = b.dataset.tag!;
+    const url = new URL(location.href);
+    tag ? url.searchParams.set('tag', tag) : url.searchParams.delete('tag');
+    history.replaceState(null, '', url);
+    apply(tag);
+  }));
+  const initial = new URL(location.href).searchParams.get('tag') ?? '';
+  apply(buttons.some((b) => b.dataset.tag === initial) ? initial : '');
+</script>

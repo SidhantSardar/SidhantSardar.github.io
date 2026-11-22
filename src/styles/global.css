@@ -711,3 +711,15 @@ a.chip:hover{color:var(--ink);border-color:var(--ink)}
 .devices figcaption{grid-column:1/-1}
 @media (max-width:700px){.devices{grid-template-columns:1fr 120px}}
 .how{margin-bottom:48px}
+
+/* ---------- work index filters ---------- */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.filters .chip{background:none;cursor:pointer;font-size:12px;padding:7px 12px}
+.filters .chip span{color:var(--dim);margin-left:4px}
+.filters .chip[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.filters .chip[aria-pressed="true"] span{color:inherit;opacity:.7}
+#filter-status{margin-bottom:24px}
+.work-grid .case[hidden]{display:none}
+.work-grid .mini img{width:100%;height:100%;object-fit:cover;object-position:top;border-radius:6px}
+.work-grid .case-body h2{font-size:24px;font-weight:700;line-height:1.1}
+@media (max-width:760px){.case-grid{grid-template-columns:1fr}}
