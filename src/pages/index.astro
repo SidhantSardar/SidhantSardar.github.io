@@ -4,6 +4,8 @@ import LayerStack from '../components/LayerStack.astro';
 import Gap from '../components/Gap.astro';
 import JsonLd from '../components/JsonLd.astro';
 import Capabilities from '../components/Capabilities.astro';
+import { Image } from 'astro:assets';
+import { asset } from '../data/images';
 import { LINKEDIN, CV, EMAIL, AVAILABILITY } from '../data/profile';
 import { skills } from '../data/skills';
 
@@ -81,7 +83,7 @@ const services = [
       <div class="intro">
         <div class="intro-id" data-reveal>
           <div class="avatar corners" data-portrait>
-            <img class="portrait-img" src="/sidhant.jpg" alt="Sidhant Sardar at his desk" width="800" height="1000" fetchpriority="high" />
+            <Image class="portrait-img" src={asset('/sidhant.jpg')} alt="Sidhant Sardar at his desk" widths={[192, 384]} sizes="96px" loading="eager" fetchpriority="high" />
             <span class="dims">96 × 112</span>
           </div>
           <div class="intro-name">
@@ -125,7 +127,7 @@ const services = [
               <div class="browser">
                 <div class="bar"><i></i><i></i><i></i><span>{s.domain}</span></div>
                 <div class="shot">
-                  <img src={s.shot} alt={`${s.name} homepage hero`} width="1440" height="900" loading="lazy" />
+                  <Image src={asset(s.shot)} alt={`${s.name} homepage hero`} widths={[480, 800, 1200, 1440]} sizes="(max-width: 820px) 100vw, 760px" />
                   <span class="shade"></span>
                   <span class="ann">hero · 1440 × 900</span>
                 </div>

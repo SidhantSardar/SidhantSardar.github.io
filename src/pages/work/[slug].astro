@@ -2,6 +2,8 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import JsonLd from '../../components/JsonLd.astro';
+import { Image } from 'astro:assets';
+import { asset } from '../../data/images';
 import { skills as allSkills } from '../../data/skills';
 
 export async function getStaticPaths() {
@@ -47,7 +49,7 @@ const schema = {
 
     {d.coverMobile && d.cover && (
       <figure class="fig devices">
-        <img src={d.cover} alt={`${d.title}: desktop, 1440 wide`} width="1440" height="900" loading="lazy" />
+        <Image src={asset(d.cover)} alt={`${d.title}: desktop, 1440 wide`} widths={[800, 1440]} sizes="(max-width: 1240px) 100vw, 1000px" />
         <img class="phone" src={d.coverMobile} alt={`${d.title}: mobile, 390 wide`} width="390" height="844" loading="lazy" />
         <figcaption><b>Frames</b>Desktop 1440 · mobile 390</figcaption>
       </figure>
