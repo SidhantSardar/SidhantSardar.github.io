@@ -2,6 +2,34 @@
 import Base from '../layouts/Base.astro';
 import LayerStack from '../components/LayerStack.astro';
 import Gap from '../components/Gap.astro';
+import JsonLd from '../components/JsonLd.astro';
+
+// {{TODO: LinkedIn URL}} — paste your profile link here; it's added to sameAs automatically.
+const LINKEDIN = '';
+
+const SITE = 'https://www.sidhantsardar.com/';
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': `${SITE}#person`,
+    name: 'Sidhant Sardar',
+    jobTitle: 'Web designer and Webflow developer',
+    url: SITE,
+    image: `${SITE}sidhant.jpg`,
+    email: 'mailto:sidhantsardar93@gmail.com',
+    knowsAbout: ['Figma', 'Webflow', 'Astro', 'Design systems', 'Product UX', 'Technical SEO'],
+    ...(LINKEDIN ? { sameAs: [LINKEDIN] } : {}),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${SITE}#website`,
+    name: 'Sidhant Sardar',
+    url: SITE,
+    publisher: { '@id': `${SITE}#person` },
+  },
+];
 
 const sites = [
   {
@@ -45,6 +73,7 @@ const services = [
 ];
 ---
 <Base active="home">
+  <JsonLd data={schema} />
   <!-- HERO + ABOUT: who I am, the moment the page opens -->
   <header class="hero" id="about">
     <div class="in">
