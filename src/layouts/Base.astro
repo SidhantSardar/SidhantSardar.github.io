@@ -6,13 +6,27 @@ interface Props {
   title?: string;
   description?: string;
   active?: 'home' | 'portfolio' | 'writing';
+  /** Share image path in /public. 1200×630 or 1600×900 works on every network. */
+  image?: string;
+  imageAlt?: string;
+  /** 'article' for writing posts, 'website' for everything else. */
+  type?: 'website' | 'article';
+  /** Keep the page out of search results (used for draft posts). */
+  noindex?: boolean;
 }
 
 const {
   title = 'Sidhant Sardar · Websites designed in Figma, built in Webflow or code',
   description = 'Sidhant Sardar designs websites and web apps in Figma and builds them in Webflow or code, with a CMS your team updates without a developer.',
   active = 'home',
+  image = '/sidhant-full.jpg',
+  imageAlt = 'Sidhant Sardar at his desk',
+  type = 'website',
+  noindex = false,
 } = Astro.props;
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+const imageUrl = new URL(image, Astro.site).href;
 ---
 <!doctype html>
 <html lang="en" data-theme="light">
@@ -33,10 +47,22 @@ const {
     <Analytics />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={pageUrl} />
+    {noindex && <meta name="robots" content="noindex" />}
+
+    <!-- Share previews: Open Graph (LinkedIn, WhatsApp, Slack, Facebook) -->
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="Sidhant Sardar" />
+    <meta property="og:url" content={pageUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={new URL('/sidhant-full.jpg', Astro.site)} />
-    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta property="og:locale" content="en_GB" />
+
+    <!-- Share previews: X / Twitter (falls back to og: for title, description, image) -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image:alt" content={imageAlt} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" />
