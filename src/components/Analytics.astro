@@ -1,0 +1,18 @@
+---
+// Google Analytics 4 — property "Sidhant Sardar Portfolio (sidhantsardar.com)".
+// Only loaded in production builds, so local development doesn't count as traffic.
+// window.gtag is global so pages can send their own events (e.g. the Diwali thank-you button).
+const GA_ID = 'G-T6MXDPD6Q5';
+const analytics = import.meta.env.PROD;
+---
+{analytics && (
+  <>
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}></script>
+    <script is:inline define:vars={{ GA_ID }}>
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', GA_ID);
+    </script>
+  </>
+)}

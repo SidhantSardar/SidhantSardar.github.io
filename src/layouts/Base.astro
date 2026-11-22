@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Analytics from '../components/Analytics.astro';
 
 interface Props {
   title?: string;
@@ -12,11 +13,6 @@ const {
   description = 'Sidhant Sardar designs websites and web apps in Figma and builds them in Webflow or code, with a CMS your team updates without a developer.',
   active = 'home',
 } = Astro.props;
-
-// Google Analytics 4 — property "Sidhant Sardar Portfolio (sidhantsardar.com)".
-// Only loaded in production builds, so local development doesn't count as traffic.
-const GA_ID = 'G-T6MXDPD6Q5';
-const analytics = import.meta.env.PROD;
 ---
 <!doctype html>
 <html lang="en" data-theme="light">
@@ -34,17 +30,7 @@ const analytics = import.meta.env.PROD;
         if (m) m.setAttribute('content', t === 'dark' ? '#000000' : '#FFFFFF');
       })();
     </script>
-    {analytics && (
-      <>
-        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}></script>
-        <script is:inline define:vars={{ GA_ID }}>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){ dataLayer.push(arguments); }
-          gtag('js', new Date());
-          gtag('config', GA_ID);
-        </script>
-      </>
-    )}
+    <Analytics />
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
@@ -53,7 +39,7 @@ const analytics = import.meta.env.PROD;
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" />
   </head>
   <body>
     <div class="grid-overlay" aria-hidden="true"><div class="in">{Array.from({ length: 12 }).map(() => <i></i>)}</div></div>
