@@ -393,7 +393,7 @@ footer .in{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 .prose a{color:var(--accent)}
 .posts{display:grid;border-top:1px solid var(--line)}
 .post{display:grid;grid-template-columns:140px 1fr auto;gap:24px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line);text-decoration:none}
-.post h3{font-size:22px;font-weight:700}
+.post h2,.post h3{font-size:22px;font-weight:700;margin:0}
 .post:hover h3{color:var(--accent)}
 .post .mono{color:var(--dim)}
 @media (max-width:640px){.post{grid-template-columns:1fr;gap:6px}}
@@ -407,8 +407,8 @@ footer .in{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 
 /* ---------- realistic light product mock-ups (case studies) ---------- */
 .mock-wrap{container-type:inline-size;min-width:0;width:100%}
-.mock{--m-bg:#FFFFFF;--m-soft:#F5F6F8;--m-line:#E6E8EC;--m-ink:#14161B;--m-muted:#6B7280;--m-acc:#111111;--m-acc-soft:#F0F0F0;
-  --hi:#C2410C;--hi-bg:#FFEDE5;--md:#A16207;--md-bg:#FEF6DC;--lo:#15803D;--lo-bg:#E5F6EC;
+.mock{--m-bg:#FFFFFF;--m-soft:#F5F6F8;--m-line:#E6E8EC;--m-ink:#14161B;--m-muted:#636A77;--m-acc:#111111;--m-acc-soft:#F0F0F0;
+  --hi:#C2410C;--hi-bg:#FFEDE5;--md:#A16207;--md-bg:#FEF6DC;--lo:#166534;--lo-bg:#E5F6EC;
   position:relative;display:flex;aspect-ratio:16/10;max-width:100%;overflow:hidden;border-radius:10px;background:var(--m-bg);color:var(--m-ink);
   font-family:var(--body);font-size:clamp(6px,1.75cqw,12px);line-height:1.35;box-shadow:var(--mock-shadow)}
 .mock .ann{position:absolute;font-family:var(--mono);font-size:max(9px,.8em);color:var(--accent);background:var(--bg);padding:2px 5px;border-radius:3px;z-index:3}
@@ -720,6 +720,11 @@ a.chip:hover{color:var(--ink);border-color:var(--ink)}
 .filters .chip[aria-pressed="true"] span{color:inherit;opacity:.7}
 #filter-status{margin-bottom:24px}
 .work-grid .case[hidden]{display:none}
-.work-grid .mini img{width:100%;height:100%;object-fit:cover;object-position:top;border-radius:6px}
+.work-grid .case{min-width:0}
+.work-grid .mini{overflow:hidden;min-width:0}
+.work-grid .mini img{display:block;width:100%;max-width:100%;height:100%;object-fit:cover;object-position:top;border-radius:6px}
 .work-grid .case-body h2{font-size:24px;font-weight:700;line-height:1.1}
 @media (max-width:760px){.case-grid{grid-template-columns:1fr}}
+
+/* keep case-study cards inside their column on phones */
+.case,.case .mini{min-width:0}

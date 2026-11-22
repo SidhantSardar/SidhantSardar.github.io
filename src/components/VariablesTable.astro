@@ -17,10 +17,10 @@ const rows = [
     <span class="vars-tools" aria-hidden="true"><i>⌕</i><i>⚙</i><i>×</i></span>
   </div>
   <div class="vars-grid">
-    <aside class="vars-side">
+    <div class="vars-side">
       <span class="vars-label">Collections</span>
       {collections.map((c, i) => <span class={`vars-col ${i === 0 ? 'on' : ''}`}>{c}<em>{[7, 8, 4, 7][i]}</em></span>)}
-    </aside>
+    </div>
     <div class="vars-table">
       <div class="vrow vhead"><span>Name</span><span>Light</span><span>Dark</span></div>
       {rows.map((r) => (

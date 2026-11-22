@@ -15,7 +15,7 @@ const posts = (await getCollection('writing')).sort((a, b) => b.data.date.valueO
       {posts.map((p) => (
         <a class="post" href={`/writing/${p.id}/`}>
           <span class="mono">{p.data.draft ? 'Draft' : p.data.date.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })} · {p.data.topic}</span>
-          <h3>{p.data.title}</h3>
+          <h2>{p.data.title}</h2>
           <span class="mono">{p.data.minutes} min</span>
         </a>
       ))}

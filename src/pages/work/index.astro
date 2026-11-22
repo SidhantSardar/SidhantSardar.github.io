@@ -12,7 +12,7 @@ const ux = (await getCollection('portfolio')).sort((a, b) => a.data.order - b.da
 type Item = { href: string; label: string; title: string; line: string; tags: string[]; cover?: string; mini?: any };
 const webTags: Record<string, string[]> = {
   'altrum-website': ['Webflow', 'Code'],
-  'aligne-ai': ['Code', 'CMS'],
+  'aligne-ai': ['Webflow', 'Code', 'CMS'],
   'world-of-gears': ['Webflow', 'CMS'],
 };
 const items: Item[] = [

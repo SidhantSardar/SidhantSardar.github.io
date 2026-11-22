@@ -29,11 +29,11 @@ const guided = [true, true, true, false, true];
   {label && <div class="wire-label"><b>{label}</b>{meta && <span>{meta}</span>}</div>}
   <div class={`mock ${full ? 'full' : ''}`}>
     {!full && (
-      <aside class="m-side">
+      <div class="m-side">
         <span class="m-logo"><i></i>Workspace</span>
         {navItems.map((n, i) => <span class={`m-nav ${i === navOn[variant] ? 'on' : ''}`}>{n}</span>)}
         <span class="m-user"><i>P</i>Priya S.</span>
-      </aside>
+      </div>
     )}
     <div class="m-main">
       {variant === 'onboarding' && (
