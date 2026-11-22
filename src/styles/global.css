@@ -696,3 +696,18 @@ footer .in{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 @media (max-width:640px){.caps{grid-template-columns:1fr 1fr}}
 .avail{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
 .contact-links{display:flex;flex-wrap:wrap;gap:20px}
+
+/* ---------- case study template blocks ---------- */
+.kind{padding:2px 7px;border-radius:4px;border:1px solid var(--line-2);color:var(--ink)}
+.skills-shown{align-items:center}
+.skills-shown .mono{margin-right:6px}
+a.chip{text-decoration:none}
+a.chip:hover{color:var(--ink);border-color:var(--ink)}
+.results{display:grid;gap:12px;margin:8px 0 40px}
+.results small{font-size:10.5px}
+.devices{display:grid;grid-template-columns:1fr 200px;gap:24px;align-items:end;margin:24px 0 48px}
+.devices img{width:100%;height:auto;border-radius:10px;box-shadow:var(--mock-shadow)}
+.devices .phone{border-radius:22px}
+.devices figcaption{grid-column:1/-1}
+@media (max-width:700px){.devices{grid-template-columns:1fr 120px}}
+.how{margin-bottom:48px}

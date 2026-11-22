@@ -11,6 +11,16 @@ const work = defineCollection({
     summary: z.string(),
     order: z.number(),
     cover: z.string().optional(),
+    // 390px-wide phone screenshot shown beside the desktop one. {{TODO: mobile screenshots}}
+    coverMobile: z.string().optional(),
+    // 'client' = paid client work; 'practice' = fictional brand built to practise a skill.
+    kind: z.enum(['client', 'practice']).default('client'),
+    // Skill ids from src/data/skills.ts that this case study proves.
+    skills: z.array(z.string()).default([]),
+    // Up to 4 real, sourced results. Rendered only when present. Never estimate.
+    metrics: z.array(z.object({ label: z.string(), value: z.string(), source: z.string(), date: z.string() })).max(4).default([]),
+    // 3-5 bullets on collaboration: who, cadence, handoff. Rendered only when present.
+    howIWorked: z.array(z.string()).default([]),
     url: z.string().url().optional(),
     snapshot: z.array(z.object({ label: z.string(), value: z.string() })),
     structure: z.array(z.object({ name: z.string(), detail: z.string() })).optional(),

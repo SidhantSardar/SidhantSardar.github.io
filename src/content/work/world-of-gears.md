@@ -5,6 +5,7 @@ type: webflow
 summary: Service pages and a Sustainability Toolbox, built for a consultancy working in 17 countries.
 tags: [Content design]
 cover: /sites/wog.jpg
+skills: [webflow-build, webflow-cms]
 order: 3
 size: half
 thumb: { kind: window, labels: [worldofgears.com], tone: green }

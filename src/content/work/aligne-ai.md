@@ -6,6 +6,7 @@ stack: Astro
 summary: I first built Aligne's site in Webflow, then rebuilt it in Astro on Cloudflare. The sales team now publishes blogs, events and case studies themselves through a Git-based CMS.
 tags: [Astro, Cloudflare, Pages CMS]
 cover: /sites/aligne.jpg
+skills: [astro, git-cms, migration]
 order: 2
 size: wide
 thumb: { kind: cms, labels: [Blogs, Events, Case studies, Authors], tone: blue }
