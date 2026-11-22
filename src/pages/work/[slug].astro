@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import JsonLd from '../../components/JsonLd.astro';
 
 export async function getStaticPaths() {
   const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
@@ -13,8 +14,21 @@ export async function getStaticPaths() {
 const { entry, next } = Astro.props;
 const d = entry.data;
 const { Content } = await render(entry);
+
+// Structured data: tells search engines this page is a project made by the Person on the home page.
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: d.title,
+  description: d.summary,
+  url: new URL(`/work/${entry.id}/`, Astro.site).href,
+  creator: { '@id': new URL('/#person', Astro.site).href },
+  keywords: d.stack,
+  ...(d.url ? { sameAs: d.url } : {}),
+};
 ---
 <Base title={`${d.title} · Sidhant Sardar`} description={d.summary}>
+  <JsonLd data={schema} />
   <div class="in">
     <header class="page-head">
       <a class="back" href="/#websites">← Websites</a>
