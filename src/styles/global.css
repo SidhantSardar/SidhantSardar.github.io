@@ -680,3 +680,19 @@ footer .in{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 .hero .facts b{font-size:24px}
 .hero .facts div{padding-block:14px}
 @media (max-width:520px){.hero .facts{grid-template-columns:repeat(3,1fr)}.hero .facts div+div{padding-left:12px;border-left:1px solid var(--line);border-top:0}.hero .facts b{font-size:19px}.hero .facts span{font-size:11.5px}.avatar{width:80px;height:94px}.intro-name b{font-size:21px}}
+
+/* ---------- capabilities: every skill links to its proof ---------- */
+.caps{display:grid;grid-template-columns:repeat(5,1fr);gap:24px;border-top:1px solid var(--line);padding-top:24px}
+.cap-col{display:grid;gap:14px;align-content:start}
+.cap-col h3{font-weight:400}
+.cap-col ul{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.cap-col li a,.cap-col li .wip{display:grid;gap:2px;padding:10px 0;border-bottom:1px solid var(--line);text-decoration:none}
+.cap-col li a span{font-weight:500}
+.cap-col li a:hover span{text-decoration:underline;text-underline-offset:3px}
+.cap-col small{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.cap-col .wip>span{color:var(--muted)}
+.cap-col .wip small{color:var(--dim)}
+@media (max-width:1000px){.caps{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:640px){.caps{grid-template-columns:1fr 1fr}}
+.avail{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.contact-links{display:flex;flex-wrap:wrap;gap:20px}

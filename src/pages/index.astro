@@ -3,9 +3,9 @@ import Base from '../layouts/Base.astro';
 import LayerStack from '../components/LayerStack.astro';
 import Gap from '../components/Gap.astro';
 import JsonLd from '../components/JsonLd.astro';
-
-// {{TODO: LinkedIn URL}} — paste your profile link here; it's added to sameAs automatically.
-const LINKEDIN = '';
+import Capabilities from '../components/Capabilities.astro';
+import { LINKEDIN, CV, EMAIL, AVAILABILITY } from '../data/profile';
+import { skills } from '../data/skills';
 
 const SITE = 'https://www.sidhantsardar.com/';
 const schema = [
@@ -17,8 +17,9 @@ const schema = [
     jobTitle: 'Web designer and Webflow developer',
     url: SITE,
     image: `${SITE}sidhant.jpg`,
-    email: 'mailto:sidhantsardar93@gmail.com',
-    knowsAbout: ['Figma', 'Webflow', 'Astro', 'Design systems', 'Product UX', 'Technical SEO'],
+    email: `mailto:${EMAIL}`,
+    // Only skills that have a proof page on the site
+    knowsAbout: skills.filter((s) => s.status === 'shown').map((s) => s.label),
     ...(LINKEDIN ? { sameAs: [LINKEDIN] } : {}),
   },
   {
@@ -174,6 +175,11 @@ const services = [
 
   <Gap size={120} />
 
+  <!-- CAPABILITIES: every skill links to its proof -->
+  <Capabilities />
+
+  <Gap size={120} />
+
   <!-- WEB APP -->
   <section id="web-app">
     <div class="in">
@@ -219,7 +225,14 @@ const services = [
       <span class="spec" data-reveal>Section / Contact</span>
       <h2 data-split>Let's design something that ships.</h2>
       <p data-reveal>Send a few lines: what you're building, a link to your current site, and when you need it live.</p>
-      <div class="mail"><a href="mailto:sidhantsardar93@gmail.com" style="text-decoration:none"><code>sidhantsardar93@gmail.com</code></a><button id="copy" type="button" aria-label="Copy email address">Copy</button></div>
+      <div class="mail"><a href={`mailto:${EMAIL}`} style="text-decoration:none"><code>{EMAIL}</code></a><button id="copy" type="button" aria-label="Copy email address" data-email={EMAIL}>Copy</button></div>
+      <p class="avail">{AVAILABILITY}</p>
+      {(LINKEDIN || CV) && (
+        <div class="contact-links">
+          {LINKEDIN && <a class="link-arrow" href={LINKEDIN} target="_blank" rel="noopener">LinkedIn <span class="ar">↗</span></a>}
+          {CV && <a class="link-arrow" href={CV} download>Download CV <span class="ar">↓</span></a>}
+        </div>
+      )}
     </div>
   </div>
 </Base>
@@ -227,7 +240,7 @@ const services = [
 <script>
   document.getElementById('copy')!.addEventListener('click', async (e) => {
     const btn = e.currentTarget as HTMLButtonElement;
-    try { await navigator.clipboard.writeText('sidhantsardar93@gmail.com'); btn.textContent = 'Copied'; }
+    try { await navigator.clipboard.writeText(btn.dataset.email ?? ''); btn.textContent = 'Copied'; }
     catch { btn.textContent = 'Select it'; }
     setTimeout(() => (btn.textContent = 'Copy'), 1800);
   });
