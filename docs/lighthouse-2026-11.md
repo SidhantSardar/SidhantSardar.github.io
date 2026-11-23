@@ -2,9 +2,29 @@
 
 **Measured:** 22 Nov 2026 · Lighthouse 12.8.2 · mobile form factor (default throttling) · headless Chrome on a Mac
 **What was measured:** the production build (`npm run build` → `astro preview`) served from `localhost:4330`, on branch `practice/p0-site-fixes`.
-**Not yet measured:** the live site on www.sidhantsardar.com (GitHub Pages). Re-run on the live URLs after this branch is deployed; real-network numbers will differ.
+Live-site scores are in the next section.
 
-## Final scores (after the P0 fixes)
+## Live site (www.sidhantsardar.com)
+
+**Measured:** 23 Nov 2026 · Lighthouse 12.8.2 · mobile · headless Chrome on a Mac, over a home connection · commit `b01ce88` on GitHub Pages.
+
+| Page | Performance | Accessibility | Best practices | SEO | LCP | CLS | TBT |
+|---|---|---|---|---|---|---|---|
+| Home `/` | 96 | 100 | 100 | 100 | 1.9 s | 0 | 50 ms |
+| Work index `/work/` | 93 | 100 | 100 | 100 | 3.1 s | 0 | 40 ms |
+| Portfolio `/portfolio/` | 100 | 100 | 100 | 100 | 1.5 s | 0 | 30 ms |
+| Case study `/work/aligne-ai/` | 99 | 100 | 100 | 100 | 1.7 s | 0 | 40 ms |
+
+`/work/`: the largest element was the first card image, which was lazy-loaded (60% of LCP was its download).
+The first card now loads eagerly with `fetchpriority="high"`. Re-measure after that change is deployed.
+
+## Structured data check
+
+**Checked:** 22 Nov 2026 on the live home page.
+- Google Rich Results Test: crawled successfully, "No items detected". Expected: `Person`, `WebSite` and `CreativeWork` are not Google rich-result types.
+- Schema.org validator: `WebSite` with nested `Person` (publisher), **0 errors, 0 warnings**.
+
+## Local build scores (after the P0 fixes)
 
 | Page | Performance | Accessibility | Best practices | SEO | LCP | CLS | TBT | FCP |
 |---|---|---|---|---|---|---|---|---|
