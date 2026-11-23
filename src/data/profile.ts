@@ -8,4 +8,10 @@ export const LINKEDIN = '';
 export const CV = '';
 
 export const EMAIL = 'sidhantsardar93@gmail.com';
-export const AVAILABILITY = 'Open to remote full-time roles and freelance projects. 1-month notice.';
+
+// {{TODO: contact number}} in international format, e.g. '+91 98765 43210'. Shown as a tap-to-call link.
+export const PHONE = '';
+/** PHONE without spaces or dashes, for tel: links and structured data. */
+export const PHONE_TEL = PHONE.replace(/[^+\d]/g, '');
+
+export const AVAILABILITY = 'Available for freelance website projects, remote.';

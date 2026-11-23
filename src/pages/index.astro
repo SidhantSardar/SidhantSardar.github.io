@@ -6,7 +6,7 @@ import JsonLd from '../components/JsonLd.astro';
 import Capabilities from '../components/Capabilities.astro';
 import { Image } from 'astro:assets';
 import { asset } from '../data/images';
-import { LINKEDIN, CV, EMAIL, AVAILABILITY } from '../data/profile';
+import { LINKEDIN, CV, EMAIL, PHONE, PHONE_TEL, AVAILABILITY } from '../data/profile';
 import { skills } from '../data/skills';
 
 const SITE = 'https://www.sidhantsardar.com/';
@@ -20,6 +20,7 @@ const schema = [
     url: SITE,
     image: `${SITE}sidhant.jpg`,
     email: `mailto:${EMAIL}`,
+    ...(PHONE_TEL ? { telephone: PHONE_TEL } : {}),
     // Only skills that have a proof page on the site
     knowsAbout: skills.filter((s) => s.status === 'shown').map((s) => s.label),
     ...(LINKEDIN ? { sameAs: [LINKEDIN] } : {}),
@@ -55,8 +56,8 @@ const sites = [
 const services = [
   {
     n: '01', name: 'Website design + build',
-    line: 'Figma design, then a Webflow build with the CMS and SEO set up. Your team publishes pages, blogs and events without waiting on a developer.',
-    chips: ['Figma', 'Webflow', 'CMS', 'SEO'], ref: 'Built for World of Gears, AltrumAI and Aligne AI',
+    line: 'Figma design, then a Webflow build with the CMS, SEO and analytics set up. Your team publishes pages, blogs and events without waiting on a developer, and you see which pages bring in enquiries.',
+    chips: ['Figma', 'Webflow', 'CMS', 'SEO', 'Analytics'], ref: 'Built for World of Gears, AltrumAI and Aligne AI',
   },
   {
     n: '02', name: 'Websites in code',
@@ -93,16 +94,18 @@ const services = [
           </div>
         </div>
         <span class="spec" data-reveal>Frame / Hero · <b>1240 × 720</b> · H1 <b>66/64</b></span>
-        <h1 data-split>Designed in Figma. <span class="soft">Built in</span> Webflow or code.</h1>
-        <p class="lede" data-reveal>I design and build websites for <b>B2B tech and consultancy teams</b>, with a CMS your marketing and sales people update themselves. One person does the design and the build, so what ships matches what you signed off.</p>
+        <p class="eyebrow hero-eyebrow" data-reveal>Designed in Figma · Built in Webflow or code</p>
+        <h1 data-split>Websites for B2B consultancies <span class="soft">and AI companies</span></h1>
+        <p class="hero-sub" data-reveal>With a monthly dashboard that shows which pages bring in clients.</p>
+        <p class="lede" data-reveal>I design the site, build it with a CMS your marketing and sales people update themselves, and set up the tracking behind the dashboard. One person does all of it, so what ships matches what you signed off.</p>
         <div class="facts" data-stagger>
           <div><b>2023 →</b><span>AltrumAI web app UX in Figma</span></div>
           <div><b data-count="3">3</b><span>Websites, in Webflow and code</span></div>
           <div><b class="accent">Code</b><span>Astro sites on Cloudflare</span></div>
         </div>
         <div class="cta" data-reveal>
-          <a class="btn primary magnetic" href="#contact">Start a project <span class="ar">↓</span></a>
-          <a class="btn magnetic" href="#services">See services <span class="ar">↓</span></a>
+          <a class="btn primary magnetic" href="#contact" data-track="cta_click" data-track-cta="start_project" data-track-location="hero">Start a project <span class="ar">↓</span></a>
+          <a class="btn magnetic" href="#services" data-track="cta_click" data-track-cta="see_services" data-track-location="hero">See services <span class="ar">↓</span></a>
         </div>
       </div>
       <LayerStack />
@@ -227,7 +230,10 @@ const services = [
       <span class="spec" data-reveal>Section / Contact</span>
       <h2 data-split>Let's design something that ships.</h2>
       <p data-reveal>Send a few lines: what you're building, a link to your current site, and when you need it live.</p>
-      <div class="mail"><a href={`mailto:${EMAIL}`} style="text-decoration:none"><code>{EMAIL}</code></a><button id="copy" type="button" aria-label="Copy email address" data-email={EMAIL}>Copy</button></div>
+      <div class="mail"><a href={`mailto:${EMAIL}`} style="text-decoration:none" data-track="contact_click" data-track-method="email" data-track-location="contact"><code>{EMAIL}</code></a><button id="copy" type="button" aria-label="Copy email address" data-email={EMAIL} data-track="contact_click" data-track-method="copy_email" data-track-location="contact">Copy</button></div>
+      {PHONE && (
+        <div class="mail"><a href={`tel:${PHONE_TEL}`} style="text-decoration:none" data-track="contact_click" data-track-method="phone" data-track-location="contact"><code>{PHONE}</code></a></div>
+      )}
       <p class="avail">{AVAILABILITY}</p>
       {(LINKEDIN || CV) && (
         <div class="contact-links">

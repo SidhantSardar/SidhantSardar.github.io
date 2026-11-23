@@ -728,3 +728,14 @@ a.chip:hover{color:var(--ink);border-color:var(--ink)}
 
 /* keep case-study cards inside their column on phones */
 .case,.case .mini{min-width:0}
+
+/* Clients-first hero: small craft line above, outcome line under the H1 */
+.hero .hero-eyebrow{margin-top:18px}
+.hero .intro .hero-eyebrow + h1{margin-top:10px}
+.hero-sub{margin-top:16px;font-family:var(--display);font-size:clamp(19px,2vw,24px);line-height:1.25;letter-spacing:-.01em;color:var(--ink);max-width:30ch}
+
+/* Contact prompt at the end of case studies */
+.case-cta{border-top:1px solid var(--line);padding-block:40px;display:grid;gap:14px}
+.case-cta h2{font-size:clamp(26px,3.2vw,36px);font-weight:700;line-height:1.05}
+.case-cta p{color:var(--muted);font-size:16.5px;max-width:52ch}
+.case-cta .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}

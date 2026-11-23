@@ -20,8 +20,8 @@ interface Props {
 }
 
 const {
-  title = 'Sidhant Sardar · Websites designed in Figma, built in Webflow or code',
-  description = 'Sidhant Sardar designs websites and web apps in Figma and builds them in Webflow or code, with a CMS your team updates without a developer.',
+  title = 'Sidhant Sardar · Websites for B2B consultancies and AI companies',
+  description = 'Websites for B2B consultancies and AI companies: designed in Figma, built in Webflow or code, with a dashboard that shows which pages bring in clients.',
   active = 'home',
   image = '/sidhant-full.jpg',
   imageAlt = 'Sidhant Sardar at his desk',
@@ -88,7 +88,7 @@ const imageUrl = new URL(image, Astro.site).href;
           <a href="/work/" aria-current={active === 'work' ? 'page' : undefined}>Work</a>
           <a href="/portfolio" class="hide-sm" aria-current={active === 'portfolio' ? 'page' : undefined}>Portfolio</a>
           <a href="/writing" class="hide-sm" aria-current={active === 'writing' ? 'page' : undefined}>Writing</a>
-          <a href="/#contact">Contact</a>
+          <a href="/#contact" data-track="cta_click" data-track-cta="contact" data-track-location="nav">Contact</a>
         </div>
         <button class="toggle" id="grid-toggle" aria-pressed="false" title="Show the 12-column layout grid">Grid · 12 col</button>
         <button class="theme-switch" id="theme-switch" type="button" aria-label="Dark mode" aria-pressed="false" title="Switch light / dark">
@@ -122,6 +122,20 @@ const imageUrl = new URL(image, Astro.site).href;
         document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'dark' ? '#000000' : '#FFFFFF');
         sync();
       });
+      // Enquiry tracking for GA4. Any element opts in with data-track="<event name>";
+      // data-track-<param>="value" attributes become event parameters (data-track-method → method).
+      // gtag only exists in production builds, so local clicks are never counted.
+      document.addEventListener('click', (e) => {
+        const el = (e.target as Element | null)?.closest<HTMLElement>('[data-track]');
+        const gtag = (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag;
+        if (!el || !gtag) return;
+        const params: Record<string, string> = {};
+        for (const [k, v] of Object.entries(el.dataset)) {
+          if (k.startsWith('track') && k !== 'track' && v) params[k.charAt(5).toLowerCase() + k.slice(6)] = v;
+        }
+        gtag('event', el.dataset.track, params);
+      });
+
       const t = document.getElementById('grid-toggle')!;
       t.addEventListener('click', () => {
         const on = t.getAttribute('aria-pressed') !== 'true';

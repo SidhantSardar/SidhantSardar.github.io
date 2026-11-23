@@ -5,6 +5,7 @@ import JsonLd from '../../components/JsonLd.astro';
 import { Image } from 'astro:assets';
 import { asset } from '../../data/images';
 import { skills as allSkills } from '../../data/skills';
+import { EMAIL, PHONE, PHONE_TEL } from '../../data/profile';
 
 export async function getStaticPaths() {
   const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
@@ -87,7 +88,16 @@ const schema = {
       </section>
     )}
 
-    {d.url && <p style="margin-bottom:48px"><a class="btn primary" href={d.url} target="_blank" rel="noopener">Visit live site ↗</a></p>}
+    {d.url && <p style="margin-bottom:48px"><a class="btn" href={d.url} target="_blank" rel="noopener">Visit live site ↗</a></p>}
+
+    <section class="case-cta" aria-labelledby="cta-h">
+      <h2 id="cta-h">Need a site like this?</h2>
+      <p>Send a few lines: what you're building, a link to your current site, and when you need it live.</p>
+      <div class="row">
+        <a class="btn primary" href={`mailto:${EMAIL}?subject=${encodeURIComponent(`Website project (from the ${d.eyebrow.split(' · ')[0]} case study)`)}`} data-track="contact_click" data-track-method="email" data-track-location={`case_study_${entry.id}`}>Email me <span class="ar">→</span></a>
+        {PHONE && <a class="btn" href={`tel:${PHONE_TEL}`} data-track="contact_click" data-track-method="phone" data-track-location={`case_study_${entry.id}`}>Call {PHONE}</a>}
+      </div>
+    </section>
 
     <div class="next">
       <span class="eyebrow">Next website</span>
