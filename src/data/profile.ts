@@ -9,8 +9,8 @@ export const CV = '';
 
 export const EMAIL = 'sidhantsardar93@gmail.com';
 
-// {{TODO: contact number}} in international format, e.g. '+91 98765 43210'. Shown as a tap-to-call link.
-export const PHONE = '';
+// Contact number in international format (clients are abroad, so keep the +91). Shown as a tap-to-call link.
+export const PHONE = '+91 97648 43137';
 /** PHONE without spaces or dashes, for tel: links and structured data. */
 export const PHONE_TEL = PHONE.replace(/[^+\d]/g, '');
 
