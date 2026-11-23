@@ -16,7 +16,12 @@ Live-site scores are in the next section.
 | Case study `/work/aligne-ai/` | 99 | 100 | 100 | 100 | 1.7 s | 0 | 40 ms |
 
 `/work/`: the largest element was the first card image, which was lazy-loaded (60% of LCP was its download).
-The first card now loads eagerly with `fetchpriority="high"`. Re-measure after that change is deployed.
+The first card now loads eagerly with `fetchpriority="high"` (commit `7ba1246`). Re-measured live on 23 Nov 2026, two runs:
+
+| Page | Performance | Accessibility | Best practices | SEO | LCP | CLS | TBT |
+|---|---|---|---|---|---|---|---|
+| Work index `/work/`, run 1 | 99 | 100 | 100 | 100 | 1.8 s | 0 | 60 ms |
+| Work index `/work/`, run 2 | 100 | 100 | 100 | 100 | 1.5 s | 0 | 30 ms |
 
 ## Structured data check
 
