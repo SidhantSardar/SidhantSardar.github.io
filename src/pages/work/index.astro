@@ -16,7 +16,7 @@ const isThisSite = (url: string) => url.includes('sidhantsardar.com');
     </header>
 
     <div class="case-grid three work-grid">
-      {work.map((w, n) => <WorkCard {...w} heading="h2" eager={n < 3} />)}
+      {work.map((w) => <WorkCard {...w} heading="h2" />)}
     </div>
 
     <section class="also" aria-labelledby="also-h">

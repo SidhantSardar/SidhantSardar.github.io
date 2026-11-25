@@ -11,9 +11,8 @@ export interface WorkItem {
   title: string;
   line: string;
   tags: string[];
-  cover?: string;
-  /** Show the 8-step process strip instead of a screenshot. */
-  process?: boolean;
+  /** Which drawn cover to show (components/WorkArt.astro). Covers are graphics, not screenshots. */
+  art: 'product' | 'merge' | 'cms';
   links: WorkLink[];
 }
 
@@ -25,7 +24,7 @@ export const work: WorkItem[] = [
     title: 'Altrum AI web app',
     line: 'Designing an AI governance product, end to end: domain, colours, layouts, user flows, every screen, Figma Make prototypes, build follow-up and testing.',
     tags: ['Product design', 'Figma', 'Figma Make', 'UX'],
-    process: true,
+    art: 'product',
     links: [
       { text: 'See the process', href: '/work/altrum-product-design/' },
       { text: 'UX case studies', href: '/portfolio/' },
@@ -38,7 +37,7 @@ export const work: WorkItem[] = [
     title: 'Aligne AI',
     line: 'Altrum AI and Aligne AI began as two separate websites I designed and built in Webflow. When Altrum became part of Aligne, I merged them into one site, built completely in code with Claude Code.',
     tags: ['Webflow', 'Claude Code', 'Astro', 'CMS'],
-    cover: '/sites/aligne.jpg',
+    art: 'merge',
     links: [
       { text: 'How I built it', href: '/work/aligne-ai/' },
       { text: 'Visit site', href: 'https://www.aligne.ai/', external: true },
@@ -51,7 +50,7 @@ export const work: WorkItem[] = [
     title: 'World of Gears',
     line: 'A complete Webflow website I designed and built for a sustainability consultancy in 17 countries: service pages, a Sustainability Toolbox and CMS collections.',
     tags: ['Webflow', 'CMS', 'Figma'],
-    cover: '/sites/wog.jpg',
+    art: 'cms',
     links: [
       { text: 'How I built it', href: '/work/world-of-gears/' },
       { text: 'Visit site', href: 'https://www.worldofgears.com/', external: true },

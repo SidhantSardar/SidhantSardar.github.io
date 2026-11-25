@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 
 const posts = (await getCollection('writing')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
-<Base title="Writing · Sidhant Sardar" description="Notes on Figma, Webflow and learning to code as a designer." image="/og/writing.png" imageAlt="Writing: learning in public">
+<Base active="writing" title="Writing · Sidhant Sardar" description="Notes on Figma, Webflow and learning to code as a designer." image="/og/writing.png" imageAlt="Writing: learning in public">
   <div class="in">
     <header class="page-head">
       <span class="eyebrow">Writing</span>

@@ -112,7 +112,7 @@ const schema = {
             )}
             {s.art === 'palette' && (
               <div class="pal">
-                <div class="sw-row">{['#0F172A', '#334155', '#64748B', '#CBD5E1', '#F1F5F9'].map((c) => <i style={`background:${c}`}></i>)}</div>
+                <div class="sw-row">{['#0A0A0A', '#525252', '#8A8A8A', '#D4D4D4', '#F4F4F4'].map((c) => <i style={`background:${c}`}></i>)}</div>
                 <div class="sw-acc"><i></i><span>Accent</span></div>
                 <div class="type"><b>Aa</b><span>Type scale · 32 / 24 / 16 / 13</span></div>
                 <small class="mono">Illustrative palette</small>
@@ -214,7 +214,7 @@ const schema = {
   /* 02 palette */
   .pal{display:grid;gap:12px;justify-items:start}
   .sw-row{display:flex;gap:6px}.sw-row i{width:38px;height:38px;border-radius:8px;border:1px solid rgba(0,0,0,.06)}
-  .sw-acc{display:flex;gap:10px;align-items:center;font-size:13px}.sw-acc i{width:84px;height:30px;border-radius:8px;background:#2563EB}
+  .sw-acc{display:flex;gap:10px;align-items:center;font-size:13px}.sw-acc i{width:84px;height:30px;border-radius:8px;background:var(--accent-fill)}
   .type{display:flex;gap:12px;align-items:baseline}.type b{font-size:34px;letter-spacing:-.03em}.type span{font-size:12.5px;color:var(--muted)}
   .pal small{color:var(--dim);font-size:10.5px}
   /* 03 layouts */
@@ -228,11 +228,11 @@ const schema = {
   .uflow{display:grid;gap:10px;justify-items:start}
   .uflow .row{display:grid;grid-template-columns:72px 18px 72px 18px 72px 18px 72px;align-items:center}
   .uflow span{font-size:12px;text-align:center;padding:7px 4px;border:1px solid var(--line-2);border-radius:6px;background:var(--surface)}
-  .uflow span.ok{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .uflow span.ok{background:var(--accent-fill);color:var(--on-accent);border-color:var(--accent-fill)}
   .uflow span.edge{border-style:dashed;color:var(--muted)}
   .uflow .e1{grid-column:5}.uflow .e2{grid-column:7}
   .uflow s{text-decoration:none;text-align:center;color:var(--dim);font-size:12px}
-  .uflow p{font-size:11.5px;color:#15803D}
+  .uflow p{font-size:11.5px;color:var(--accent)}
   /* 05 screens */
   .screens{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%}
   .scr{display:grid;grid-template-rows:10px 1fr auto;gap:5px;aspect-ratio:3/4;border:1px solid var(--line-2);border-radius:8px;background:var(--surface);padding:6px}
@@ -240,21 +240,21 @@ const schema = {
   .scr .body{border-radius:4px;background:repeating-linear-gradient(var(--bg-2) 0 8px,transparent 8px 13px)}
   .s-empty .body{background:var(--bg-2)}
   .s-loading .body{background:linear-gradient(90deg,var(--bg-2),var(--line),var(--bg-2))}
-  .s-error .body{background:var(--bg-2);border:1px dashed #DC2626}
+  .s-error .body{background:var(--bg-2);border:1px dashed var(--ink)}
   .scr .mono{font-size:9.5px;color:var(--muted);text-align:center}
   /* 06 prototype */
   .proto{display:flex;align-items:center;gap:16px}
   .proto .frame{position:relative;width:120px;height:160px;border:1px solid var(--line-2);border-radius:12px;background:var(--surface);padding:8px;display:grid;grid-template-rows:10px 1fr;gap:8px}
   .proto .bar{background:var(--line);border-radius:3px}
-  .proto .btn-x{align-self:end;justify-self:center;font-size:10px;padding:5px 12px;border-radius:6px;background:var(--ink);color:var(--bg)}
-  .proto .tap{position:absolute;bottom:14px;left:50%;width:22px;height:22px;margin-left:8px;border-radius:50%;border:2px solid #2563EB;background:rgba(37,99,235,.15)}
+  .proto .btn-x{align-self:end;justify-self:center;font-size:10px;padding:5px 12px;border-radius:6px;background:var(--accent-fill);color:var(--on-accent)}
+  .proto .tap{position:absolute;bottom:14px;left:50%;width:22px;height:22px;margin-left:8px;border-radius:50%;border:2px solid var(--accent);background:var(--accent-soft)}
   .proto .arr{color:var(--dim)}
   .proto .who{display:grid;gap:6px}.proto .who b{font-size:13px}
   .proto .who span{font-size:12px;padding:5px 10px;border:1px solid var(--line-2);border-radius:999px;background:var(--surface)}
   /* 07 checks */
   .checks{list-style:none;margin:0;padding:0;display:grid;gap:8px}
   .checks li{display:flex;gap:10px;align-items:center;font-size:14px;padding:8px 12px;border:1px solid var(--line-2);border-radius:8px;background:var(--surface)}
-  .checks i{font-style:normal;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:#16A34A;color:#fff;font-size:11px}
+  .checks i{font-style:normal;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:var(--accent-fill);color:var(--on-accent);font-size:11px}
   /* 08 loop */
   .loop{display:flex;align-items:center;gap:10px}
   .loop span{padding:10px 16px;border:1px solid var(--line-2);border-radius:999px;background:var(--surface);font-weight:500}
@@ -283,6 +283,7 @@ const schema = {
     .dom{grid-template-columns:repeat(2,auto)}
     .sw-row i{width:32px;height:32px}
     .proto{flex-direction:column}
+    .loop{flex-wrap:wrap;justify-content:center}
     .proto .arr{transform:rotate(90deg)}
   }
 </style>

@@ -5,6 +5,7 @@ import '@fontsource-variable/geist-mono';
 import geistLatin from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
 import '../styles/global.css';
 import Analytics from '../components/Analytics.astro';
+import { EMAIL, PHONE, PHONE_TEL, LINKEDIN, YOUTUBE, AVAILABILITY } from '../data/profile';
 
 interface Props {
   title?: string;
@@ -31,6 +32,17 @@ const {
 
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 const imageUrl = new URL(image, Astro.site).href;
+
+// The site's pages, in menu order. Used by the top menu and the footer.
+// hideSm: left out of the top menu on phones (still listed in the footer).
+const pages: { id: NonNullable<Props['active']>; label: string; href: string; hideSm?: boolean }[] = [
+  { id: 'home', label: 'Home', href: '/' },
+  { id: 'work', label: 'Work', href: '/work/' },
+  { id: 'resume', label: 'Resume', href: '/resume/' },
+  { id: 'portfolio', label: 'Portfolio', href: '/portfolio', hideSm: true },
+  { id: 'writing', label: 'Writing', href: '/writing', hideSm: true },
+  { id: 'lab', label: 'Lab', href: '/lab/', hideSm: true },
+];
 ---
 <!doctype html>
 <html lang="en" data-theme="light">
@@ -80,17 +92,13 @@ const imageUrl = new URL(image, Astro.site).href;
     <a class="skip" href="#main">Skip to content</a>
     <div class="grid-overlay" aria-hidden="true"><div class="in">{Array.from({ length: 12 }).map(() => <i></i>)}</div></div>
 
-    <nav aria-label="Main">
+    <nav class="site-nav" aria-label="Main">
       <div class="in">
         <a class="logo" href="/">Sidhant<span>.</span></a>
         <div class="links">
-          <a href="/" aria-current={active === 'home' ? 'page' : undefined}>Home</a>
-          <a href="/work/" aria-current={active === 'work' ? 'page' : undefined}>Work</a>
-          <a href="/resume/" aria-current={active === 'resume' ? 'page' : undefined}>Resume</a>
-          <a href="/portfolio" class="hide-sm" aria-current={active === 'portfolio' ? 'page' : undefined}>Portfolio</a>
-          <a href="/writing" class="hide-sm" aria-current={active === 'writing' ? 'page' : undefined}>Writing</a>
-          <a href="/lab/" class="hide-sm" aria-current={active === 'lab' ? 'page' : undefined}>Lab</a>
-          <a href="/#contact" data-track="cta_click" data-track-cta="contact" data-track-location="nav">Contact</a>
+          {pages.map((p) => <a href={p.href} class={p.hideSm ? 'hide-sm' : undefined} aria-current={active === p.id ? 'page' : undefined}>{p.label}</a>)}
+          {/* The contact call to action is the footer of every page, so this scrolls to it */}
+          <a class="nav-cta" href="#contact" data-track="cta_click" data-track-cta="contact" data-track-location="nav">Contact</a>
         </div>
         <button class="toggle" id="grid-toggle" aria-pressed="false" title="Show the 12-column layout grid">Grid · 12 col</button>
         <button class="theme-switch" id="theme-switch" type="button" aria-label="Dark mode" aria-pressed="false" title="Switch light / dark">
@@ -104,15 +112,57 @@ const imageUrl = new URL(image, Astro.site).href;
       <slot />
     </main>
 
-    <footer>
-      <div class="in mono">
-        <span>© {new Date().getFullYear()} Sidhant Sardar</span>
-        <span>Designed in Figma · built with Claude Code + Astro · 1240 max · 12 col · 24 gutter</span>
+    <!-- Footer = the contact call to action, on every page. #contact is where "Contact" and
+         "Start a project" scroll to. -->
+    <footer class="site-footer" id="contact">
+      <div class="in">
+        <div class="foot-top">
+          <span class="spec" data-reveal>Section / Contact</span>
+          <h2 data-split>Marketing website not converting? <span class="fix">Let's fix it.</span></h2>
+        </div>
+        <div class="foot-main">
+          <div class="foot-cta">
+            <p data-reveal>Send a few lines: what you're building, a link to your current site, and when you need it live.</p>
+            <div class="foot-actions" data-reveal>
+              <a class="btn primary" href={`mailto:${EMAIL}`} data-track="contact_click" data-track-method="email" data-track-location="contact">Email me <span class="ar">→</span></a>
+              {PHONE && <a class="btn" href={`tel:${PHONE_TEL}`} data-track="contact_click" data-track-method="phone" data-track-location="contact">Call {PHONE}</a>}
+            </div>
+            <div class="foot-mail" data-reveal>
+              <a href={`mailto:${EMAIL}`} data-track="contact_click" data-track-method="email" data-track-location="contact"><code>{EMAIL}</code></a>
+              <button id="copy" type="button" aria-label="Copy email address" data-email={EMAIL} data-track="contact_click" data-track-method="copy_email" data-track-location="contact">Copy</button>
+            </div>
+            <p class="avail"><i aria-hidden="true"></i>{AVAILABILITY}</p>
+          </div>
+          <div class="foot-side">
+            <nav class="foot-col" aria-label="Pages">
+              <h3>Pages</h3>
+              {pages.map((p) => <a href={p.href}>{p.label}</a>)}
+            </nav>
+            {(LINKEDIN || YOUTUBE) && (
+              <div class="foot-col">
+                <h3>Elsewhere</h3>
+                {LINKEDIN && <a href={LINKEDIN} target="_blank" rel="noopener">LinkedIn<span class="ar">↗</span></a>}
+                {YOUTUBE && <a href={YOUTUBE} target="_blank" rel="noopener">YouTube<span class="ar">↗</span></a>}
+              </div>
+            )}
+          </div>
+        </div>
+        <div class="foot-bar">
+          <span>© {new Date().getFullYear()} Sidhant Sardar</span>
+          <span>Designed in Figma · built with Claude Code + Astro · 1240 max · 12 col · 24 gutter</span>
+        </div>
       </div>
     </footer>
 
     <script>
       import '../scripts/motion.ts';
+      // Copy the email address (footer)
+      document.getElementById('copy')?.addEventListener('click', async (e) => {
+        const btn = e.currentTarget as HTMLButtonElement;
+        try { await navigator.clipboard.writeText(btn.dataset.email ?? ''); btn.textContent = 'Copied'; }
+        catch { btn.textContent = 'Select it'; }
+        setTimeout(() => (btn.textContent = 'Copy'), 1800);
+      });
       const sw = document.getElementById('theme-switch')!;
       const root = document.documentElement;
       const sync = () => sw.setAttribute('aria-pressed', String(root.dataset.theme === 'dark'));

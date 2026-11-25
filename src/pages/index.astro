@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import WorkCard from '../components/WorkCard.astro';
 import { work } from '../data/work';
@@ -7,7 +8,7 @@ import JsonLd from '../components/JsonLd.astro';
 import Capabilities from '../components/Capabilities.astro';
 import { Image } from 'astro:assets';
 import { asset } from '../data/images';
-import { LINKEDIN, YOUTUBE, CV, EMAIL, PHONE, PHONE_TEL, AVAILABILITY } from '../data/profile';
+import { LINKEDIN, YOUTUBE, EMAIL, PHONE_TEL } from '../data/profile';
 import { skills } from '../data/skills';
 
 const SITE = 'https://www.sidhantsardar.com/';
@@ -34,6 +35,15 @@ const schema = [
     url: SITE,
     publisher: { '@id': `${SITE}#person` },
   },
+];
+
+// Home "Case studies" section: the user journey the UX case studies cover, in order.
+const caseCount = (await getCollection('portfolio')).length;
+const journey = [
+  { name: 'Register', line: 'List every AI system in use', icon: '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/>' },
+  { name: 'Assess', line: 'Answer a guided risk check', icon: '<path d="M5 6h14v9H9l-4 4z"/><path d="M9 10h6"/>' },
+  { name: 'Control', line: 'Apply guardrails and policies', icon: '<path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M9 12l2 2 4-4"/>' },
+  { name: 'Monitor', line: 'Track usage, cost and risk', icon: '<path d="M4 19V5M4 19h16"/><path d="M8 15l3-4 3 2 4-6"/>' },
 ];
 
 // Services are hidden for now (they'll get their own page). Flip to true to show them again.
@@ -67,7 +77,7 @@ const services = [
   <header class="hero" id="about">
     <div class="in">
       <div class="intro">
-        <span class="spec" data-reveal>Frame / Hero · <b>1240 × 720</b> · H1 <b>66/64</b></span>
+        <span class="spec" data-reveal>Frame / Hero · <b>1240 × 720</b> · H1 <b>72/70</b></span>
         <p class="eyebrow hero-eyebrow" data-reveal>Designed in Figma · Built in Webflow or code</p>
         <h1 data-split>Websites for B2B consultancies <span class="soft">and AI companies</span></h1>
         <p class="hero-sub" data-reveal>With a monthly dashboard that shows which pages bring in clients.</p>
@@ -145,73 +155,36 @@ const services = [
 
   <Gap size={120} />
 
-  <!-- CASE STUDIES: the detailed decisions behind the web app (/portfolio/) -->
-  <section id="web-app">
-    <div class="in">
-      <div class="section-head">
-        <span class="spec" data-reveal>Section / Case studies · <b>6 UX case studies</b> · 2023 → now</span>
+  <!-- CASE STUDIES: title, description and button on the left; the user journey the case studies
+       cover on the right, drawn as a square Figma-style prototype flow. Full list on /portfolio/. -->
+  <section id="case-studies">
+    <div class="in cs-wrap">
+      <div class="cs-text">
+        <span class="spec" data-reveal>Section / Case studies · <b>{caseCount} UX case studies</b> · 2023 → now</span>
         <h2 data-split>Case studies</h2>
-        <p data-reveal>The design decisions behind the Altrum AI web app, one problem at a time.</p>
+        <p data-reveal>UX case studies from the Altrum AI web app, which I've designed in Figma since 2023. Each one takes a single problem, such as onboarding, a guided risk check or the design system, and shows how I solved it in screens and diagrams.</p>
+        <div data-reveal><a class="btn primary magnetic" href="/portfolio">See the case studies <span class="ar">→</span></a></div>
       </div>
-      <div class="app-card corners" data-reveal>
-        <div class="app-top">
-          <div>
-            <h3>One place for a company to see, check and control every AI system it uses.</h3>
-            <p>I've designed its UX and UI in Figma since 2023: onboarding, guided risk assessments, configuration, dashboards and the design system behind them.</p>
-          </div>
-          <a class="btn primary magnetic" href="/portfolio">See the case studies <span class="ar">→</span></a>
-        </div>
-        <div class="pipeline" id="pipeline">
-          <div class="pipe">
-            <span class="flowdot"></span><div class="node"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></div>
-            <b>Register</b><span>List every AI system in use</span>
-          </div>
-          <div class="pipe">
-            <span class="flowdot"></span><div class="node"><svg viewBox="0 0 24 24"><path d="M5 6h14v9H9l-4 4z"/><path d="M9 10h6"/></svg></div>
-            <b>Assess</b><span>Answer a guided risk check</span>
-          </div>
-          <div class="pipe">
-            <span class="flowdot"></span><div class="node"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
-            <b>Control</b><span>Apply guardrails and policies</span>
-          </div>
-          <div class="pipe">
-            <span class="flowdot"></span><div class="node"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16"/><path d="M8 15l3-4 3 2 4-6"/></svg></div>
-            <b>Monitor</b><span>Track usage, cost and risk</span>
+      <figure class="cs-fig" data-reveal>
+        <div class="cs-square">
+          <div class="cs-flow" id="cs-flow">
+            <ol class="cs-ring">
+              {journey.map((s, i) => (
+                <li class:list={['cs-step', { on: i === 0 }]}>
+                  <span class="cs-node"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={s.icon} /></span>
+                  <span class="cs-label"><b><i aria-hidden="true">{String(i + 1).padStart(2, '0')}</i>{s.name}</b><span>{s.line}</span></span>
+                </li>
+              ))}
+            </ol>
+            <span class="cs-dot" aria-hidden="true"></span>
           </div>
         </div>
-      </div>
+        <figcaption>The user journey the case studies cover.</figcaption>
+      </figure>
     </div>
   </section>
 
   <Gap size={96} />
 
-  <!-- CONTACT -->
-  <div class="in" id="contact">
-    <div class="contact">
-      <span class="spec" data-reveal>Section / Contact</span>
-      <h2 data-split>Let's design something that ships.</h2>
-      <p data-reveal>Send a few lines: what you're building, a link to your current site, and when you need it live.</p>
-      <div class="mail"><a href={`mailto:${EMAIL}`} style="text-decoration:none" data-track="contact_click" data-track-method="email" data-track-location="contact"><code>{EMAIL}</code></a><button id="copy" type="button" aria-label="Copy email address" data-email={EMAIL} data-track="contact_click" data-track-method="copy_email" data-track-location="contact">Copy</button></div>
-      {PHONE && (
-        <div class="mail"><a href={`tel:${PHONE_TEL}`} style="text-decoration:none" data-track="contact_click" data-track-method="phone" data-track-location="contact"><code>{PHONE}</code></a></div>
-      )}
-      <p class="avail">{AVAILABILITY}</p>
-      {(LINKEDIN || CV) && (
-        <div class="contact-links">
-          {LINKEDIN && <a class="link-arrow" href={LINKEDIN} target="_blank" rel="noopener">LinkedIn <span class="ar">↗</span></a>}
-          {YOUTUBE && <a class="link-arrow" href={YOUTUBE} target="_blank" rel="noopener">YouTube <span class="ar">↗</span></a>}
-          {CV && <a class="link-arrow" href={CV}>Resume <span class="ar">→</span></a>}
-        </div>
-      )}
-    </div>
-  </div>
+  <!-- Contact lives in the site footer (layouts/Base.astro), on every page: #contact -->
 </Base>
-
-<script>
-  document.getElementById('copy')!.addEventListener('click', async (e) => {
-    const btn = e.currentTarget as HTMLButtonElement;
-    try { await navigator.clipboard.writeText(btn.dataset.email ?? ''); btn.textContent = 'Copied'; }
-    catch { btn.textContent = 'Select it'; }
-    setTimeout(() => (btn.textContent = 'Copy'), 1800);
-  });
-</script>

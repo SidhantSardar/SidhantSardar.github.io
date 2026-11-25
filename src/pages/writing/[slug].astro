@@ -24,7 +24,7 @@ const schema = {
   image: new URL(`/og/writing-${entry.id}.png`, Astro.site).href,
 };
 ---
-<Base title={`${d.title} · Sidhant Sardar`} description={d.description} type="article" noindex={d.draft} image={`/og/writing-${entry.id}.png`} imageAlt={d.title}>
+<Base active="writing" title={`${d.title} · Sidhant Sardar`} description={d.description} type="article" noindex={d.draft} image={`/og/writing-${entry.id}.png`} imageAlt={d.title}>
   <JsonLd data={schema} />
   <div class="in">
     <header class="page-head">

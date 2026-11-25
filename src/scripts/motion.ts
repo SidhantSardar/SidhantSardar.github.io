@@ -216,24 +216,45 @@ function websites() {
   });
 }
 
-/* ---------- web app pipeline: data flows Register → Monitor ---------- */
-function pipeline() {
-  const p = $('#pipeline');
-  if (!p) return;
-  const pipes = $$('.pipe', p);
+/* ---------- case studies: the journey lights up Register → Assess → Control → Monitor ---------- */
+function journey() {
+  const flow = $('#cs-flow');
+  if (!flow) return;
+  const steps = $$('.cs-step', flow);
+  const dot = $('.cs-dot', flow);
+  if (!dot || steps.length < 2) return;
+
+  // The stretch of wire between step i and the next one, in the flow's own coordinates.
+  // Measured when each move starts, so it stays right after a resize. Works for any layout
+  // where neighbouring steps sit side by side or one above the other.
+  const wire = (i: number) => {
+    const f = flow.getBoundingClientRect();
+    const a = $('.cs-node', steps[i])!.getBoundingClientRect();
+    const b = $('.cs-node', steps[i + 1])!.getBoundingClientRect();
+    const ax = a.left + a.width / 2 - f.left, ay = a.top + a.height / 2 - f.top;
+    const bx = b.left + b.width / 2 - f.left, by = b.top + b.height / 2 - f.top;
+    if (Math.abs(bx - ax) > Math.abs(by - ay)) {
+      const dir = Math.sign(bx - ax);
+      return { x0: ax + (dir * a.width) / 2, y0: ay, x1: bx - (dir * b.width) / 2, y1: ay };
+    }
+    const dir = Math.sign(by - ay);
+    return { x0: ax, y0: ay + (dir * a.height) / 2, x1: ax, y1: by - (dir * b.height) / 2 };
+  };
+
   const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.6, paused: true });
-  pipes.forEach((pipe, i) => {
-    tl.call(() => pipes.forEach((x, j) => x.classList.toggle('on', j === i)));
-    const dot = $('.flowdot', pipe);
-    if (dot && i < pipes.length - 1) {
-      const w = pipe.getBoundingClientRect().width - 56;
-      tl.fromTo(dot, { x: 0, opacity: 1 }, { x: Math.max(0, w), opacity: 1, duration: 0.9, ease: 'power1.inOut' })
+  steps.forEach((_, i) => {
+    tl.call(() => steps.forEach((s, j) => s.classList.toggle('on', j === i)));
+    if (i < steps.length - 1) {
+      tl.fromTo(dot,
+        { x: () => wire(i).x0, y: () => wire(i).y0, opacity: 1 },
+        { x: () => wire(i).x1, y: () => wire(i).y1, opacity: 1, duration: 0.9, ease: 'power1.inOut' })
         .set(dot, { opacity: 0 });
     } else {
       tl.to({}, { duration: 0.9 });
     }
   });
-  ScrollTrigger.create({ trigger: p, start: 'top 85%', end: 'bottom top', onToggle: (s) => (s.isActive ? tl.play() : tl.pause()) });
+  ScrollTrigger.addEventListener('refresh', () => tl.invalidate());
+  ScrollTrigger.create({ trigger: flow, start: 'top 85%', end: 'bottom top', onToggle: (s) => (s.isActive ? tl.play() : tl.pause()) });
 }
 
 /* ---------- diagrams on portfolio pages ---------- */
@@ -435,12 +456,14 @@ function cursor() {
     document.body.classList.add('has-cursor');
     x(e.clientX); y(e.clientY);
     label.textContent = `x ${Math.round(e.clientX)} · y ${Math.round(e.clientY + scrollY)}`;
+    // The crosshair is blue, so it turns white over the blue footer.
+    c.classList.toggle('on-blue', !!(e.target as Element | null)?.closest?.('.site-footer'));
   });
   document.addEventListener('pointerleave', () => document.body.classList.remove('has-cursor'));
 }
 
 function nav() {
-  const n = $('nav');
+  const n = $('.site-nav');
   if (!n) return;
   let last = scrollY;
   addEventListener('scroll', () => {
@@ -456,7 +479,7 @@ if (!reduce) {
   reveals();
   measurements();
   websites();
-  pipeline();
+  journey();
   diagrams();
   magnetic();
   cursor();

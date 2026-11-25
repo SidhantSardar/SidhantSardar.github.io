@@ -33,7 +33,7 @@ const schema = {
   ...(d.url ? { sameAs: d.url } : {}),
 };
 ---
-<Base title={`${d.title} · Sidhant Sardar`} description={d.summary} image={d.cover} imageAlt={`Screenshot of the ${d.eyebrow.split(' · ')[0]} website`}>
+<Base active="work" title={`${d.title} · Sidhant Sardar`} description={d.summary} image={d.cover} imageAlt={`Screenshot of the ${d.eyebrow.split(' · ')[0]} website`}>
   <JsonLd data={schema} />
   <div class="in">
     <header class="page-head">

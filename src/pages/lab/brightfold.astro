@@ -138,13 +138,13 @@ const schema = {
 </Base>
 
 <style>
-  .path-link{display:grid;gap:4px;border:1px solid var(--ink);border-radius:10px;padding:16px 18px;text-decoration:none;margin-bottom:16px;max-width:76ch}
+  .path-link{display:grid;gap:4px;border:1px solid var(--accent);border-radius:10px;padding:16px 18px;text-decoration:none;margin-bottom:16px;max-width:76ch}
   .path-link .mono{color:var(--dim)}
   .path-link b{font-weight:600}
   .chap{scroll-margin-top:90px}
-  .chap:target{outline:2px solid var(--ink);outline-offset:2px}
+  .chap:target{outline:2px solid var(--accent);outline-offset:2px}
   .lab-note{border:1px solid var(--line-2);border-radius:10px;padding:14px 16px;font-size:15px;color:var(--muted);margin-bottom:56px;max-width:76ch}
-  .lab-note b{color:var(--ink);font-weight:600}
+  .lab-note b,.lab-note em{color:var(--ink);font-weight:600}
   .lab-sec{display:grid;gap:14px;margin-bottom:72px}
   .lab-sec h2{font-size:clamp(26px,3vw,36px)}
   .lab-lede{max-width:64ch;font-size:16.5px}
@@ -156,14 +156,14 @@ const schema = {
   .lane h3{font-weight:400}
   .chap{border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:8px;background:var(--bg)}
   .chap.planned{background:var(--bg-2)}
-  .chap.built{border-color:var(--ink)}
+  .chap.built{border-color:var(--accent)}
   .chap h4{margin:0;font-size:16px;line-height:1.25;letter-spacing:-.01em}
   .chap p{font-size:13.5px;color:var(--muted)}
   .chap .chip{font-size:10px;padding:2px 6px}
   .chap .wf{font-size:10.5px}
   .chap-top{display:flex;justify-content:space-between;align-items:center;color:var(--dim)}
   .badge{font-family:var(--mono);font-size:10px;padding:2px 6px;border-radius:4px;border:1px solid var(--line-2);color:var(--muted)}
-  .badge.built{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .badge.built{background:var(--accent-fill);color:var(--on-accent);border-color:var(--accent-fill)}
   .badge.next{color:var(--ink);border-color:var(--ink)}
   .pipe{flex-wrap:wrap}
   .themes{display:grid;grid-template-columns:1fr 1fr;gap:20px}
