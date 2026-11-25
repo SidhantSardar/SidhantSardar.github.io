@@ -1,0 +1,32 @@
+---
+// One "Work" card (home page and /work/). Top: full-bleed picture on a grey panel.
+// Bottom: text on white. The whole card opens `href`; the small links below stay clickable on their own.
+import { Image } from 'astro:assets';
+import { asset } from '../data/images';
+import type { WorkItem } from '../data/work';
+
+interface Props extends WorkItem { eager?: boolean; heading?: 'h2' | 'h3' }
+const { href, label, title, line, tags, cover, process = false, links, eager = false, heading = 'h3' } = Astro.props;
+const H = heading;
+const STEPS = ['Domain', 'Colours', 'Layouts', 'Flows', 'Screens', 'Prototype', 'Build', 'Test'];
+---
+<article class="case work-card">
+  <div class:list={['mini', { media: !!cover }]} aria-hidden="true">
+    {process ? (
+      <div class="mini-process">{STEPS.map((x, k) => <span><i>{String(k + 1).padStart(2, '0')}</i>{x}</span>)}</div>
+    ) : cover && (
+      <Image src={asset(cover)} alt="" widths={[400, 640, 900]} sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 400px" loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'high' : 'auto'} />
+    )}
+  </div>
+  <div class="case-body">
+    <span class="n">{label}</span>
+    <H><a class="card-main" href={href}>{title}</a></H>
+    <p>{line}</p>
+    <div class="chips">{tags.map((t) => <span class="chip">{t}</span>)}</div>
+    <div class="work-links">
+      {links.map((l) => (
+        <a class="link-arrow" href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.text} <span class="ar">{l.external ? '↗' : '→'}</span></a>
+      ))}
+    </div>
+  </div>
+</article>

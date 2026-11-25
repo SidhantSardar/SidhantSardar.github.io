@@ -1,77 +1,62 @@
 ---
-import { getCollection } from 'astro:content';
+// Work = what I built: the product first, then the websites (same list as the home page).
+// Case studies (the detailed decisions) live on /portfolio/.
 import Base from '../../layouts/Base.astro';
-import CaseCard from '../../components/CaseCard.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import { work, alsoBuilt } from '../../data/work';
 
-// One index for every case study. URLs stay where they were (/work/… and /portfolio/…).
-const websites = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
-const ux = (await getCollection('portfolio')).sort((a, b) => a.data.order - b.data.order);
-
-type Item = { href: string; label: string; title: string; line: string; tags: string[]; cover?: string; mini?: any; process?: boolean };
-const webTags: Record<string, string[]> = {
-  'altrum-website': ['Webflow', 'Code'],
-  'aligne-ai': ['Webflow', 'Code', 'CMS'],
-  'world-of-gears': ['Webflow', 'CMS'],
-};
-const items: Item[] = [
-  // Lead card: the whole product design process for the Altrum AI web app.
-  {
-    href: '/work/altrum-product-design/', label: 'Product design · Client project', process: true,
-    title: 'Designing an AI governance product, end to end',
-    line: 'The Altrum AI web app: domain, colours, layouts, user flows, every screen, Figma Make prototypes, build follow-up and testing.',
-    tags: ['Product design', 'Figma', 'UX'],
-  },
-  ...websites.map((w) => ({
-    href: `/work/${w.id}/`, label: `Website · ${w.data.kind === 'client' ? 'Client project' : 'Practice project'}`,
-    title: w.data.title, line: w.data.summary, tags: webTags[w.id] ?? [], cover: w.data.cover,
-  })),
-  ...ux.map((c) => ({
-    href: `/portfolio/${c.id}/`, label: `UX case study ${String(c.data.order).padStart(2, '0')}`,
-    title: c.data.title, line: c.data.problem, tags: c.id.includes('design-system') ? ['Figma', 'Design system'] : ['Figma', 'UX'], mini: c.data.mini,
-  })),
-];
-// Only offer filters that have at least one case study behind them.
-const TAGS = ['Product design', 'Webflow', 'Code', 'CMS', 'Figma', 'UX', 'Design system'].filter((t) => items.some((i) => i.tags.includes(t)));
+const isThisSite = (url: string) => url.includes('sidhantsardar.com');
 ---
-<Base title="Work · Sidhant Sardar" description="Every case study in one place: Webflow and code websites, and UX case studies designed in Figma." active="work">
+<Base title="Work · Sidhant Sardar" description="What I've built: the Altrum AI web app (product design), the Aligne AI website (Webflow, then Claude Code) and the World of Gears website (Webflow)." active="work">
   <div class="in">
     <header class="page-head">
-      <span class="spec">Page / Work · <b>{items.length} case studies</b></span>
+      <span class="spec">Page / Work · <b>{work.length} projects</b></span>
       <h1>Work</h1>
-      <p class="sum">Product design for an AI web app, websites built in Webflow and in code, and UX case studies designed in Figma. Filter by what you're hiring for.</p>
+      <p class="sum">What I've built. The product I designed comes first, then the websites. Each one shows how I built it.</p>
     </header>
 
-    <div class="filters" role="group" aria-label="Filter case studies">
-      <button type="button" class="chip" data-tag="" aria-pressed="true">All <span>{items.length}</span></button>
-      {TAGS.map((t) => <button type="button" class="chip" data-tag={t} aria-pressed="false">{t} <span>{items.filter((i) => i.tags.includes(t)).length}</span></button>)}
-    </div>
-    <p class="mono muted" id="filter-status" aria-live="polite">Showing all {items.length}</p>
-
     <div class="case-grid three work-grid">
-      {items.map((i, n) => <CaseCard {...i} eager={n < 3} />)}
+      {work.map((w, n) => <WorkCard {...w} heading="h2" eager={n < 3} />)}
     </div>
+
+    <section class="also" aria-labelledby="also-h">
+      <h2 id="also-h" class="eyebrow">Also built</h2>
+      <ul>
+        {alsoBuilt.map((a) => (
+          <li>
+            <div class="also-name"><b>{a.name}</b><span>{a.type}</span></div>
+            <span class="also-role">{a.role}</span>
+            {isThisSite(a.url)
+              ? <span class="mono muted also-here">You're on it</span>
+              : <a class="link-arrow" href={a.url} target="_blank" rel="noopener">Visit site <span class="ar">↗</span></a>}
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="to-cases" aria-labelledby="cases-h">
+      <div>
+        <span class="eyebrow">Case studies</span>
+        <h2 id="cases-h">Want the decisions behind the work?</h2>
+        <p>Case studies go deep on one problem at a time: the options, the trade-offs and why I chose what I did. Six of them come from the Altrum AI web app.</p>
+      </div>
+      <a class="btn primary" href="/portfolio">See the case studies <span class="ar">→</span></a>
+    </section>
     <div style="height:80px"></div>
   </div>
 </Base>
 
-<script>
-  // Tiny static filter. The chosen tag lives in the URL (?tag=Webflow) so a filtered view can be shared.
-  const buttons = [...document.querySelectorAll<HTMLButtonElement>('.filters button')];
-  const cards = [...document.querySelectorAll<HTMLElement>('.work-grid .case')];
-  const status = document.getElementById('filter-status')!;
-  const apply = (tag: string) => {
-    let n = 0;
-    cards.forEach((c) => { const on = !tag || c.dataset.tags!.split('|').includes(tag); c.hidden = !on; if (on) n++; });
-    buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.tag === tag)));
-    status.textContent = tag ? `Showing ${n} tagged ${tag}` : `Showing all ${n}`;
-  };
-  buttons.forEach((b) => b.addEventListener('click', () => {
-    const tag = b.dataset.tag!;
-    const url = new URL(location.href);
-    tag ? url.searchParams.set('tag', tag) : url.searchParams.delete('tag');
-    history.replaceState(null, '', url);
-    apply(tag);
-  }));
-  const initial = new URL(location.href).searchParams.get('tag') ?? '';
-  apply(buttons.some((b) => b.dataset.tag === initial) ? initial : '');
-</script>
+<style>
+  .also{margin-top:56px;display:grid;gap:12px}
+  .also ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+  .also li{display:grid;grid-template-columns:minmax(220px,1.1fr) 1.4fr auto;gap:8px 24px;align-items:center;padding:16px 0;border-bottom:1px solid var(--line)}
+  .also-name{display:grid;gap:2px}
+  .also-name b{font-size:17px}
+  .also-name span,.also-role{color:var(--muted);font-size:14.5px}
+  .also-here{font-size:11.5px}
+  .to-cases{margin-top:56px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px 40px;border:1px solid var(--line);border-radius:14px;padding:clamp(20px,3vw,32px);background:var(--bg-2)}
+  .to-cases div{display:grid;gap:8px;max-width:62ch}
+  .to-cases h2{font-size:clamp(22px,2.6vw,30px)}
+  .to-cases p{color:var(--muted);font-size:16px}
+  @media (max-width:760px){.also li{grid-template-columns:1fr;gap:6px}}
+</style>

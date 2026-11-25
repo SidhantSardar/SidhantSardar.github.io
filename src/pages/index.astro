@@ -1,7 +1,7 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import CaseCard from '../components/CaseCard.astro';
+import WorkCard from '../components/WorkCard.astro';
+import { work } from '../data/work';
 import Gap from '../components/Gap.astro';
 import JsonLd from '../components/JsonLd.astro';
 import Capabilities from '../components/Capabilities.astro';
@@ -34,39 +34,6 @@ const schema = [
     url: SITE,
     publisher: { '@id': `${SITE}#person` },
   },
-];
-
-const sites = [
-  {
-    slug: 'altrum-website', n: '01', name: 'AltrumAI', url: 'https://www.aligne.ai/altrum/', domain: 'aligne.ai/altrum',
-    line: 'Product pages for an enterprise AI control platform. Built first in Webflow, now in code.',
-    chips: ['Webflow', 'Astro', 'Messaging'], shot: '/sites/altrum.jpg', measure: '1440 desktop',
-  },
-  {
-    slug: 'aligne-ai', n: '02', name: 'Aligne AI', url: 'https://www.aligne.ai/', domain: 'aligne.ai',
-    line: 'Responsible AI consultancy. Moved from Webflow to code, with a CMS the sales team publishes from.',
-    chips: ['Astro', 'Cloudflare', 'Pages CMS'], shot: '/sites/aligne.jpg', measure: 'CMS · 4 collections',
-  },
-  {
-    slug: 'world-of-gears', n: '03', name: 'World of Gears', url: 'https://www.worldofgears.com/', domain: 'worldofgears.com',
-    line: 'Sustainability consultancy working across 17 countries.',
-    chips: ['Webflow', 'CMS', 'Content'], shot: '/sites/wog.jpg', measure: 'CMS · 3 collections',
-  },
-];
-
-// Home "Work" section: three picks. The full list lives on /work/.
-const workEntries = await getCollection('work');
-const pick = (id: string) => workEntries.find((w) => w.id === id)!;
-const totalWork = workEntries.length + (await getCollection('portfolio')).length + 1;
-const featuredWork = [
-  {
-    href: '/work/altrum-product-design/', label: 'Product design · Client project', process: true,
-    title: 'Designing an AI governance product, end to end',
-    line: 'The Altrum AI web app: domain, colours, layouts, user flows, every screen, Figma Make prototypes, build follow-up and testing.',
-    tags: ['Product design', 'Figma', 'UX'],
-  },
-  { href: '/work/altrum-website/', label: 'Website · Client project', title: pick('altrum-website').data.title, line: pick('altrum-website').data.summary, cover: pick('altrum-website').data.cover, tags: ['Webflow', 'Code'] },
-  { href: '/work/world-of-gears/', label: 'Website · Client project', title: pick('world-of-gears').data.title, line: pick('world-of-gears').data.summary, cover: pick('world-of-gears').data.cover, tags: ['Webflow', 'CMS'] },
 ];
 
 // Services are hidden for now (they'll get their own page). Flip to true to show them again.
@@ -130,50 +97,18 @@ const services = [
 
   <Gap size={120} />
 
-  <!-- WORK: three picks, the rest on /work/ -->
+  <!-- WORK: what I built. The product first, then the websites. Case studies live on /portfolio/. -->
   <section id="work">
     <div class="in">
       <div class="section-head">
-        <span class="spec" data-reveal>Section / Work · <b>3 of {totalWork}</b> · 3 col · gap <b>20</b></span>
+        <span class="spec" data-reveal>Section / Work · <b>{work.length} projects</b> · 3 col · gap <b>20</b></span>
         <h2 data-split>Work</h2>
-        <p data-reveal>Product design for an AI web app, and websites for AI and sustainability companies.</p>
+        <p data-reveal>The product I designed and the websites I built.</p>
       </div>
       <div class="case-grid three" data-stagger>
-        {featuredWork.map((w) => <CaseCard {...w} heading="h3" />)}
+        {work.map((w) => <WorkCard {...w} />)}
       </div>
       <div class="section-foot" data-reveal><a class="btn primary magnetic" href="/work/">View all work <span class="ar">→</span></a></div>
-    </div>
-  </section>
-
-  <Gap size={120} />
-
-  <!-- WEBSITES -->
-  <section id="websites">
-    <div class="in">
-      <div class="section-head">
-        <span class="spec" data-reveal>Section / Websites · <b>3 items</b> · 3 col · gap <b>20</b></span>
-        <h2 data-split>Websites</h2>
-        <p data-reveal>Marketing sites for AI and sustainability companies, built in Webflow and in code.</p>
-      </div>
-      <div class="case-grid three" data-stagger>
-        {sites.map((s) => (
-          <article class="case site-card">
-            <a class="mini media" href={`/work/${s.slug}/`} tabindex="-1" aria-hidden="true">
-              <Image src={asset(s.shot)} alt="" widths={[400, 640, 900]} sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 400px" />
-            </a>
-            <div class="case-body">
-              <span class="n">{s.n} / 03 · {s.domain}</span>
-              <h3>{s.name}</h3>
-              <p>{s.line}</p>
-              <div class="chips">{s.chips.map((c) => <span class="chip">{c}</span>)}</div>
-              <div class="site-links">
-                <a class="link-arrow" href={`/work/${s.slug}/`}>How I built it <span class="ar">→</span></a>
-                <a class="link-arrow" href={s.url} target="_blank" rel="noopener">Visit site <span class="ar">↗</span></a>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
     </div>
   </section>
 
@@ -210,12 +145,13 @@ const services = [
 
   <Gap size={120} />
 
-  <!-- WEB APP -->
+  <!-- CASE STUDIES: the detailed decisions behind the web app (/portfolio/) -->
   <section id="web-app">
     <div class="in">
       <div class="section-head">
-        <span class="spec" data-reveal>Section / Figma experience · <b>2023 → now</b></span>
-        <h2 data-split>The AltrumAI web app</h2>
+        <span class="spec" data-reveal>Section / Case studies · <b>6 UX case studies</b> · 2023 → now</span>
+        <h2 data-split>Case studies</h2>
+        <p data-reveal>The design decisions behind the Altrum AI web app, one problem at a time.</p>
       </div>
       <div class="app-card corners" data-reveal>
         <div class="app-top">
@@ -223,7 +159,7 @@ const services = [
             <h3>One place for a company to see, check and control every AI system it uses.</h3>
             <p>I've designed its UX and UI in Figma since 2023: onboarding, guided risk assessments, configuration, dashboards and the design system behind them.</p>
           </div>
-          <a class="btn primary magnetic" href="/portfolio">See UX case studies <span class="ar">→</span></a>
+          <a class="btn primary magnetic" href="/portfolio">See the case studies <span class="ar">→</span></a>
         </div>
         <div class="pipeline" id="pipeline">
           <div class="pipe">
