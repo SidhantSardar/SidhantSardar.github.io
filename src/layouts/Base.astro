@@ -9,7 +9,7 @@ import Analytics from '../components/Analytics.astro';
 interface Props {
   title?: string;
   description?: string;
-  active?: 'home' | 'work' | 'portfolio' | 'writing' | 'lab';
+  active?: 'home' | 'work' | 'portfolio' | 'writing' | 'lab' | 'resume';
   /** Share image path in /public. 1200×630 or 1600×900 works on every network. */
   image?: string;
   imageAlt?: string;
@@ -86,6 +86,7 @@ const imageUrl = new URL(image, Astro.site).href;
         <div class="links">
           <a href="/" aria-current={active === 'home' ? 'page' : undefined}>Home</a>
           <a href="/work/" aria-current={active === 'work' ? 'page' : undefined}>Work</a>
+          <a href="/resume/" aria-current={active === 'resume' ? 'page' : undefined}>Resume</a>
           <a href="/portfolio" class="hide-sm" aria-current={active === 'portfolio' ? 'page' : undefined}>Portfolio</a>
           <a href="/writing" class="hide-sm" aria-current={active === 'writing' ? 'page' : undefined}>Writing</a>
           <a href="/lab/" class="hide-sm" aria-current={active === 'lab' ? 'page' : undefined}>Lab</a>

@@ -57,16 +57,22 @@ const brings = [
   'Reliable remote partner: 3.5+ years managing multiple projects with clear written communication, using modern Figma and AI-assisted tooling.',
 ];
 ---
-<Base title="Resume · Sidhant Sardar" description="Sidhant Sardar: UI/UX designer, Webflow developer and AI-assisted developer (Claude Code). 3.5+ years of remote product and web design." image="/sidhant-full.jpg" imageAlt="Sidhant Sardar">
+<Base active="resume" title="Resume · Sidhant Sardar" description="Sidhant Sardar: UI/UX designer, Webflow developer and AI-assisted developer (Claude Code). 3.5+ years of remote product and web design." image="/sidhant-full.jpg" imageAlt="Sidhant Sardar">
   <div class="in cv">
     <header class="cv-head">
-      <div class="who">
-        <Image class="photo" src={asset('/sidhant.jpg')} alt="Sidhant Sardar" widths={[160, 320]} sizes="96px" loading="eager" />
-        <div>
-          <h1>Sidhant Sardar</h1>
-          <p class="title">UI/UX Designer · Webflow Developer · AI-Assisted Developer (Claude Code) · GA4 Conversion Tracking</p>
+      <div class="intro-id">
+        <div class="avatar corners">
+          <Image class="portrait-img" src={asset('/sidhant.jpg')} alt="Sidhant Sardar" widths={[192, 384]} sizes="96px" loading="eager" />
+          <span class="dims">96 × 112</span>
+        </div>
+        <div class="intro-name">
+          <b>Sidhant Sardar</b>
+          <span>UI/UX Designer · Webflow Developer · Claude Code · GA4</span>
+          <span class="status mono"><i></i>Open to projects</span>
         </div>
       </div>
+      <p class="eyebrow">Resume · 3.5+ years remote</p>
+      <h1 class="cv-title">Product and web designer <span class="soft">who builds and measures.</span></h1>
       <ul class="contact">
         <li><a href={`mailto:${EMAIL}`} data-track="contact_click" data-track-method="email" data-track-location="resume">{EMAIL}</a></li>
         {PHONE && <li><a href={`tel:${PHONE_TEL}`} data-track="contact_click" data-track-method="phone" data-track-location="resume">{PHONE}</a></li>}
@@ -146,10 +152,9 @@ const brings = [
 <style>
   .cv{padding-block:56px 96px;display:grid;gap:40px}
   .cv-head{display:grid;gap:18px;border-bottom:1px solid var(--line);padding-bottom:28px}
-  .who{display:flex;gap:20px;align-items:center}
-  .photo{width:96px;height:96px;border-radius:50%;object-fit:cover;flex:none}
-  h1{font-size:clamp(36px,5vw,56px);line-height:1}
-  .title{color:var(--muted);font-size:17px;margin-top:8px}
+  .intro-id{margin-bottom:22px}
+  .cv-title{font-size:clamp(36px,4.6vw,66px);line-height:.98;max-width:16ch}
+  .cv-title .soft{color:var(--dim)}
   .contact{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 20px;font-size:15px}
   .contact a{text-decoration:none;border-bottom:1px solid var(--line-2)}
   .contact a:hover{border-color:var(--ink)}
@@ -157,7 +162,7 @@ const brings = [
   .cv-grid{display:grid;grid-template-columns:1fr 320px;gap:56px}
   .main,.side{display:grid;gap:40px;align-content:start}
   section{display:grid;gap:14px;align-content:start}
-  .lead{font-size:17.5px;line-height:1.65}
+  .lead{font-size:17px;line-height:1.6;color:var(--muted)}
   .job{display:grid;gap:8px;padding-bottom:22px}
   .job+.job{border-top:1px solid var(--line);padding-top:22px}
   .job-top{display:flex;justify-content:space-between;gap:8px 16px;flex-wrap:wrap;align-items:baseline}
@@ -177,7 +182,6 @@ const brings = [
   .cv-links{display:grid;gap:6px;justify-items:start;text-align:left}
   .cv-links a{text-decoration:none}
   @media (max-width:860px){.cv-grid{grid-template-columns:1fr;gap:40px}}
-  @media (max-width:480px){.who{flex-direction:column;align-items:flex-start}.photo{width:80px;height:80px}}
 
   /* Print / Save as PDF: plain A4, black on white, no site chrome */
   @media print{
@@ -187,9 +191,13 @@ const brings = [
     :global(*){color:#111!important;transition:none!important;animation:none!important;opacity:1!important;transform:none!important}
     .cv{padding:0;gap:18px;font-size:12px}
     .cv-head{padding-bottom:12px;gap:10px}
-    .photo{width:64px;height:64px}
-    h1{font-size:28px}
-    .title{font-size:13px;margin-top:4px}
+    .intro-id{margin-bottom:4px;gap:14px}
+    .avatar{width:58px;height:68px}
+    .avatar .dims,.intro-name .status{display:none}
+    .intro-name b{font-size:18px}
+    .intro-name>span{font-size:11.5px!important}
+    .cv-title{font-size:24px;max-width:none}
+    .cv-title .soft{color:#666!important}
     .contact{font-size:11.5px}
     .cv-grid{grid-template-columns:1fr 220px;gap:24px}
     .main,.side{gap:16px}
