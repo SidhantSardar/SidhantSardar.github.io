@@ -45,16 +45,20 @@ const pages: { id: NonNullable<Props['active']>; label: string; href: string; hi
 ];
 ---
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#FFFFFF" />
+    <meta name="theme-color" content="#000000" />
     <script is:inline>
-      // Apply the saved theme before first paint. Light is the default.
+      // Apply the theme before first paint. Dark is the default; the switch in the menu saves a choice.
+      // ?theme=light or ?theme=dark shows one theme for that visit without saving it.
       (function () {
-        var t = 'light';
-        try { t = localStorage.getItem('theme') || 'light'; } catch (e) {}
+        var t = 'dark';
+        try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+        var q = /[?&]theme=(light|dark)\b/.exec(location.search);
+        if (q) t = q[1];
+        if (t !== 'light') t = 'dark';
         document.documentElement.setAttribute('data-theme', t);
         var m = document.querySelector('meta[name="theme-color"]');
         if (m) m.setAttribute('content', t === 'dark' ? '#000000' : '#FFFFFF');
@@ -117,7 +121,6 @@ const pages: { id: NonNullable<Props['active']>; label: string; href: string; hi
     <footer class="site-footer" id="contact">
       <div class="in">
         <div class="foot-top">
-          <span class="spec" data-reveal>Section / Contact</span>
           <h2 data-split>Marketing website not converting? <span class="fix">Let's fix it.</span></h2>
         </div>
         <div class="foot-main">
@@ -149,7 +152,7 @@ const pages: { id: NonNullable<Props['active']>; label: string; href: string; hi
         </div>
         <div class="foot-bar">
           <span>© {new Date().getFullYear()} Sidhant Sardar</span>
-          <span>Designed in Figma · built with Claude Code + Astro · 1240 max · 12 col · 24 gutter</span>
+          <span>Designed in Figma · built with Claude Code + Astro</span>
         </div>
       </div>
     </footer>

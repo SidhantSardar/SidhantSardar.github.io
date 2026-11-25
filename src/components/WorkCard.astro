@@ -9,7 +9,7 @@ const { href, label, title, line, tags, art, links, heading = 'h3' } = Astro.pro
 const H = heading;
 ---
 <article class="case work-card">
-  <div class="mini media"><WorkArt kind={art} /></div>
+  <div class="mini media"><WorkArt kind={art} /><span class="card-go" aria-hidden="true">→</span></div>
   <div class="case-body">
     <span class="n">{label}</span>
     <H><a class="card-main" href={href}>{title}</a></H>

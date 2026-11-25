@@ -1,6 +1,6 @@
 ---
-// Visible spacing marker between sections, like a redline in Figma.
+// Plain vertical space between sections. `size` is the height on desktop; phones get a little less.
 interface Props { size?: number }
 const { size = 120 } = Astro.props;
 ---
-<div class="gap" style={`--h:${size}px`} aria-hidden="true"><span>{size}</span></div>
+<div class="gap" style={`--h:${size}px`} aria-hidden="true"></div>

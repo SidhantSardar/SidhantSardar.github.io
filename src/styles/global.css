@@ -1,11 +1,9 @@
-/* Three colours and black, one typeface (Geist):
-     white  page background
-     black  titles and subtitles
-     grey   body text and labels
-     blue   the one accent, about a tenth of any screen
-   The blue is pure blue, #0000FF: 8.6:1 on white (AAA), the highest-contrast vivid blue. Like the
-   selection colour in Figma, it marks what is selected, measured or clickable, and nothing else.
-   Dark mode mirrors it: black page, light text, a lighter blue for text and a deep blue for fills. */
+/* Black, white, grey and one blue, one typeface (Geist).
+   Dark is the default theme: black page, white titles, grey body text, and the blue as light:
+   a lighter blue for text and lines, a deep blue for fills, and soft blue glows (see "Dark theme:
+   light and shine" at the end of this file).
+   The light theme mirrors it: white page, black titles, grey body text, pure blue #0000FF
+   (8.6:1 on white). In both, blue marks what is selected or clickable, about a tenth of any screen. */
 :root{
   --bg:#FFFFFF; --bg-2:#F4F4F4; --surface:#FFFFFF; --surface-2:#F4F4F4;
   --line:#E8E8E8; --line-2:#D4D4D4; --ink:#0A0A0A; --muted:#525252; --dim:#6B6B6B; /* 5.3:1 on white (was #7A7A7A, 4.3:1) */
@@ -64,10 +62,11 @@ main:focus{outline:none}
 .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .accent{color:var(--accent)}
 
-/* ---------- measurement language ---------- */
-.spec{font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--dim);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.spec b{font-weight:400;color:var(--accent)}
-.spec::before{content:"";width:10px;height:10px;background:var(--accent);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M12 1.5L22.5 12 12 22.5 1.5 12zM12 5L5 12l7 7 7-7z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M12 1.5L22.5 12 12 22.5 1.5 12zM12 5L5 12l7 7 7-7z'/%3E%3C/svg%3E") center/contain no-repeat}
+/* ---------- small labels and spacing ---------- */
+/* a quiet line of facts above a case-study title: what kind of project, which tools */
+.spec{font-family:var(--mono);font-size:11.5px;letter-spacing:.03em;color:var(--dim);display:flex;gap:6px 10px;flex-wrap:wrap;align-items:center}
+.spec b{font-weight:400;color:var(--muted)}
+/* four corner marks on a box (the hero photo turns them into selection handles) */
 .corners{position:relative;--c:var(--line-2)}
 .corners::after{content:"";position:absolute;inset:-6px;pointer-events:none;
   background:
@@ -75,17 +74,8 @@ main:focus{outline:none}
     linear-gradient(var(--c),var(--c)) 100% 0/10px 1px no-repeat, linear-gradient(var(--c),var(--c)) 100% 0/1px 10px no-repeat,
     linear-gradient(var(--c),var(--c)) 0 100%/10px 1px no-repeat, linear-gradient(var(--c),var(--c)) 0 100%/1px 10px no-repeat,
     linear-gradient(var(--c),var(--c)) 100% 100%/10px 1px no-repeat, linear-gradient(var(--c),var(--c)) 100% 100%/1px 10px no-repeat}
-/* vertical gap marker between sections */
-.gap{position:relative;height:var(--h,120px)}
-.gap::before{content:"";position:absolute;left:var(--gutter);top:12px;bottom:12px;border-left:1px dashed var(--line-2);transform:scaleY(var(--draw,1));transform-origin:top}
-.gap::after{content:"";position:absolute;left:calc(var(--gutter) - 4px);top:12px;bottom:12px;width:9px;
-  background:linear-gradient(var(--line-2),var(--line-2)) top/9px 1px no-repeat,linear-gradient(var(--line-2),var(--line-2)) bottom/9px 1px no-repeat}
-.gap span{position:absolute;left:calc(var(--gutter) + 10px);top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:10.5px;color:var(--accent)}
-@media (min-width:1280px){.gap::before,.gap::after,.gap span{margin-left:calc((100vw - 1240px)/2)}}
-/* horizontal width marker */
-.measure-x{position:relative;height:16px;margin-bottom:18px;border-left:1px solid var(--line-2);border-right:1px solid var(--line-2)}
-.measure-x::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--line-2)}
-.measure-x span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--bg);padding:0 8px;font-family:var(--mono);font-size:10.5px;color:var(--accent)}
+/* plain space between sections (components/Gap.astro): full height on desktop, less on phones */
+.gap{height:clamp(calc(var(--h,120px) * .6),10vw,var(--h,120px))}
 /* layout grid overlay */
 .grid-overlay{position:fixed;inset:0;pointer-events:none;z-index:50;opacity:0;transition:opacity .25s}
 .grid-overlay .in{height:100%;display:grid;grid-template-columns:repeat(12,1fr);gap:24px}
@@ -94,7 +84,7 @@ body.grid-on .grid-overlay{opacity:1}
 @media (max-width:700px){.grid-overlay .in{grid-template-columns:repeat(4,1fr);gap:16px}.grid-overlay i:nth-child(n+5){display:none}}
 
 /* ---------- nav (the main bar only: other <nav> elements, like the footer's, are not sticky) ---------- */
-.site-nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.site-nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--nav-bg);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .site-nav .in{display:flex;align-items:center;gap:28px;height:60px}
 .logo{font-family:var(--display);font-weight:700;font-size:18px;text-decoration:none;letter-spacing:-.02em}
 .logo span{color:var(--accent)}
@@ -119,7 +109,7 @@ body.grid-on .grid-overlay{opacity:1}
 @media (max-width:380px){.links a:first-child{display:none}}
 
 /* ---------- buttons ---------- */
-.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:8px;font-weight:500;font-size:15px;line-height:1.2;text-decoration:none;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);transition:border-color .2s,background-color .2s,color .2s,transform .2s}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:8px;font-weight:500;font-size:15px;line-height:1.2;text-decoration:none;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);transition:border-color .2s,background-color .2s,color .2s,box-shadow .25s,transform .2s}
 .btn:hover{border-color:var(--ink)}
 .btn.primary{background:var(--accent-fill);border-color:var(--accent-fill);color:var(--on-accent)}
 .btn.primary:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
@@ -128,15 +118,19 @@ body.grid-on .grid-overlay{opacity:1}
 .link-arrow:hover{text-decoration:underline;text-underline-offset:4px}
 
 /* ---------- hero ---------- */
-.hero{padding-block:40px 24px;overflow:hidden}
-.hero .in{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(0,.9fr);gap:48px;align-items:center;min-height:min(720px,calc(100vh - 100px))}
-/* 72/70 at desktop size: the hero's spec label ("H1 72/70") quotes these numbers, so keep them in step */
-.hero h1{font-size:clamp(38px,5.3vw,72px);line-height:.972;letter-spacing:-.04em;font-weight:700;margin-top:20px}
+.hero{padding-block:32px 24px;overflow:hidden}
+.hero .in{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:48px;align-items:center;min-height:min(720px,calc(100vh - 100px))}
+/* The type is balanced the way the footer's is: one very large, tight headline (same line height and
+   letter spacing as the footer headline), then small, calm text under it. The size follows the window's
+   width, and its height too, so the buttons stay on screen on short laptop screens. */
+.hero h1{font-size:clamp(44px,min(6.6vw,11.5vh),88px);line-height:.96;letter-spacing:-.045em;font-weight:700;margin-top:14px}
 /* the second half of the headline is the one place a title turns blue, on a line of its own */
 .hero h1 .soft{color:var(--accent);display:block}
-.hero .lede{margin-top:22px;color:var(--muted);font-size:18px;max-width:40ch}
-.hero .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
-@media (max-width:900px){.hero .in{grid-template-columns:1fr;min-height:0}}
+.hero .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+@media (max-width:900px){
+  .hero .in{grid-template-columns:1fr;min-height:0}
+  .hero h1{font-size:clamp(32px,10.2vw,64px)}
+}
 
 /* 3D layer stack: vertical, fanned, filled one layer at a time on scroll */
 .hero-art{display:grid;gap:18px;min-width:0}
@@ -194,13 +188,6 @@ body.grid-on .grid-overlay{opacity:1}
 @media (max-width:900px){.stage{height:500px}.stack{width:236px;height:330px}.l-ui .u.ttl{font-size:28px}.l-code .code{font-size:10px;line-height:1.9}}
 @media (max-width:420px){.stage{height:420px}.stack{width:196px;height:274px}.l-ui .u.ttl{font-size:21px}.l-code .code{font-size:8px;inset:34px 12px 12px}.layer .info p{font-size:10.5px}}
 
-/* cursor readout */
-.cursor{position:fixed;left:0;top:0;z-index:60;pointer-events:none;font-family:var(--mono);font-size:10px;color:var(--accent);opacity:0;transition:opacity .2s;white-space:nowrap}
-.cursor::before{content:"";position:absolute;left:-6px;top:-6px;width:11px;height:11px;
-  background:linear-gradient(var(--accent),var(--accent)) center/1px 100% no-repeat,linear-gradient(var(--accent),var(--accent)) center/100% 1px no-repeat}
-.cursor span{position:absolute;left:12px;top:8px;background:var(--bg);padding:1px 4px;border:1px solid var(--accent-soft);border-radius:2px}
-@media (hover:hover) and (pointer:fine){body.has-cursor .cursor{opacity:1}}
-
 /* micro-interaction states */
 .link-arrow .ar{display:inline-block;transition:transform .25s}
 .link-arrow:hover .ar{transform:translateX(4px)}
@@ -223,7 +210,6 @@ body.grid-on .grid-overlay{opacity:1}
 /* about */
 .about{display:grid;grid-template-columns:320px 1fr;gap:64px;align-items:start}
 .portrait{aspect-ratio:4/5;max-width:100%;border-radius:4px;position:relative}
-.portrait .dims{position:absolute;bottom:-22px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:10.5px;color:var(--accent)}
 .about-copy{display:grid;gap:24px}
 .about-copy h2{font-size:clamp(30px,3.8vw,48px);line-height:1.05;font-weight:700}
 .about-copy p{font-size:18px;color:var(--muted);max-width:54ch}
@@ -327,8 +313,6 @@ body.grid-on .grid-overlay{opacity:1}
 .site-footer{--fb:#0000FF;--fm:rgba(255,255,255,.84);--fl:rgba(255,255,255,.26);background:var(--fb);color:#fff;scroll-margin-top:0}
 .site-footer ::selection{background:#fff;color:var(--fb)}
 .site-footer :focus-visible{outline-color:#fff}
-.site-footer .spec{color:var(--fm)}
-.site-footer .spec::before{background:#fff}
 .foot-top{display:grid;gap:26px;padding-block:clamp(64px,9vw,128px) clamp(40px,5vw,64px)}
 .foot-top h2{font-size:clamp(36px,7vw,96px);line-height:.96;letter-spacing:-.045em;font-weight:700}
 .foot-top h2 .fix{display:block}
@@ -745,17 +729,15 @@ body.grid-on .grid-overlay{opacity:1}
 .intro-id{display:flex;align-items:center;gap:18px;margin-bottom:36px}
 .avatar{flex:none;width:96px;height:112px;border-radius:10px;position:relative}
 .avatar .portrait-img{border-radius:10px;object-position:50% 20%}
-.avatar .dims{position:absolute;left:0;right:0;bottom:-20px;text-align:center;font-family:var(--mono);font-size:10px;color:var(--accent)}
 .intro-name{display:grid;gap:4px;min-width:0}
 .intro-name b{font-family:var(--display);font-size:24px;font-weight:700;letter-spacing:-.02em}
 .intro-name>span:not(.status){color:var(--muted);font-size:14.5px}
 .intro-name .status{display:inline-flex;align-items:center;gap:8px;margin-top:4px;color:var(--muted);font-size:11.5px}
 .intro-name .status i,.hero-photo .status i{width:8px;height:8px;border-radius:50%;background:#16A34A;box-shadow:0 0 0 4px rgba(22,163,74,.18)}
-.hero .intro h1{margin-top:12px}
-.hero .lede{max-width:46ch;font-size:17px}
+.hero .lede{margin-top:12px;color:var(--muted);font-size:17px;line-height:1.55;max-width:54ch}
 .hero .lede b{color:var(--ink);font-weight:500}
 .hero .facts{margin-top:26px}
-.hero .facts b{font-size:24px}
+.hero .facts b{font-size:22px;letter-spacing:-.02em}
 .hero .facts div{padding-block:14px}
 @media (max-width:520px){.hero .facts{grid-template-columns:repeat(3,1fr)}.hero .facts div+div{padding-left:12px;border-left:1px solid var(--line);border-top:0}.hero .facts b{font-size:19px}.hero .facts span{font-size:11.5px}.avatar{width:80px;height:94px}.intro-name b{font-size:21px}}
 
@@ -810,9 +792,8 @@ a.chip:hover{color:var(--ink);border-color:var(--ink)}
 .case,.case .mini{min-width:0}
 
 /* Clients-first hero: small craft line above, outcome line under the H1 */
-.hero .hero-eyebrow{margin-top:18px}
-.hero .intro .hero-eyebrow + h1{margin-top:10px}
-.hero-sub{margin-top:16px;font-family:var(--display);font-size:clamp(19px,2vw,24px);line-height:1.25;letter-spacing:-.01em;color:var(--ink);max-width:30ch}
+.hero .hero-eyebrow{margin-top:0}
+.hero-sub{margin-top:24px;font-family:var(--display);font-size:clamp(18px,1.6vw,21px);line-height:1.35;letter-spacing:-.01em;color:var(--ink)}
 
 /* Contact prompt at the end of case studies */
 .case-cta{border-top:1px solid var(--line);padding-block:40px;display:grid;gap:14px}
@@ -838,21 +819,18 @@ a.chip:hover{color:var(--ink);border-color:var(--ink)}
 .hero-photo figcaption{display:grid;justify-items:center;gap:6px;margin-top:14px}
 .hero-photo figcaption b{font-family:var(--display);font-size:26px;font-weight:700;letter-spacing:-.02em}
 .hero-photo .status{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:12px}
-/* The photo is "selected", the way a frame looks in Figma: a blue bounding box, a white handle on
-   each corner, and a blue badge underneath with its size. Used for the hero photo and the resume photo. */
+/* The photo is "selected", the way a frame looks in Figma: a blue bounding box with a handle on
+   each corner. Used for the hero photo and the resume photo. */
 .hero-portrait::before,.avatar::before{content:"";position:absolute;inset:-1px;border:1.5px solid var(--accent-fill);pointer-events:none;z-index:1}
 .hero-portrait.corners::after,.avatar.corners::after{inset:-4.5px;z-index:2;background:
   linear-gradient(var(--bg),var(--bg)) 1.5px 1.5px/5px 5px no-repeat,linear-gradient(var(--accent-fill),var(--accent-fill)) 0 0/8px 8px no-repeat,
   linear-gradient(var(--bg),var(--bg)) calc(100% - 1.5px) 1.5px/5px 5px no-repeat,linear-gradient(var(--accent-fill),var(--accent-fill)) 100% 0/8px 8px no-repeat,
   linear-gradient(var(--bg),var(--bg)) 1.5px calc(100% - 1.5px)/5px 5px no-repeat,linear-gradient(var(--accent-fill),var(--accent-fill)) 0 100%/8px 8px no-repeat,
   linear-gradient(var(--bg),var(--bg)) calc(100% - 1.5px) calc(100% - 1.5px)/5px 5px no-repeat,linear-gradient(var(--accent-fill),var(--accent-fill)) 100% 100%/8px 8px no-repeat}
-.hero-portrait .dims,.avatar .dims{position:absolute;left:50%;right:auto;top:calc(100% + 9px);bottom:auto;transform:translateX(-50%);z-index:2;white-space:nowrap;
-  background:var(--accent-fill);color:var(--on-accent);border-radius:3px;padding:2px 6px;font-family:var(--mono);font-size:10.5px;line-height:1.35;text-align:center}
 @media (max-width:900px){
   .hero-photo{order:-1;justify-items:start;grid-template-columns:auto 1fr;align-items:center;gap:20px}
   .hero-portrait{width:120px;border-radius:12px}
   .hero-portrait .portrait-img{border-radius:12px}
-  .hero-portrait .dims{display:none}
   .hero-photo figcaption{justify-items:start;margin-top:0}
   .hero-photo figcaption b{font-size:22px}
 }
@@ -872,8 +850,8 @@ a.chip:hover{color:var(--ink);border-color:var(--ink)}
    selected in blue, blue prototype wires between frames, and the designer's cursor.
    Greys carry the layout, black carries headlines, blue carries the one thing to look at. */
 .wa{display:block;width:100%;height:100%;pointer-events:none;user-select:none;-webkit-user-select:none}
-.wa text{font-family:var(--mono);font-size:8.5px;letter-spacing:.02em;fill:var(--dim)}
-.wa text.on{fill:var(--accent)}
+.wa text{font-family:var(--mono);font-size:8.5px;letter-spacing:.02em;fill:var(--wa-text,var(--dim))}
+.wa text.on{fill:var(--wa-on,var(--accent))}
 .wa .wa-fr{fill:var(--surface);stroke:var(--line);stroke-width:1}
 .wa .wa-cd{fill:var(--surface);stroke:var(--line-2);stroke-width:1}
 .wa .wa-g0{fill:var(--bg-2)}
@@ -917,13 +895,152 @@ a.chip:hover{color:var(--ink);border-color:var(--ink)}
 /* ---------- small things that keep the blue to its job ---------- */
 /* hero facts stay black: in the hero, blue is the headline, the button and the selected photo */
 .hero .facts b.accent{color:inherit}
-/* the crosshair is blue, so it turns white while it is over the blue footer */
-.cursor.on-blue{color:#fff}
-.cursor.on-blue::before{background:linear-gradient(#fff,#fff) center/1px 100% no-repeat,linear-gradient(#fff,#fff) center/100% 1px no-repeat}
-.cursor.on-blue span{background:#fff;color:#0000FF;border-color:#fff}
+/* short laptop screens: the hero closes up a little so its two buttons stay on the first screen */
+@media (min-width:901px) and (max-height:760px){
+  .hero{padding-block:16px 24px}
+  .hero-sub{margin-top:16px}
+  .hero .facts{margin-top:18px}
+  .hero .facts div{padding-block:10px}
+  .hero .cta{margin-top:20px}
+}
 
 /* ---------- the narrowest phones (320px wide) ---------- */
 /* a square that holds two columns of labels cannot stay square this narrow, so it may grow taller */
 @media (max-width:350px){.cs-square{aspect-ratio:auto}}
 /* no room left in the menu for the light/dark switch */
 @media (max-width:340px){.site-nav .theme-switch{display:none}}
+
+/* ---------- cards: the small things every card shares (both themes) ---------- */
+/* --ra is how bright the edge light is (0 to 1). Registering it lets it fade in and out. */
+@property --ra{syntax:'<number>';inherits:true;initial-value:0}
+.case{position:relative}
+.case,.glow-card{transition:border-color .2s,box-shadow .35s,translate .35s cubic-bezier(.2,.7,.2,1),--ra .35s}
+.case .mini{position:relative;overflow:hidden}
+/* the round arrow in the corner of a Work cover: on hover it fills blue and turns to point up and out */
+.case .mini .card-go{position:absolute;right:10px;top:10px;z-index:2;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid var(--line-2);background:var(--surface);color:var(--ink);font-family:var(--mono);font-size:13px;line-height:1;pointer-events:none;
+  transition:background-color .25s,border-color .25s,color .25s,box-shadow .25s,rotate .35s cubic-bezier(.2,.7,.2,1)}
+.case:hover .mini .card-go{background:var(--accent-fill);border-color:var(--accent-fill);color:var(--on-accent);rotate:-45deg}
+/* the cover drifts a little against the pointer (scripts/motion.ts sets --px and --py, from 0 to 1) */
+.case .mini.media .wa{transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+@media (hover:hover) and (pointer:fine){
+  .case:hover .mini.media .wa{transform:translate(calc((var(--px,.5) - .5) * -12px),calc((var(--py,.5) - .5) * -10px)) scale(1.04)}
+}
+/* Work cards in a row line up: the description takes the spare height, so the tags and the links
+   sit at the same level on every card, with a hairline above the links */
+.work-card .case-body{grid-template-rows:auto auto 1fr auto auto;align-content:stretch}
+.work-card .work-links{margin-top:8px;padding-top:10px;border-top:1px solid var(--line)}
+:root[data-theme="dark"] .work-card .work-links{border-top-color:rgba(255,255,255,.08)}
+
+/* ---------- drawn art: light (components/WorkArt.astro and StepArt.astro) ----------
+   .wa-halo   a soft glow behind the main frame
+   .wa-glow   a glow on wires and on the selected frame (an SVG filter set in the markup)
+   .wa-spark  a short bright dash that runs along a wire while its card is hovered or its step is reached
+   The glows belong to the dark theme; the light theme stays flat. */
+.wa .wa-halo{opacity:0}
+:root:not([data-theme="dark"]) .wa .wa-glow{filter:none}
+.wa .wa-spark{fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-dasharray:12 88;stroke-dashoffset:100;opacity:0}
+.case:hover .wa .wa-spark,.story-step.on .wa .wa-spark{opacity:.95;animation:waSpark 2.2s linear infinite}
+@keyframes waSpark{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.wa .wa-spark{display:none}}
+
+/* ============ Dark theme: light and shine ============
+   Still black, grey and one blue. What the dark theme adds is light: a blue glow and a faint grid
+   behind the top of every page, glass-like cards whose edge lights up under the pointer, and blue
+   marks that glow. Text colours stay as they are. */
+main{position:relative;isolation:isolate}
+:root[data-theme="dark"] main::before{content:"";position:absolute;z-index:-1;left:0;right:0;top:-61px;height:min(980px,100%);pointer-events:none;
+  background:
+    radial-gradient(46% 52% at 20% 4%,rgba(46,59,255,.4),transparent 72%),
+    radial-gradient(34% 40% at 86% 10%,rgba(143,155,255,.16),transparent 72%),
+    linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px) 50% 0/64px 64px,
+    linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px) 50% 0/64px 64px;
+  -webkit-mask-image:radial-gradient(120% 100% at 50% 0%,#000 0%,rgba(0,0,0,.5) 48%,transparent 80%);mask-image:radial-gradient(120% 100% at 50% 0%,#000 0%,rgba(0,0,0,.5) 48%,transparent 80%)}
+
+/* menu bar: darker glass, with a line of light along its lower edge */
+:root[data-theme="dark"] .site-nav{background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(18px) saturate(160%);backdrop-filter:blur(18px) saturate(160%);border-bottom-color:rgba(255,255,255,.08)}
+:root[data-theme="dark"] .site-nav::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;pointer-events:none;opacity:.55;
+  background:linear-gradient(90deg,transparent,rgba(143,155,255,.6) 35%,rgba(143,155,255,.6) 65%,transparent)}
+:root[data-theme="dark"] .logo span{text-shadow:0 0 14px rgba(143,155,255,.9)}
+@media (min-width:721px){
+  :root[data-theme="dark"] .links a.nav-cta{background:linear-gradient(180deg,#4652FF,#2632F0);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 6px 22px -8px rgba(46,59,255,.95)}
+  :root[data-theme="dark"] .links a.nav-cta:hover{background:linear-gradient(180deg,#5661FF,#323EFF)}
+}
+
+/* buttons (the footer keeps its own): glass for the plain one, lit blue for the main one.
+   White on these blues is at least 5.3:1. */
+:root[data-theme="dark"] main .btn{background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.03));border-color:rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.09)}
+:root[data-theme="dark"] main .btn:hover{border-color:rgba(255,255,255,.45)}
+:root[data-theme="dark"] main .btn.primary{background:linear-gradient(180deg,#4652FF,#2632F0);border-color:#5F6AFF;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 10px 32px -10px rgba(46,59,255,.95),0 0 0 1px rgba(46,59,255,.3)}
+:root[data-theme="dark"] main .btn.primary:hover{background:linear-gradient(180deg,#5661FF,#323EFF);border-color:#8690FF;box-shadow:inset 0 1px 0 rgba(255,255,255,.36),0 14px 44px -8px #2E3BFF,0 0 0 1px rgba(143,155,255,.4)}
+
+/* hero: the blue line of the headline glows, and so does the selected photo */
+.hero h1 .soft{transition:text-shadow .9s}
+.split-done .split-w{overflow:visible}
+:root[data-theme="dark"] .hero h1:not(.is-split) .soft,:root[data-theme="dark"] .hero h1.split-done .soft{text-shadow:0 0 44px rgba(92,104,255,.6)}
+:root[data-theme="dark"] .hero-portrait{box-shadow:0 50px 130px -40px rgba(46,59,255,.85),0 0 70px -20px rgba(46,59,255,.45)}
+:root[data-theme="dark"] .hero-portrait::before,:root[data-theme="dark"] .avatar::before{border-color:#6B76FF;box-shadow:0 0 18px rgba(46,59,255,.75),inset 0 0 18px rgba(46,59,255,.2)}
+
+/* cards (.case) and art panels (.glow-card): dark glass, a hairline edge that is brighter at the top,
+   and a light that follows the pointer, on the surface (::before) and along the edge (::after) */
+:root[data-theme="dark"] :is(.case,.glow-card){border:0;background:linear-gradient(180deg,#16161C,#0B0B0F);box-shadow:0 30px 60px -44px #000}
+:root[data-theme="dark"] :is(.case,.glow-card)::before{content:"";position:absolute;inset:0;z-index:2;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .35s;
+  background:radial-gradient(460px circle at var(--mx,50%) var(--my,0%),rgba(143,155,255,.13),transparent 65%)}
+:root[data-theme="dark"] :is(.case,.glow-card)::after{content:"";position:absolute;inset:0;z-index:3;border-radius:inherit;padding:1px;pointer-events:none;
+  background:radial-gradient(360px circle at var(--mx,50%) var(--my,0%),rgba(143,155,255,var(--ra)),transparent 65%),linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.06) 42%,rgba(143,155,255,.22));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+:root[data-theme="dark"] :is(.case,.glow-card):hover{--ra:.95;box-shadow:0 44px 90px -46px rgba(46,59,255,.9),0 30px 60px -44px #000}
+:root[data-theme="dark"] :is(.case,.glow-card):hover::before{opacity:1}
+:root[data-theme="dark"] .case:hover{translate:0 -4px}
+/* the picture area of a card: black, a fine grid, and blue light rising from its lower edge */
+:root[data-theme="dark"] .case .mini{border-bottom-color:rgba(255,255,255,.08);background:
+  radial-gradient(85% 75% at 50% 122%,rgba(46,59,255,.42),transparent 70%),
+  radial-gradient(circle,rgba(255,255,255,.1) 1px,transparent 1.2px) 0 0/18px 18px,#08080B}
+:root[data-theme="dark"] .case .mini.media,:root[data-theme="dark"] .glow-card{background:
+  radial-gradient(85% 75% at 50% 122%,rgba(46,59,255,.5),transparent 70%),
+  linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px) 0 0/20px 20px,
+  linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px) 0 0/20px 20px,#08080B}
+:root[data-theme="dark"] .case .mini .card-go{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.2);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+:root[data-theme="dark"] .case:hover .mini .card-go{background:linear-gradient(180deg,#4652FF,#2632F0);border-color:#7A84FF;box-shadow:0 0 22px rgba(46,59,255,.95)}
+:root[data-theme="dark"] .chip:not([aria-pressed="true"]){background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.11)}
+/* the small label above a card title starts with a lit dot */
+:root[data-theme="dark"] .case-body .n{display:flex;align-items:center;gap:8px}
+:root[data-theme="dark"] .case-body .n::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px 1px rgba(143,155,255,.9)}
+
+/* drawn art on black: glass frames, brighter blue, and the glows switched on */
+:root[data-theme="dark"] .wa{--wa-text:#9C9CA6;--wa-on:#A9B2FF}
+:root[data-theme="dark"] .wa .wa-fr{fill:#0E0E13;stroke:rgba(255,255,255,.16)}
+:root[data-theme="dark"] .wa .wa-cd{fill:#15151B;stroke:rgba(255,255,255,.14)}
+:root[data-theme="dark"] .wa .wa-g0{fill:rgba(255,255,255,.045)}
+:root[data-theme="dark"] .wa .wa-g1{fill:rgba(255,255,255,.1)}
+:root[data-theme="dark"] .wa .wa-g2{fill:rgba(255,255,255,.22)}
+:root[data-theme="dark"] .wa .wa-ln{stroke:rgba(255,255,255,.1)}
+:root[data-theme="dark"] .wa .wa-o{stroke:rgba(255,255,255,.24)}
+:root[data-theme="dark"] .wa .wa-b{fill:#3D49FF}
+:root[data-theme="dark"] .wa .wa-bt{fill:rgba(92,104,255,.28)}
+:root[data-theme="dark"] .wa .wa-bo{fill:#15151B;stroke:#6B76FF}
+:root[data-theme="dark"] .wa :is(.wa-line,.wa-wire,.wa-sel){stroke:#6B76FF}
+:root[data-theme="dark"] .wa .wa-port{fill:#0E0E13;stroke:#8F9BFF}
+:root[data-theme="dark"] .wa .wa-h{fill:#0E0E13;stroke:#8F9BFF}
+:root[data-theme="dark"] .wa .wa-cur path{fill:#3D49FF;stroke:#fff}
+:root[data-theme="dark"] .wa .wa-halo{opacity:1}
+
+/* home, case studies: the square journey */
+:root[data-theme="dark"] .cs-square{border-color:rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 50px 110px -60px rgba(46,59,255,.9);background:
+  radial-gradient(80% 70% at 50% 118%,rgba(46,59,255,.45),transparent 70%),
+  radial-gradient(circle,rgba(255,255,255,.1) 1px,transparent 1.2px) 0 0/18px 18px,#08080B}
+:root[data-theme="dark"] .cs-node{background:#14141A;border-color:rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
+:root[data-theme="dark"] .cs-step.on .cs-node{background:linear-gradient(180deg,#4652FF,#2632F0);border-color:#7A84FF;box-shadow:0 0 0 4px rgba(46,59,255,.22),0 0 34px rgba(46,59,255,.95),inset 0 1px 0 rgba(255,255,255,.3)}
+:root[data-theme="dark"] .cs-step:nth-child(1)::after,:root[data-theme="dark"] .cs-step:nth-child(4)::after,:root[data-theme="dark"] .cs-ring::after{box-shadow:0 0 12px rgba(143,155,255,.75)}
+:root[data-theme="dark"] .cs-dot{background:#fff;box-shadow:0 0 0 3px rgba(143,155,255,.35),0 0 16px 3px rgba(143,155,255,.95)}
+
+/* diagrams and figures */
+:root[data-theme="dark"] .fig .canvas{background-color:#08080B;border-color:rgba(255,255,255,.09)}
+:root[data-theme="dark"] .flow .st.acc{box-shadow:0 0 26px -8px rgba(46,59,255,.95)}
+
+/* footer: the same blue, lit from the top-left corner, with a bright line along its upper edge.
+   White text on the lightest part of the blue is 5:1 or more. */
+:root[data-theme="dark"] .site-footer{position:relative;background:
+  radial-gradient(70% 90% at 10% 0%,rgba(120,132,255,.42),transparent 62%),
+  radial-gradient(60% 90% at 100% 100%,rgba(0,0,120,.7),transparent 62%),var(--fb)}
+:root[data-theme="dark"] .site-footer::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75) 30%,rgba(255,255,255,.75) 70%,transparent)}

@@ -153,9 +153,13 @@ function splitWords(el: Element) {
 function headings() {
   $$('[data-split]').forEach((el) => {
     splitWords(el);
+    // "is-split" while the words are clipped for the rise; "split-done" once they have landed,
+    // so anything that reaches outside a word (like a glow) can show again.
+    el.classList.add('is-split');
     gsap.from($$('.split-w > span', el), {
       yPercent: 110, duration: 0.9, ease: 'power4.out', stagger: 0.05,
       scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+      onComplete: () => el.classList.add('split-done'),
     });
   });
 }
@@ -173,25 +177,10 @@ function reveals() {
     const o = { v: 0 };
     gsap.to(o, { v: to, duration: 1.2, ease: 'power2.out', onUpdate: () => (el.textContent = String(Math.round(o.v))), scrollTrigger: { trigger: el, start: 'top 90%', once: true } });
   });
-  // Spec labels "type" in.
-  $$('.spec').forEach((el) => {
-    gsap.from(el, { clipPath: 'inset(0 100% 0 0)', duration: 0.9, ease: 'steps(24)', scrollTrigger: { trigger: el, start: 'top 92%', once: true } });
-  });
 }
 
-/* ---------- measurements draw themselves ---------- */
-function measurements() {
-  $$('.gap').forEach((el) => {
-    const label = $('span', el)!;
-    const to = Number(label.textContent);
-    const o = { v: 0 };
-    gsap.timeline({ scrollTrigger: { trigger: el, start: 'top 85%', once: true } })
-      .fromTo(el, { '--draw': 0 }, { '--draw': 1, duration: 0.8, ease: 'power2.out' })
-      .to(o, { v: to, duration: 0.8, ease: 'power2.out', onUpdate: () => (label.textContent = String(Math.round(o.v))) }, 0);
-  });
-  $$('.measure-x').forEach((el) => {
-    gsap.from(el, { scaleX: 0, duration: 0.9, ease: 'power3.inOut', scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
-  });
+/* ---------- the hero photo wipes in ---------- */
+function portrait() {
   $$('[data-portrait]').forEach((el) => {
     gsap.from($('img', el), { clipPath: 'inset(100% 0 0 0)', scale: 1.08, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 80%', once: true } });
   });
@@ -442,24 +431,35 @@ function magnetic() {
   });
 }
 
-function cursor() {
+/* ---------- cards: a soft light follows the pointer ---------- */
+// Sets --mx / --my (pixels from the card's top-left corner) and --px / --py (0 to 1) on the card
+// under the pointer. The CSS uses them for the light on the card and the slight shift of its cover.
+function spotlight() {
   if (!finePointer) return;
-  const c = document.createElement('div');
-  c.className = 'cursor';
-  c.setAttribute('aria-hidden', 'true');
-  c.innerHTML = '<span></span>';
-  document.body.append(c);
-  const label = c.firstElementChild as HTMLElement;
-  const x = gsap.quickTo(c, 'x', { duration: 0.25, ease: 'power3' });
-  const y = gsap.quickTo(c, 'y', { duration: 0.25, ease: 'power3' });
-  addEventListener('pointermove', (e) => {
-    document.body.classList.add('has-cursor');
-    x(e.clientX); y(e.clientY);
-    label.textContent = `x ${Math.round(e.clientX)} · y ${Math.round(e.clientY + scrollY)}`;
-    // The crosshair is blue, so it turns white over the blue footer.
-    c.classList.toggle('on-blue', !!(e.target as Element | null)?.closest?.('.site-footer'));
+  $$('.case, .glow-card').forEach((el) => {
+    el.addEventListener('pointermove', (e) => {
+      const r = el.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      el.style.setProperty('--mx', `${x.toFixed(1)}px`);
+      el.style.setProperty('--my', `${y.toFixed(1)}px`);
+      el.style.setProperty('--px', (x / r.width).toFixed(3));
+      el.style.setProperty('--py', (y / r.height).toFixed(3));
+    });
   });
-  document.addEventListener('pointerleave', () => document.body.classList.remove('has-cursor'));
+}
+
+/* ---------- story pages: the line between the steps fills as you scroll ---------- */
+function story() {
+  $$('[data-story]').forEach((el) => {
+    const fill = $('.story-fill', el);
+    const steps = $$('.story-step', el);
+    if (!fill || !steps.length) return;
+    el.classList.add('is-live');
+    gsap.fromTo(fill, { scaleY: 0 }, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: el, start: 'top 62%', end: 'bottom 62%', scrub: 0.4 } });
+    steps.forEach((s) => {
+      ScrollTrigger.create({ trigger: $('.story-node', s) ?? s, start: 'center 62%', onEnter: () => s.classList.add('on'), onLeaveBack: () => s.classList.remove('on') });
+    });
+  });
 }
 
 function nav() {
@@ -477,12 +477,13 @@ hero();
 if (!reduce) {
   headings();
   reveals();
-  measurements();
+  portrait();
   websites();
   journey();
   diagrams();
   magnetic();
-  cursor();
+  spotlight();
+  story();
   nav();
 }
 protoWires(); // wires draw for everyone; only the motion respects reduced-motion
