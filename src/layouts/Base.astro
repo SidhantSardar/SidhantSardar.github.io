@@ -9,7 +9,7 @@ import Analytics from '../components/Analytics.astro';
 interface Props {
   title?: string;
   description?: string;
-  active?: 'home' | 'work' | 'portfolio' | 'writing';
+  active?: 'home' | 'work' | 'portfolio' | 'writing' | 'lab';
   /** Share image path in /public. 1200×630 or 1600×900 works on every network. */
   image?: string;
   imageAlt?: string;
@@ -88,6 +88,7 @@ const imageUrl = new URL(image, Astro.site).href;
           <a href="/work/" aria-current={active === 'work' ? 'page' : undefined}>Work</a>
           <a href="/portfolio" class="hide-sm" aria-current={active === 'portfolio' ? 'page' : undefined}>Portfolio</a>
           <a href="/writing" class="hide-sm" aria-current={active === 'writing' ? 'page' : undefined}>Writing</a>
+          <a href="/lab/" class="hide-sm" aria-current={active === 'lab' ? 'page' : undefined}>Lab</a>
           <a href="/#contact" data-track="cta_click" data-track-cta="contact" data-track-location="nav">Contact</a>
         </div>
         <button class="toggle" id="grid-toggle" aria-pressed="false" title="Show the 12-column layout grid">Grid · 12 col</button>

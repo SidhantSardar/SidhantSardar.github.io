@@ -1,0 +1,33 @@
+---
+// A YouTube episode. With an ID it embeds (privacy-enhanced, lazy); without one it shows "coming soon".
+import type { Video } from '../lab/brightfold/path';
+interface Props { video: Video; large?: boolean }
+const { video, large = false } = Astro.props;
+---
+{video.youtubeId ? (
+  <div class:list={['vid', { large }]}>
+    <iframe
+      src={`https://www.youtube-nocookie.com/embed/${video.youtubeId}`}
+      title={`Episode ${video.ep}: ${video.title}`}
+      loading="lazy"
+      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen></iframe>
+  </div>
+) : (
+  <div class:list={['vid', 'soon', { large }]} role="img" aria-label={`Episode ${video.ep}, ${video.title}: video coming soon`}>
+    <span class="play" aria-hidden="true">▶</span>
+    <span class="mono">Ep {video.ep} · ~{video.minutes} min · coming soon</span>
+    <b>{video.title}</b>
+  </div>
+)}
+
+<style>
+  .vid{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:var(--bg-2)}
+  .vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .soon{display:grid;place-content:center;justify-items:center;gap:8px;padding:16px;text-align:center;
+    background-image:radial-gradient(circle,var(--line) 1px,transparent 1.2px);background-size:18px 18px}
+  .soon .play{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line-2);font-size:13px;color:var(--muted);background:var(--bg)}
+  .soon .mono{color:var(--dim)}
+  .soon b{font-size:15px;font-weight:600;max-width:28ch}
+  .large.soon b{font-size:clamp(18px,2.4vw,26px)}
+</style>

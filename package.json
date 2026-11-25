@@ -4,9 +4,10 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview"
+    "dev": "npm run tokens && astro dev",
+    "build": "npm run tokens && astro build",
+    "preview": "astro preview",
+    "tokens": "node scripts/build-tokens.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "4.2.6",

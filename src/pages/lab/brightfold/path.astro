@@ -1,0 +1,140 @@
+---
+import Base from '../../../layouts/Base.astro';
+import JsonLd from '../../../components/JsonLd.astro';
+import VideoSlot from '../../../components/VideoSlot.astro';
+import { steps, intro, eras, outcomes } from '../../../lab/brightfold/path';
+import { chapters } from '../../../lab/brightfold/chapters';
+
+const stages = ['Idea', 'Product', 'Website', 'Growth', 'Client'] as const;
+const statusOf = (n?: string) => chapters.find((c) => c.n === n)?.status;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'From idea to first client: building a B2B product website that converts',
+  description: 'A step-by-step path from product idea to a converting website and a won client, using the Brightfold concept project.',
+  url: new URL('/lab/brightfold/path/', Astro.site).href,
+  step: steps.map((s) => ({ '@type': 'HowToStep', name: s.title, text: s.why })),
+};
+---
+<Base title="The path: idea to first client · Sidhant Sardar" description="A step-by-step guide from product idea to a website that converts and a client you win, with a video for every step. Built on the Brightfold concept project." active="lab">
+  <JsonLd data={schema} />
+  <div class="in">
+    <header class="page-head">
+      <a class="back" href="/lab/brightfold/">← Brightfold</a>
+      <span class="spec">Lab / Guide · <b>{steps.length} steps · 5 stages</b></span>
+      <h1>The path: from idea to first client.</h1>
+      <p class="sum">Every step it takes to turn a product idea into a website that brings in clients, including the steps most designers skip. Each one is built on Brightfold and explained in a short video.</p>
+      <nav class="stage-nav" aria-label="Stages">
+        {stages.map((st, i) => <a href={`#stage-${st.toLowerCase()}`}><span class="mono">{i + 1}</span>{st}</a>)}
+      </nav>
+    </header>
+
+    <section class="p-sec intro" aria-labelledby="intro-h">
+      <div>
+        <span class="eyebrow">Start here · Episode {intro.ep}</span>
+        <h2 id="intro-h">A website isn't for looking finished.</h2>
+        <p class="muted">A good-looking site that nobody acts on has failed. A website's job is <strong>conversion</strong>: turning a visitor into a call, a sign-up or a sale. Everything on this path serves that one job.</p>
+        <ul class="conv">
+          <li><b>Clear</b> In 5 seconds: what is it, who is it for, what do I do next?</li>
+          <li><b>Credible</b> Proof next to every ask: logos, numbers, quotes.</li>
+          <li><b>Easy</b> One main button per page, a short form, fast on a phone.</li>
+          <li><b>Measured</b> Every click that matters is tracked, so it can improve.</li>
+        </ul>
+      </div>
+      <VideoSlot video={intro} large />
+    </section>
+
+    <section class="p-sec" aria-labelledby="eras-h">
+      <span class="eyebrow">How we got here</span>
+      <h2 id="eras-h">What a website is for has changed five times</h2>
+      <ol class="eras">
+        {eras.map((e) => (
+          <li><span class="mono">{e.years}</span><b>{e.name}</b><p>"{e.idea}"</p><span class="mono muted">{e.how}</span></li>
+        ))}
+      </ol>
+      <p class="muted lede">The tools got faster each time, but the job kept moving toward the same thing: a website as a measured sales system. AI doesn't change the job. It makes one person able to do all of it.</p>
+    </section>
+
+    {stages.map((st, si) => (
+      <section class="p-sec" id={`stage-${st.toLowerCase()}`} aria-labelledby={`stage-${si}-h`}>
+        <span class="eyebrow">Stage {si + 1} of {stages.length}</span>
+        <h2 id={`stage-${si}-h`}>{st}</h2>
+        <div class="steps">
+          {steps.filter((s) => s.stage === st).map((s) => (
+            <article class="step" id={`step-${s.n}`}>
+              <div class="step-body">
+                <div class="step-top">
+                  <span class="mono">Step {s.n}</span>
+                  {s.gap && <span class="tag gap-tag">Often skipped</span>}
+                </div>
+                <h3>{s.title}</h3>
+                <p class="why">{s.why}</p>
+                <ul class="do">{s.do.map((d) => <li>{d}</li>)}</ul>
+                <p class="out"><span class="mono muted">You'll have</span>{s.deliverable}</p>
+                {s.chapter && (
+                  <a class="ch" href={`/lab/brightfold/#ch-${s.chapter}`}>Brightfold chapter {s.chapter} · {statusOf(s.chapter) === 'built' ? 'built' : statusOf(s.chapter) === 'next' ? 'up next' : 'planned'} →</a>
+                )}
+              </div>
+              <VideoSlot video={s.video} />
+            </article>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <section class="p-sec" aria-labelledby="out-h">
+      <span class="eyebrow">At the end of the path</span>
+      <h2 id="out-h">What you can do, by role</h2>
+      <div class="outcomes">
+        {outcomes.map((o) => <div><b>{o.role}</b><ul>{o.gets.map((g) => <li>{g}</li>)}</ul></div>)}
+      </div>
+    </section>
+
+    <section class="case-cta" aria-labelledby="cta-h">
+      <h2 id="cta-h">Follow along</h2>
+      <p>A new step and video ships as each Brightfold chapter is built.</p>
+      <div class="row"><a class="btn primary" href="/lab/brightfold/">See the project <span class="ar">→</span></a></div>
+    </section>
+    <div style="height:80px"></div>
+  </div>
+</Base>
+
+<style>
+  .stage-nav{display:flex;flex-wrap:wrap;gap:8px}
+  .stage-nav a{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border:1px solid var(--line-2);border-radius:999px;text-decoration:none;font-size:14px}
+  .stage-nav a:hover{border-color:var(--muted)}
+  .stage-nav .mono{color:var(--dim)}
+  .p-sec{display:grid;gap:14px;margin:24px 0 72px;scroll-margin-top:80px}
+  .p-sec h2{font-size:clamp(26px,3vw,36px)}
+  .lede{max-width:64ch}
+  .intro{grid-template-columns:1fr 1.1fr;gap:40px;align-items:center}
+  .intro>div{display:grid;gap:14px}
+  .intro strong{color:var(--ink);font-weight:600}
+  .conv{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+  .conv li{display:grid;grid-template-columns:90px 1fr;gap:12px;font-size:15px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+  .conv b{color:var(--ink);font-weight:600}
+  .eras{list-style:none;padding:0;margin:8px 0 0;display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid var(--line)}
+  .eras li{display:grid;gap:6px;align-content:start;padding:16px 16px 0 0}
+  .eras li+li{padding-left:16px;border-left:1px solid var(--line)}
+  .eras b{font-size:16px}
+  .eras p{font-size:14.5px}
+  .eras .mono{font-size:10.5px}
+  .steps{display:grid;gap:20px}
+  .step{display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:start;border:1px solid var(--line);border-radius:12px;padding:24px;scroll-margin-top:80px}
+  .step-body{display:grid;gap:10px}
+  .step-top{display:flex;gap:10px;align-items:center;color:var(--dim)}
+  .tag{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:4px;border:1px solid var(--ink);color:var(--ink)}
+  .step h3{font-size:22px;letter-spacing:-.02em}
+  .why{color:var(--muted);font-size:15.5px}
+  .do{margin:0;padding-left:18px;display:grid;gap:4px;font-size:14.5px}
+  .out{display:grid;gap:2px;font-size:14.5px;border-top:1px solid var(--line);padding-top:10px}
+  .ch{font-family:var(--mono);font-size:11.5px;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line-2);justify-self:start}
+  .ch:hover{border-color:var(--ink)}
+  .outcomes{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+  .outcomes div{border-top:1px solid var(--line);padding-top:14px;display:grid;gap:8px;align-content:start}
+  .outcomes ul{margin:0;padding-left:18px;color:var(--muted);font-size:14.5px;display:grid;gap:4px}
+  @media (max-width:1000px){.eras{grid-template-columns:1fr 1fr 1fr}.outcomes{grid-template-columns:1fr 1fr}}
+  @media (max-width:820px){.intro,.step{grid-template-columns:1fr}.eras{grid-template-columns:1fr}.eras li+li{padding-left:0;border-left:0;border-top:1px solid var(--line);margin-top:12px}}
+  @media (max-width:520px){.outcomes{grid-template-columns:1fr}.step{padding:18px}}
+</style>

@@ -1,0 +1,43 @@
+---
+import Base from '../../layouts/Base.astro';
+import { chapters } from '../../lab/brightfold/chapters';
+
+const built = chapters.filter((c) => c.status === 'built').length;
+---
+<Base title="Lab · Sidhant Sardar" description="Concept projects built in public: product design, websites, motion, analytics and AI, connected end to end." active="lab">
+  <div class="in">
+    <header class="page-head">
+      <span class="spec">Page / Lab · <b>Concept projects</b></span>
+      <h1>Lab</h1>
+      <p class="sum">Client work shows what I've done. The lab shows what I can do next: made-up businesses, built end to end and in public, so you can see every step.</p>
+    </header>
+    <div class="case-grid" style="margin:24px 0 96px">
+      <a class="case" href="/lab/brightfold/">
+        <div class="mini"><div class="bf-mini" aria-hidden="true"><b>Brightfold</b><span>Proposals your clients actually read.</span><i></i></div></div>
+        <div class="case-body">
+          <span class="n">Concept · {built} of {chapters.length} chapters built</span>
+          <h3>Brightfold: one product, from idea to first client</h3>
+          <p>A fictional B2B SaaS: research, product UX, design system, website, motion, analytics, A/B test and an AI feature.</p>
+        </div>
+      </a>
+      <a class="case" href="/lab/brightfold/path/">
+        <div class="mini"><div class="path-mini" aria-hidden="true">{['Idea','Product','Website','Growth','Client'].map((x, i) => <span><i>{i + 1}</i>{x}</span>)}</div></div>
+        <div class="case-body">
+          <span class="n">Guide · 14 steps · a video for each</span>
+          <h3>The path: from idea to first client</h3>
+          <p>Every step to turn a product idea into a website that converts and a client you win, including the steps most people skip.</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .bf-mini{background:#FAF8F5;border-radius:12px;padding:28px;display:grid;gap:8px;color:#14161A;box-shadow:var(--mock-shadow)}
+  .bf-mini b{font-size:22px;letter-spacing:-.02em}
+  .bf-mini span{color:#6A707A;font-size:14px}
+  .bf-mini i{display:block;width:110px;height:34px;border-radius:6px;background:#F05A28;margin-top:6px}
+  .path-mini{display:grid;gap:8px;max-width:260px;margin:auto}
+  .path-mini span{display:flex;gap:10px;align-items:center;font-size:14px;padding:8px 12px;border:1px solid var(--line-2);border-radius:8px;background:var(--bg)}
+  .path-mini i{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--dim)}
+</style>

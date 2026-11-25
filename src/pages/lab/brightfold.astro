@@ -1,0 +1,189 @@
+---
+import Base from '../../layouts/Base.astro';
+import JsonLd from '../../components/JsonLd.astro';
+import tokens from '../../lab/brightfold/tokens.json';
+import { setsOf, resolve } from '../../lab/brightfold/tokens.mjs';
+import { chapters, gaps } from '../../lab/brightfold/chapters';
+import { EMAIL } from '../../data/profile';
+import '../../lab/brightfold/tokens.css';
+
+const sets = setsOf(tokens);
+const built = chapters.filter((c) => c.status === 'built').length;
+const lanes = ['Strategy', 'Product', 'Website', 'Growth', 'Quality'] as const;
+const label = { built: 'Built', next: 'Next', planned: 'Planned' };
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: 'Brightfold: a concept B2B product, end to end',
+  description: 'A fictional B2B SaaS designed and built end to end: strategy, product UX, design system, website, motion, analytics, A/B testing and an AI feature.',
+  url: new URL('/lab/brightfold/', Astro.site).href,
+  creator: { '@id': new URL('/#person', Astro.site).href },
+};
+---
+<Base title="Brightfold concept project · Sidhant Sardar" description="A fictional B2B product designed and built end to end: strategy, product UX, design system, website, motion, analytics and AI. Built in public, chapter by chapter." active="lab">
+  <JsonLd data={schema} />
+  <div class="in">
+    <header class="page-head">
+      <a class="back" href="/lab/">← Lab</a>
+      <span class="spec">Lab / Concept project · <b>{built} of {chapters.length} chapters built</b> · <span class="kind">Concept</span></span>
+      <span class="eyebrow">Brightfold · B2B SaaS · fictional</span>
+      <h1>One product, from idea to first client.</h1>
+      <p class="sum">Brightfold is a made-up company. I'm designing and building all of it in public: the product, the website, the motion, the analytics and an AI feature. It shows how the pieces connect, which is what clients actually pay for.</p>
+      <div class="snap">
+        <div><span>Business</span><b>Proposal software for consultancies</b></div>
+        <div><span>My role</span><b>Product, web and growth</b></div>
+        <div><span>Stack</span><b>Figma · Tokens Studio · Astro · GSAP · GA4</b></div>
+        <div><span>Status</span><b>Chapter {built} of {chapters.length}</b></div>
+      </div>
+    </header>
+
+    <a class="path-link" href="/lab/brightfold/path/"><span class="mono">Guide</span><b>Follow the path: every step from idea to first client, with a video for each →</b></a>
+
+    <p class="lab-note"><b>Honest label.</b> Brightfold isn't a real company: no real clients, no real data. Any number on this page is marked as a <em>target</em> or a <em>test</em>, never a result.</p>
+
+    <section class="lab-sec" aria-labelledby="biz-h">
+      <span class="eyebrow">The business</span>
+      <h2 id="biz-h">What Brightfold sells</h2>
+      <div class="biz">
+        <div><span class="mono muted">Customer</span><p>Small B2B consultancies, 5–50 people, who write 10+ proposals a month.</p></div>
+        <div><span class="mono muted">Problem</span><p>Proposals take a day each, live in Word files, and nobody knows which ones get read.</p></div>
+        <div><span class="mono muted">Product</span><p>Turn call notes into a branded proposal in minutes, then see when the client opens and signs it.</p></div>
+        <div><span class="mono muted">Money</span><p>$49 per seat per month. The website's one job is getting demo calls booked.</p></div>
+      </div>
+    </section>
+
+    <section class="lab-sec" aria-labelledby="map-h">
+      <span class="eyebrow">The map</span>
+      <h2 id="map-h">{chapters.length} chapters, five parts</h2>
+      <p class="muted lab-lede">Each chapter shows one skill and how it feeds the next: research shapes the product, the product shapes the website, and the analytics show whether it all brings in clients.</p>
+      <div class="lanes">
+        {lanes.map((lane) => (
+          <div class="lane">
+            <h3 class="eyebrow">{lane}</h3>
+            {chapters.filter((c) => c.lane === lane).map((c) => (
+              <article class={`chap ${c.status}`} id={`ch-${c.n}`}>
+                <div class="chap-top"><span class="mono">{c.n}</span><span class={`badge ${c.status}`}>{label[c.status]}</span></div>
+                <h4>{c.title}</h4>
+                <p>{c.proves}</p>
+                <div class="chips">{c.tools.map((t) => <span class="chip">{t}</span>)}</div>
+                {c.webflow && <span class="mono muted wf">In Webflow: {c.webflow}</span>}
+              </article>
+            ))}
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="lab-sec" id="design-system" aria-labelledby="ds-h">
+      <span class="eyebrow">Chapter 03 · Built</span>
+      <h2 id="ds-h">Design system: one source for every colour</h2>
+      <p class="muted lab-lede">Tokens live in one JSON file, the format Tokens Studio syncs from Figma. A small script turns them into CSS variables, so a colour changed in Figma changes the product and the website on the next build.</p>
+
+      <figure class="fig">
+        <div class="canvas">
+          <div class="flow pipe">
+            <div class="st acc"><span class="k">Figma</span><b>Tokens Studio</b><span>Designer edits a token</span></div>
+            <span class="ar">→</span>
+            <div class="st"><span class="k">Git</span><b>tokens.json</b><span>{sets.global.length} base + {sets.light.length} semantic</span></div>
+            <span class="ar">→</span>
+            <div class="st"><span class="k">Build</span><b>build-tokens.mjs</b><span>Resolves references</span></div>
+            <span class="ar">→</span>
+            <div class="st"><span class="k">Output</span><b>CSS variables</b><span>Light and dark themes</span></div>
+          </div>
+        </div>
+        <figcaption><b>Fig 1</b>The token pipeline. In Webflow the last step is Webflow variables instead of CSS.</figcaption>
+      </figure>
+
+      <figure class="fig">
+        <div class="canvas">
+          <div class="themes">
+            {(['light', 'dark'] as const).map((mode) => (
+              <div class="bf theme" data-bf-theme={mode === 'dark' ? 'dark' : undefined}>
+                <span class="mono">Theme · {mode}</span>
+                <div class="swatches">
+                  {sets[mode].map((t) => (
+                    <div class="sw"><i style={`background:var(--bf-${t.path.join('-')})`}></i><span>{t.path.join('-')}</span><code>{t.value} · {resolve(tokens, t.value)}</code></div>
+                  ))}
+                </div>
+                <div class="bf-card">
+                  <span class="bf-tag">Opened 2h ago</span>
+                  <b>Proposal · Northwind rebrand</b>
+                  <p>£18,400 · sent to 3 people</p>
+                  <div class="bf-row"><button class="bf-btn" type="button">Send reminder</button><button class="bf-btn ghost" type="button">View</button></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <figcaption><b>Fig 2</b>Same component, two themes. Only the semantic tokens swap; the component code never changes.</figcaption>
+      </figure>
+    </section>
+
+    <section class="lab-sec" aria-labelledby="gaps-h">
+      <span class="eyebrow">Beyond the screens</span>
+      <h2 id="gaps-h">What most portfolios skip</h2>
+      <div class="gaps">{gaps.map((g) => <div><b>{g.title}</b><p>{g.body}</p></div>)}</div>
+    </section>
+
+    <section class="case-cta" aria-labelledby="cta-h">
+      <h2 id="cta-h">Want this for your product?</h2>
+      <p>Product design, website and analytics, from one person who connects them.</p>
+      <div class="row">
+        <a class="btn primary" href={`mailto:${EMAIL}?subject=${encodeURIComponent('Project enquiry (from the Brightfold concept)')}`} data-track="contact_click" data-track-method="email" data-track-location="lab_brightfold">Email me <span class="ar">→</span></a>
+      </div>
+    </section>
+    <div style="height:80px"></div>
+  </div>
+</Base>
+
+<style>
+  .path-link{display:grid;gap:4px;border:1px solid var(--ink);border-radius:10px;padding:16px 18px;text-decoration:none;margin-bottom:16px;max-width:76ch}
+  .path-link .mono{color:var(--dim)}
+  .path-link b{font-weight:600}
+  .chap{scroll-margin-top:90px}
+  .chap:target{outline:2px solid var(--ink);outline-offset:2px}
+  .lab-note{border:1px solid var(--line-2);border-radius:10px;padding:14px 16px;font-size:15px;color:var(--muted);margin-bottom:56px;max-width:76ch}
+  .lab-note b{color:var(--ink);font-weight:600}
+  .lab-sec{display:grid;gap:14px;margin-bottom:72px}
+  .lab-sec h2{font-size:clamp(26px,3vw,36px)}
+  .lab-lede{max-width:64ch;font-size:16.5px}
+  .biz{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:8px}
+  .biz div{display:grid;gap:6px;align-content:start;border-top:1px solid var(--line);padding-top:14px}
+  .biz p{font-size:15.5px}
+  .lanes{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:8px}
+  .lane{display:grid;gap:12px;align-content:start}
+  .lane h3{font-weight:400}
+  .chap{border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:8px;background:var(--bg)}
+  .chap.planned{background:var(--bg-2)}
+  .chap.built{border-color:var(--ink)}
+  .chap h4{margin:0;font-size:16px;line-height:1.25;letter-spacing:-.01em}
+  .chap p{font-size:13.5px;color:var(--muted)}
+  .chap .chip{font-size:10px;padding:2px 6px}
+  .chap .wf{font-size:10.5px}
+  .chap-top{display:flex;justify-content:space-between;align-items:center;color:var(--dim)}
+  .badge{font-family:var(--mono);font-size:10px;padding:2px 6px;border-radius:4px;border:1px solid var(--line-2);color:var(--muted)}
+  .badge.built{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .badge.next{color:var(--ink);border-color:var(--ink)}
+  .pipe{flex-wrap:wrap}
+  .themes{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .theme{background:var(--bf-bg);color:var(--bf-text);border:1px solid var(--bf-line);border-radius:var(--bf-radius-lg);padding:var(--bf-space-6);display:grid;gap:var(--bf-space-4);font-family:var(--bf-font-family);min-width:0}
+  .theme>.mono{color:var(--bf-text-muted)}
+  .swatches{display:grid;gap:6px}
+  .sw{display:grid;grid-template-columns:22px 1fr;column-gap:10px;align-items:center;font-size:12.5px}
+  .sw i{width:22px;height:22px;border-radius:6px;border:1px solid var(--bf-line);grid-row:span 2}
+  .sw code{font-family:var(--mono);font-size:10px;color:var(--bf-text-muted);overflow-wrap:anywhere}
+  .bf-card{background:var(--bf-surface);border:1px solid var(--bf-line);border-radius:var(--bf-radius-md);padding:var(--bf-space-4);display:grid;gap:var(--bf-space-2)}
+  .bf-card p{color:var(--bf-text-muted);font-size:14px}
+  .bf-tag{justify-self:start;font-size:11.5px;padding:3px 8px;border-radius:var(--bf-radius-pill);background:var(--bf-action-soft);color:var(--bf-action-text);font-weight:500}
+  .bf-row{display:flex;gap:var(--bf-space-2);margin-top:var(--bf-space-2)}
+  .bf-btn{border:0;border-radius:var(--bf-radius-sm);padding:9px 14px;background:var(--bf-action);color:var(--bf-on-action);font-weight:500;font-size:14px;transition:transform var(--bf-motion-fast) var(--bf-motion-ease)}
+  .bf-btn:hover{transform:translateY(-1px)}
+  .bf-btn.ghost{background:transparent;color:var(--bf-text);border:1px solid var(--bf-line)}
+  .gaps{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px 24px;margin-top:8px}
+  .gaps div{display:grid;gap:6px;border-top:1px solid var(--line);padding-top:14px}
+  .gaps p{font-size:15px;color:var(--muted)}
+  @media (max-width:1100px){.lanes{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:760px){.lanes,.biz{grid-template-columns:1fr 1fr}.themes{grid-template-columns:1fr}}
+  @media (max-width:480px){.lanes,.biz{grid-template-columns:1fr}}
+</style>
