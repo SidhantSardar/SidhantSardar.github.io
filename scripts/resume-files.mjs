@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 import {
   Document, Packer, Paragraph, TextRun, ExternalHyperlink, AlignmentType, BorderStyle, TabStopType,
 } from 'docx';
-import { skills, jobs, projects, brings, fmt, tagline, headline, profile, education, icons, contactList } from '../src/data/resume.mjs';
+import { skills, jobs, projects, brings, fmt, tagline, headline, profile, education, icons, contactList, kwHtml, parts } from '../src/data/resume.mjs';
 import { EMAIL, PHONE, LINKEDIN, YOUTUBE } from '../src/data/profile.ts';
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -64,14 +64,17 @@ ul{margin:.4mm 0 0;padding-left:3.6mm;display:grid;gap:.5mm;color:#333}
 .pj p{font-size:9.6px}
 .pj .r{font-family:ui-monospace,Menlo,monospace;font-size:7.8px;color:#666}
 .pj p{margin:0;color:#333}
-.pj a{font-family:ui-monospace,Menlo,monospace;font-size:7.8px;color:#111;text-decoration:none}
+.pj a{font-family:ui-monospace,Menlo,monospace;font-size:7.8px;color:#1D4ED8;text-decoration:none}
+.tools{display:flex;flex-wrap:wrap;gap:1mm;margin:1.2mm 0 .4mm}
+.tools span{font-family:ui-monospace,Menlo,monospace;font-size:7.2px;padding:.3mm 1.8mm;border:1px solid #d2d2cc;border-radius:9mm;background:#fff}
+mark.kw{background:linear-gradient(transparent 52%,#FDE68A 52%);color:#111;font-weight:600;padding:0 .2mm}
 .projs{display:grid;grid-template-columns:1fr 1fr;gap:3mm 5mm}
 .sk{display:grid;gap:.4mm;padding-top:1.6mm;border-top:1px solid #e6e1d8}
 .sk:first-of-type{border-top:0;padding-top:0}
 .sk b{font-size:10.2px}.sk p{margin:0;color:#444;font-size:9.4px}
 .side ul{font-size:9.4px}
 .side p{margin:0}
-.lnk a{display:block;color:#111;text-decoration:none;font-size:9.6px}
+.lnk a{display:block;color:#1D4ED8;text-decoration:none;font-size:9.6px}
 </style></head><body><div class="page">
 <header>
   <img class="ph" src="data:image/jpeg;base64,${photo}" alt="">
@@ -87,8 +90,8 @@ ul{margin:.4mm 0 0;padding-left:3.6mm;display:grid;gap:.5mm;color:#333}
       ${jobs.map((j) => `<li class="${j.end ? '' : 'now'}">
         <div class="when"><b>${j.start.slice(0, 4)} – ${j.end ? j.end.slice(0, 4) : 'Now'}</b><span>${dates(j)}</span><span>${esc(j.where)}</span>${j.end ? '' : '<span class="pill">Current</span>'}</div>
         <span class="dot"></span>
-        <div><h3>${esc(j.role)}</h3><p class="org"><b>${esc(j.org)}</b> · ${esc(j.note)}</p>
-          ${j.groups.map((g) => `${g.k ? `<div class="k">${esc(g.k)}</div>` : ''}<ul>${g.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>`).join('')}
+        <div><h3>${esc(j.role)}</h3><p class="org"><b>${esc(j.org)}</b> · ${esc(j.note)}</p>${j.tools?.length ? `<div class="tools">${j.tools.map((t) => `<span>${esc(t)}</span>`).join('')}</div>` : ''}
+          ${j.groups.map((g) => `${g.k ? `<div class="k">${esc(g.k)}</div>` : ''}<ul>${g.points.map((p) => `<li>${kwHtml(p)}</li>`).join('')}</ul>`).join('')}
         </div></li>`).join('')}
     </ol></section>
     <section class="panel proj"><h2 class="eyebrow">Featured projects</h2><div class="projs">
@@ -99,7 +102,7 @@ ul{margin:.4mm 0 0;padding-left:3.6mm;display:grid;gap:.5mm;color:#333}
     <section><h2 class="eyebrow">Core skills</h2>${skills.map((s) => `<div class="sk"><b>${esc(s.k)}</b><p>${s.v.map(esc).join(' · ')}</p></div>`).join('')}</section>
     <section><h2 class="eyebrow">What I bring</h2><ul>${brings.map((b) => `<li>${esc(b)}</li>`).join('')}</ul></section>
     <section><h2 class="eyebrow">Education</h2><p><b>${esc(education.title)}</b><br>${esc(education.org)} · ${esc(education.year)}</p></section>
-    <section class="lnk"><h2 class="eyebrow">Links</h2><a href="${SITE}">Portfolio · ${clean(SITE)}</a>${projects.filter((p) => p.url && !p.url.includes('sidhantsardar')).map((p) => `<a href="${p.url}">${clean(p.url)} ↗</a>`).join('')}</section>
+    <section class="lnk"><h2 class="eyebrow">Links</h2><a href="${SITE}">${clean(SITE)}</a>${projects.filter((p) => p.url && !p.url.includes('sidhantsardar')).map((p) => `<a href="${p.url}">${clean(p.url)} ↗</a>`).join('')}</section>
   </aside>
 </div></div></body></html>`;
 
@@ -124,8 +127,8 @@ async function word() {
     border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: 'D4D4D4', space: 4 } },
     children: [run(text.toUpperCase(), { bold: true, size: 18, color: '444444', characterSpacing: 40 })],
   });
-  const bullet = (text) => new Paragraph({ bullet: { level: 0 }, spacing: { after: 40 }, children: [run(text)] });
-  const link = (text, href) => new ExternalHyperlink({ link: href, children: [run(text, { color: '111111', underline: {} })] });
+  const bullet = (text) => new Paragraph({ bullet: { level: 0 }, spacing: { after: 40 }, children: parts(text).map((p) => run(p.t, p.k ? { bold: true } : {})) });
+  const link = (text, href) => new ExternalHyperlink({ link: href, children: [run(text, { color: '1D4ED8', underline: {} })] });
 
   const children = [
     new Paragraph({ children: [run(NAME, { bold: true, size: 44 })] }),
@@ -144,6 +147,7 @@ async function word() {
         children: [run(j.role, { bold: true, size: 23 }), run(`\t${dates(j)} · ${j.where}`, { color: '525252', size: 19 })],
       }),
       new Paragraph({ spacing: { after: 60 }, children: [run(j.org, { bold: true }), run(` · ${j.note}`, { color: '525252' })] }),
+      ...(j.tools?.length ? [new Paragraph({ spacing: { after: 60 }, children: [run('Skills: ', { bold: true, size: 19 }), run(j.tools.join(' · '), { size: 19, color: '333333' })] })] : []),
       ...j.groups.flatMap((g) => [
         ...(g.k ? [new Paragraph({ spacing: { before: 80, after: 20 }, children: [run(g.k.toUpperCase(), { size: 16, color: '777777', bold: true, characterSpacing: 30 })] })] : []),
         ...g.points.map(bullet),

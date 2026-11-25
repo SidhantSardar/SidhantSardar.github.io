@@ -15,6 +15,7 @@ export const skills = [
 ];
 
 // Experience, newest first. Duration is worked out at build time, so it stays current.
+// Experience, newest first. **word** marks a skill: highlighted on the page and in the PDF, bold in Word.
 export const jobs = [
   {
     role: 'UI/UX Designer & Webflow Developer',
@@ -23,20 +24,21 @@ export const jobs = [
     start: '2023-05',
     end: null,
     where: 'Remote',
+    tools: ['Figma', 'Figma tokens', 'Prototyping', 'Webflow', 'CMS', 'Claude Code', 'Google Analytics (GA4)'],
     groups: [
       { k: 'Web app', points: [
-        'Designed the Altrum AI web application end to end in Figma: dashboards, policy management, audit logs and incident detection.',
-        'Own the full process: user flows, page structure, wireframes, prototypes and final UI.',
-        'Test the web app end to end: explore every flow, note issues and observations, and turn them into product improvements.',
+        'Designed the **Altrum AI web application** end to end in **Figma**: dashboards, policy management, audit logs and incident detection.',
+        'Own the full process: **user flows**, page structure, **wireframes**, **prototypes** and final **UI**.',
+        '**Test the web app end to end**: explore every flow, note issues and observations, and turn them into product improvements.',
       ] },
       { k: 'Websites', points: [
-        'Designed and built two full CMS websites in Webflow: first altrum.ai, then aligne.ai.',
-        'When Altrum became part of Aligne, merged both into one site and rebuilt aligne.ai in code with Claude Code.',
-        'Built a shared Figma component library (80+ components) used across both brands.',
+        'Designed and built two full **CMS websites** in **Webflow**: first altrum.ai, then aligne.ai.',
+        'When Altrum became part of Aligne, merged both into one site and rebuilt aligne.ai **in code with Claude Code**.',
+        'Built a shared **Figma component library** (80+ components) and **Figma tokens** used across both brands.',
       ] },
       { k: 'Analytics', points: [
-        'Set up Google Analytics on both websites: tracking visitors and key events to see which pages bring enquiries.',
-        'Used that data to improve pages for conversion with executive buyers.',
+        'Set up **Google Analytics (GA4)** on both websites: tracking visitors and **key events** to see which pages bring enquiries.',
+        'Used that data to improve pages for **conversion** with executive buyers.',
       ] },
     ],
   },
@@ -47,15 +49,22 @@ export const jobs = [
     start: '2019-11',
     end: '2023-01',
     where: 'Pune',
+    tools: ['Power BI', 'SQL', 'Data modelling'],
     groups: [
       { k: '', points: [
-        'Built Power BI dashboards from multiple data sources.',
-        'Data modelling and SQL: tabular models, relationships, query tuning.',
+        'Built **Power BI dashboards** from multiple data sources.',
+        '**Data modelling** and **SQL**: tabular models, relationships, query tuning.',
         'Turned business needs into technical specs and clear visuals.',
       ] },
     ],
   },
 ];
+
+/** "**word**" → [{ t: 'word', k: true }, …] so each output (web, PDF, Word) can style skills its own way. */
+export const parts = (s) => s.split(/(\*\*[^*]+\*\*)/).filter(Boolean).map((x) => (x.startsWith('**') ? { t: x.slice(2, -2), k: true } : { t: x, k: false }));
+const escHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+/** HTML with skills wrapped in <mark class="kw">. */
+export const kwHtml = (s) => parts(s).map((p) => (p.k ? `<mark class="kw">${escHtml(p.t)}</mark>` : escHtml(p.t))).join('');
 
 export const fmt = (ym) => new Date(`${ym}-01T00:00:00Z`).toLocaleDateString('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' });
 export const span = (start, end) => {
@@ -66,12 +75,14 @@ export const span = (start, end) => {
   return [y && `${y} yr${y > 1 ? 's' : ''}`, m && `${m} mo${m > 1 ? 's' : ''}`].filter(Boolean).join(' ');
 };
 
+// Featured projects, in this order.
 export const projects = [
+  { name: 'Altrum AI website', type: 'AI governance product site', role: 'UI/UX designer · Webflow developer', body: 'Designed and built the full Webflow CMS website for Altrum AI. When Altrum became part of Aligne, the site was merged into aligne.ai.' },
+  { name: 'Altrum AI web app', type: 'Enterprise AI governance platform', role: 'UI/UX designer · Figma', body: 'End-to-end UI for policy enforcement, audit logging, no-code governance and incident detection, tested end to end to find and fix issues.' },
+  { name: 'Aligne AI', type: 'Responsible AI consulting & platform', role: 'UI/UX designer · Webflow developer → code', body: 'Designed and built as a full Webflow CMS site, then rebuilt in code with Claude Code as one site for Aligne and Altrum, with GA4 tracking.', url: 'https://aligne.ai' },
+  { name: 'World of Gears', type: 'Sustainability consultancy', role: 'UI/UX designer · Webflow developer', body: 'A clean, editorial website for a supply-chain consultancy, with CMS structures for case studies and insights.' },
   { name: 'sidhantsardar.com', type: 'Portfolio, designed, built and measured', role: 'Figma · Claude Code + Astro · GA4', body: 'Designed in Figma, built in code with Claude Code. GA4 tracks every enquiry click as a key event, linked to Search Console to see which searches bring visitors.', url: 'https://www.sidhantsardar.com' },
   { name: 'Prabuddha Pathak', type: 'Digital archive of Dr. B. R. Ambedkar’s works', role: 'Designer & developer · custom code', body: 'A free, searchable library of Dr. B. R. Ambedkar’s writings and speeches: 17 volumes, speeches, videos, the Constitution, 141 people profiles and an “Ask the archive” search.', url: 'https://prabuddhapathak.com' },
-  { name: 'Altrum AI web app', type: 'Enterprise AI governance platform', role: 'Product designer · Figma', body: 'End-to-end UI for policy enforcement, audit logging, no-code governance and incident detection.' },
-  { name: 'Aligne AI', type: 'Responsible AI consulting & platform', role: 'Webflow CMS → rebuilt in code', body: 'Designed and built as a full Webflow CMS site, with altrum.ai alongside it. Now one site, rebuilt in code with Claude Code, with GA4 tracking.', url: 'https://aligne.ai' },
-  { name: 'World of Gears', type: 'Sustainability consultancy', role: 'Web designer', body: 'A clean, editorial website for a supply-chain consultancy, with CMS structures for case studies and insights.' },
 ];
 
 export const brings = [
