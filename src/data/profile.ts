@@ -1,11 +1,11 @@
 // Facts about Sidhant used across the site. Leave a value empty until it's real:
 // empty values are simply not shown (and not put into structured data).
 
-// {{TODO: LinkedIn URL}} e.g. 'https://www.linkedin.com/in/your-handle/'
-export const LINKEDIN = '';
+// LinkedIn profile (from the Oct 2026 resume).
+export const LINKEDIN = 'https://www.linkedin.com/in/sidhant-sardar/';
 
-// {{TODO: CV PDF}} put the file in public/ (e.g. public/sidhant-sardar-cv.pdf) and set the path here.
-export const CV = '';
+// The resume page. Shared as a link instead of a PDF ("Save as PDF" on the page prints one).
+export const CV = '/resume/';
 
 export const EMAIL = 'sidhantsardar93@gmail.com';
 

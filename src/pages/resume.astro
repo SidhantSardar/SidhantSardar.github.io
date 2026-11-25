@@ -1,0 +1,216 @@
+---
+// Resume as a web page: share the link instead of a PDF. "Save as PDF" prints a clean A4 copy.
+import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import { asset } from '../data/images';
+import { EMAIL, PHONE, PHONE_TEL, LINKEDIN } from '../data/profile';
+
+const skills = [
+  { k: 'UX', v: ['Human-centred design', 'User flows', 'Information architecture', 'Wireframing', 'Prototyping', 'Usability testing', 'Accessibility'] },
+  { k: 'UI & visual', v: ['Visual hierarchy', 'Typography', 'Colour', 'Layout grids', 'Responsive & mobile-first', 'Conversion-focused layouts'] },
+  { k: 'Design systems', v: ['Component libraries', 'Design tokens', 'Type & colour scales', '8pt spacing', 'Atomic design', 'Documentation'] },
+  { k: 'Tools & build', v: ['Figma (expert)', 'FigJam', 'Figma Make', 'Webflow (CMS, interactions)', 'Claude Code', 'HTML / CSS', 'Notion'] },
+];
+
+const jobs = [
+  {
+    role: 'UI/UX Designer & Webflow Developer',
+    org: 'Aligne AI (Aligne Technologies Ltd)',
+    note: 'Responsible AI governance for 50+ enterprises, including HSBC, MUFG, Vodafone, BP, Moody’s and Infosys',
+    when: 'May 2023 – Present',
+    where: 'Remote',
+    points: [
+      'Designed the complete Altrum AI product UI (dashboards, policy management, audit logs, incident detection), making complex governance workflows intuitive for enterprise users.',
+      'Own the end-to-end design process: user flows, IA, wireframes, interactive prototypes and pixel-perfect high-fidelity UI.',
+      'Built a shared design system across two brands: 80+ Figma components, semantic colour tokens, a 4-level type scale, 8pt grid, dark and light modes.',
+      'Designed and built aligne.ai and altrum.ai end to end, from Figma to responsive Webflow builds with CMS, animations and accessibility-aware structure for UK, EU, UAE and KSA markets.',
+      'Partner with founders, PMs, marketers and engineers, turning dense compliance content into clear, conversion-focused pages for executive buyers.',
+    ],
+  },
+  {
+    role: 'Power BI Developer',
+    org: 'Nimbja Security Solutions',
+    note: 'Full-time',
+    when: 'Nov 2019 – Jan 2023',
+    where: 'Pune',
+    points: [
+      'Built and maintained Power BI reports and dashboards, connecting multiple data sources and turning them into clear business visuals.',
+      'Data modelling and SQL: tabular models, dataset relationships, query and performance tuning.',
+      'Translated business requirements into technical specs and resolved defects through root-cause analysis.',
+    ],
+  },
+];
+
+const projects = [
+  { name: 'Altrum AI', type: 'Enterprise AI governance platform', role: 'Product designer · web app UI + marketing site', body: 'Complete Figma UI for policy enforcement, audit logging, no-code governance and incident detection, plus the marketing site, all on one design system.', url: 'https://altrum.ai' },
+  { name: 'Aligne AI', type: 'Responsible AI consulting & platform', role: 'UI/UX designer · Figma → Webflow', body: 'Corporate site end to end: information architecture for a multi-service offering, wireframes, prototypes and a responsive build.', url: 'https://aligne.ai' },
+  { name: 'World of Gears', type: 'Sustainability consultancy', role: 'Web designer', body: 'A clean, editorial website for a supply-chain consultancy, with CMS structures for case studies and insights.' },
+];
+
+const brings = [
+  'Human-centred problem solver: designs from real use cases outward, with care for every state and interaction.',
+  'Strong visual foundation: typography, colour, grids and hierarchy.',
+  'Systems mindset: reusable components and guidelines, not one-off screens.',
+  'Reliable remote partner: 3.5+ years managing multiple projects with clear written communication, using modern Figma and AI-assisted tooling.',
+];
+---
+<Base title="Resume · Sidhant Sardar" description="Sidhant Sardar: UI/UX designer, Webflow developer and AI-assisted developer (Claude Code). 3.5+ years of remote product and web design." image="/sidhant-full.jpg" imageAlt="Sidhant Sardar">
+  <div class="in cv">
+    <header class="cv-head">
+      <div class="who">
+        <Image class="photo" src={asset('/sidhant.jpg')} alt="Sidhant Sardar" widths={[160, 320]} sizes="96px" loading="eager" />
+        <div>
+          <h1>Sidhant Sardar</h1>
+          <p class="title">UI/UX Designer · Webflow Developer · AI-Assisted Developer (Claude Code)</p>
+        </div>
+      </div>
+      <ul class="contact">
+        <li><a href={`mailto:${EMAIL}`} data-track="contact_click" data-track-method="email" data-track-location="resume">{EMAIL}</a></li>
+        {PHONE && <li><a href={`tel:${PHONE_TEL}`} data-track="contact_click" data-track-method="phone" data-track-location="resume">{PHONE}</a></li>}
+        <li><a href="/">sidhantsardar.com</a></li>
+        {LINKEDIN && <li><a href={LINKEDIN} target="_blank" rel="noopener">linkedin.com/in/sidhant-sardar</a></li>}
+      </ul>
+      <div class="actions no-print">
+        <button class="btn primary" type="button" id="print-cv" data-track="resume_download" data-track-location="resume">Save as PDF <span class="ar">↓</span></button>
+        <a class="btn" href="/">See my work <span class="ar">→</span></a>
+      </div>
+    </header>
+
+    <div class="cv-grid">
+      <div class="main">
+        <section>
+          <h2 class="eyebrow">Profile</h2>
+          <p class="lead">UI/UX designer with 3.5+ years of remote experience designing clean, user-friendly digital products. I own the full workflow (user flows, wireframes, prototypes and high-fidelity Figma UI) and ship it myself through Webflow and Claude Code. Currently designing the product UI and web experience for an enterprise SaaS platform serving Tier-1 banks.</p>
+        </section>
+
+        <section>
+          <h2 class="eyebrow">Experience</h2>
+          {jobs.map((j) => (
+            <article class="job">
+              <div class="job-top">
+                <h3>{j.role}</h3>
+                <span class="mono muted">{j.when} · {j.where}</span>
+              </div>
+              <p class="org"><b>{j.org}</b> · {j.note}</p>
+              <ul>{j.points.map((p) => <li>{p}</li>)}</ul>
+            </article>
+          ))}
+        </section>
+
+        <section>
+          <h2 class="eyebrow">Featured projects</h2>
+          <div class="projects">
+            {projects.map((p) => (
+              <article>
+                <h3>{p.name} <span class="muted">· {p.type}</span></h3>
+                <span class="mono muted">{p.role}</span>
+                <p>{p.body}</p>
+                {p.url && <a class="mono" href={p.url} target="_blank" rel="noopener">{p.url.replace('https://', '')} ↗</a>}
+              </article>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      <aside class="side">
+        <section>
+          <h2 class="eyebrow">Core skills</h2>
+          {skills.map((s) => (
+            <div class="skill"><b>{s.k}</b><p>{s.v.join(' · ')}</p></div>
+          ))}
+        </section>
+        <section>
+          <h2 class="eyebrow">What I bring</h2>
+          <ul class="brings">{brings.map((b) => <li>{b}</li>)}</ul>
+        </section>
+        <section>
+          <h2 class="eyebrow">Education</h2>
+          <p><b>Graduation</b><br /><span class="muted">Nagpur University · 2015</span></p>
+        </section>
+        <section>
+          <h2 class="eyebrow">Links</h2>
+          <p class="cv-links"><a href="/">Portfolio · sidhantsardar.com</a><a href="https://aligne.ai" target="_blank" rel="noopener">aligne.ai ↗</a><a href="https://altrum.ai" target="_blank" rel="noopener">altrum.ai ↗</a></p>
+        </section>
+      </aside>
+    </div>
+  </div>
+</Base>
+
+<script>
+  document.getElementById('print-cv')?.addEventListener('click', () => window.print());
+</script>
+
+<style>
+  .cv{padding-block:56px 96px;display:grid;gap:40px}
+  .cv-head{display:grid;gap:18px;border-bottom:1px solid var(--line);padding-bottom:28px}
+  .who{display:flex;gap:20px;align-items:center}
+  .photo{width:96px;height:96px;border-radius:50%;object-fit:cover;flex:none}
+  h1{font-size:clamp(36px,5vw,56px);line-height:1}
+  .title{color:var(--muted);font-size:17px;margin-top:8px}
+  .contact{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 20px;font-size:15px}
+  .contact a{text-decoration:none;border-bottom:1px solid var(--line-2)}
+  .contact a:hover{border-color:var(--ink)}
+  .actions{display:flex;gap:10px;flex-wrap:wrap}
+  .cv-grid{display:grid;grid-template-columns:1fr 320px;gap:56px}
+  .main,.side{display:grid;gap:40px;align-content:start}
+  section{display:grid;gap:14px;align-content:start}
+  .lead{font-size:17.5px;line-height:1.65}
+  .job{display:grid;gap:8px;padding-bottom:22px}
+  .job+.job{border-top:1px solid var(--line);padding-top:22px}
+  .job-top{display:flex;justify-content:space-between;gap:8px 16px;flex-wrap:wrap;align-items:baseline}
+  h3{font-size:19px;letter-spacing:-.015em}
+  .org{font-size:15px;color:var(--muted)}
+  .org b{color:var(--ink);font-weight:600}
+  .job ul,.brings{margin:4px 0 0;padding-left:18px;display:grid;gap:6px;font-size:15px;color:var(--muted)}
+  .projects{display:grid;gap:20px}
+  .projects article{display:grid;gap:6px;border-top:1px solid var(--line);padding-top:14px}
+  .projects h3 span{font-weight:400;font-size:15px}
+  .projects p{font-size:15px;color:var(--muted)}
+  .projects a{text-decoration:none;justify-self:start}
+  .skill{display:grid;gap:4px;border-top:1px solid var(--line);padding-top:10px}
+  .skill b{font-size:14.5px;font-weight:600}
+  .skill p{font-size:14px;color:var(--muted);line-height:1.55}
+  .side p{font-size:15px}
+  .cv-links{display:grid;gap:6px;justify-items:start;text-align:left}
+  .cv-links a{text-decoration:none}
+  @media (max-width:860px){.cv-grid{grid-template-columns:1fr;gap:40px}}
+  @media (max-width:480px){.who{flex-direction:column;align-items:flex-start}.photo{width:80px;height:80px}}
+
+  /* Print / Save as PDF: plain A4, black on white, no site chrome */
+  @media print{
+    @page{size:A4;margin:14mm 14mm}
+    :global(html),:global(body){background:#fff!important;color:#111!important}
+    :global(nav),:global(footer),:global(.grid-overlay),:global(.skip),.no-print{display:none!important}
+    :global(*){color:#111!important;transition:none!important;animation:none!important;opacity:1!important;transform:none!important}
+    .cv{padding:0;gap:18px;font-size:12px}
+    .cv-head{padding-bottom:12px;gap:10px}
+    .photo{width:64px;height:64px}
+    h1{font-size:28px}
+    .title{font-size:13px;margin-top:4px}
+    .contact{font-size:11.5px}
+    .cv-grid{grid-template-columns:1fr 220px;gap:24px}
+    .main,.side{gap:16px}
+    section{gap:8px}
+    .lead,.job ul,.brings,.projects p,.side p,.skill p,.org{font-size:11px;line-height:1.45}
+    h3{font-size:13.5px}
+    .job{padding-bottom:10px;gap:4px;break-inside:avoid}
+    .job+.job{padding-top:10px}
+    .projects{gap:8px}
+    .projects article{padding-top:8px;gap:3px;break-inside:avoid}
+    a{text-decoration:none!important;border:0!important}
+    @page{margin:11mm 12mm}
+    .cv{gap:12px}
+    .mono,.eyebrow{font-size:9px!important}
+    .skill b,.org b{font-size:11.5px}
+    .projects h3 span{font-size:11px}
+    .job ul,.brings{gap:2px;margin-top:2px}
+    .skill{padding-top:6px;gap:2px}
+    .side{gap:12px}
+    .cv-links{gap:2px;font-size:11px}
+    .lead{font-size:11px}
+    .lead,.job ul,.brings,.projects p,.org{font-size:10.5px!important;line-height:1.4!important}
+    .main{gap:12px}
+    .job{padding-bottom:6px}
+    .job+.job{padding-top:6px}
+  }
+</style>
