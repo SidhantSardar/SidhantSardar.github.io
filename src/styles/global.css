@@ -293,8 +293,8 @@ footer .in{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 .back{font-family:var(--mono);font-size:12px;color:var(--muted);text-decoration:none}
 .back:hover{color:var(--ink)}
 .case-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
-.case{display:grid;text-decoration:none;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg-2);transition:border-color .2s}
-.case:hover{border-color:var(--line-2)}
+.case{display:grid;grid-template-rows:auto 1fr;text-decoration:none;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);transition:border-color .2s,box-shadow .2s,transform .2s}
+.case:hover{border-color:var(--line-2);box-shadow:0 14px 32px -20px rgba(0,0,0,.28);transform:translateY(-2px)}
 .case .mini{aspect-ratio:16/10;max-width:100%;border-bottom:1px solid var(--line);padding:24px;display:grid;place-items:center;background:
   radial-gradient(circle,var(--line) 1px,transparent 1.2px) 0 0/18px 18px}
 .case .mini>*{width:100%}
@@ -723,7 +723,7 @@ a.chip:hover{color:var(--ink);border-color:var(--ink)}
 .work-grid .case[hidden]{display:none}
 .work-grid .case{min-width:0}
 .work-grid .mini{overflow:hidden;min-width:0}
-.work-grid .mini img{display:block;width:100%;max-width:100%;height:100%;object-fit:cover;object-position:top;border-radius:6px}
+.work-grid .mini img{display:block;width:100%;max-width:100%;height:100%;object-fit:cover;object-position:top}
 .work-grid .case-body h2{font-size:24px;font-weight:700;line-height:1.1}
 @media (max-width:760px){.case-grid{grid-template-columns:1fr}}
 
@@ -772,3 +772,20 @@ a.chip:hover{color:var(--ink);border-color:var(--ink)}
 .mini-process span:first-child{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .mini-process i{font-style:normal;font-family:var(--mono);font-size:10px;opacity:.6}
 @media (max-width:420px){.mini-process{grid-template-columns:repeat(2,1fr)}}
+
+/* Cards: picture fills the top panel edge to edge (no inner padding); text sits on the card's white below */
+.case .mini.media{padding:0;place-items:stretch;background:var(--bg-2)}
+.case .mini.media img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;border-radius:0}
+.case .mini.media .browser{border-radius:0}
+.case-body{align-content:start}
+.case-grid.three{grid-template-columns:repeat(3,1fr);gap:20px}
+.case-grid.three .case-body{padding:18px 20px 22px}
+.case-grid.three .case-body h2,.case-grid.three .case-body h3{font-size:20px;line-height:1.15;letter-spacing:-.02em}
+.case-grid.three .mini-process{gap:6px}
+.case-grid.three .mini-process span{padding:8px;font-size:12px}
+.case-grid.three .mini:not(.media){padding:18px}
+@media (max-width:1100px){.case-grid.three{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:700px){.case-grid.three{grid-template-columns:1fr}}
+/* Home: website cards carry two links in the body */
+.site-card .site-links{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:4px}
+.section-foot{display:flex;justify-content:center;margin-top:32px}

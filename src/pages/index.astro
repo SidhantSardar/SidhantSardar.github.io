@@ -1,5 +1,7 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import CaseCard from '../components/CaseCard.astro';
 import Gap from '../components/Gap.astro';
 import JsonLd from '../components/JsonLd.astro';
 import Capabilities from '../components/Capabilities.astro';
@@ -52,6 +54,23 @@ const sites = [
   },
 ];
 
+// Home "Work" section: three picks. The full list lives on /work/.
+const workEntries = await getCollection('work');
+const pick = (id: string) => workEntries.find((w) => w.id === id)!;
+const totalWork = workEntries.length + (await getCollection('portfolio')).length + 1;
+const featuredWork = [
+  {
+    href: '/work/altrum-product-design/', label: 'Product design · Client project', process: true,
+    title: 'Designing an AI governance product, end to end',
+    line: 'The Altrum AI web app: domain, colours, layouts, user flows, every screen, Figma Make prototypes, build follow-up and testing.',
+    tags: ['Product design', 'Figma', 'UX'],
+  },
+  { href: '/work/altrum-website/', label: 'Website · Client project', title: pick('altrum-website').data.title, line: pick('altrum-website').data.summary, cover: pick('altrum-website').data.cover, tags: ['Webflow', 'Code'] },
+  { href: '/work/world-of-gears/', label: 'Website · Client project', title: pick('world-of-gears').data.title, line: pick('world-of-gears').data.summary, cover: pick('world-of-gears').data.cover, tags: ['Webflow', 'CMS'] },
+];
+
+// Services are hidden for now (they'll get their own page). Flip to true to show them again.
+const SHOW_SERVICES = false;
 const services = [
   {
     n: '01', name: 'Website design + build',
@@ -93,7 +112,7 @@ const services = [
         </div>
         <div class="cta" data-reveal>
           <a class="btn primary magnetic" href="#contact" data-track="cta_click" data-track-cta="start_project" data-track-location="hero">Start a project <span class="ar">↓</span></a>
-          <a class="btn magnetic" href="#services" data-track="cta_click" data-track-cta="see_services" data-track-location="hero">See services <span class="ar">↓</span></a>
+          <a class="btn magnetic" href="#work" data-track="cta_click" data-track-cta="see_work" data-track-location="hero">See my work <span class="ar">↓</span></a>
         </div>
       </div>
       <figure class="hero-photo" data-reveal>
@@ -111,37 +130,45 @@ const services = [
 
   <Gap size={120} />
 
+  <!-- WORK: three picks, the rest on /work/ -->
+  <section id="work">
+    <div class="in">
+      <div class="section-head">
+        <span class="spec" data-reveal>Section / Work · <b>3 of {totalWork}</b> · 3 col · gap <b>20</b></span>
+        <h2 data-split>Work</h2>
+        <p data-reveal>Product design for an AI web app, and websites for AI and sustainability companies.</p>
+      </div>
+      <div class="case-grid three" data-stagger>
+        {featuredWork.map((w) => <CaseCard {...w} heading="h3" />)}
+      </div>
+      <div class="section-foot" data-reveal><a class="btn primary magnetic" href="/work/">View all work <span class="ar">→</span></a></div>
+    </div>
+  </section>
+
+  <Gap size={120} />
+
   <!-- WEBSITES -->
   <section id="websites">
     <div class="in">
       <div class="section-head">
-        <span class="spec" data-reveal>Section / Websites · <b>3 items</b> · gap <b>96</b></span>
+        <span class="spec" data-reveal>Section / Websites · <b>3 items</b> · 3 col · gap <b>20</b></span>
         <h2 data-split>Websites</h2>
         <p data-reveal>Marketing sites for AI and sustainability companies, built in Webflow and in code.</p>
       </div>
-      <div class="sites">
+      <div class="case-grid three" data-stagger>
         {sites.map((s) => (
-          <article class="site">
-            <div class="site-visual corners" data-tilt>
-              <div class="measure-x"><span>{s.measure}</span></div>
-              <div class="browser">
-                <div class="bar"><i></i><i></i><i></i><span>{s.domain}</span></div>
-                <div class="shot">
-                  <Image src={asset(s.shot)} alt={`${s.name} homepage hero`} widths={[480, 800, 1200, 1440]} sizes="(max-width: 820px) 100vw, 760px" />
-                  <span class="shade"></span>
-                  <span class="ann">hero · 1440 × 900</span>
-                </div>
-                </div>
-              </div>
-            </div>
-            <div class="site-text" data-stagger>
-              <span class="n">{s.n} / 03</span>
+          <article class="case site-card">
+            <a class="mini media" href={`/work/${s.slug}/`} tabindex="-1" aria-hidden="true">
+              <Image src={asset(s.shot)} alt="" widths={[400, 640, 900]} sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 400px" />
+            </a>
+            <div class="case-body">
+              <span class="n">{s.n} / 03 · {s.domain}</span>
               <h3>{s.name}</h3>
               <p>{s.line}</p>
               <div class="chips">{s.chips.map((c) => <span class="chip">{c}</span>)}</div>
               <div class="site-links">
-                <a class="link-arrow" href={s.url} target="_blank" rel="noopener">Visit site <span class="ar">↗</span></a>
                 <a class="link-arrow" href={`/work/${s.slug}/`}>How I built it <span class="ar">→</span></a>
+                <a class="link-arrow" href={s.url} target="_blank" rel="noopener">Visit site <span class="ar">↗</span></a>
               </div>
             </div>
           </article>
@@ -152,30 +179,31 @@ const services = [
 
   <Gap size={120} />
 
-  <!-- SERVICES: what a client can hire me for -->
-  <section id="services">
-    <div class="in">
-      <div class="section-head">
-        <span class="spec" data-reveal>Section / Services · <b>4 offers</b> · gap <b>24</b></span>
-        <h2 data-split>Services</h2>
-        <p data-reveal>Tell me what you need, and you get a fixed quote before any work starts.</p>
+  <!-- SERVICES: hidden for now (SHOW_SERVICES) -->
+  {SHOW_SERVICES && (
+    <section id="services">
+      <div class="in">
+        <div class="section-head">
+          <span class="spec" data-reveal>Section / Services · <b>4 offers</b> · gap <b>24</b></span>
+          <h2 data-split>Services</h2>
+          <p data-reveal>Tell me what you need, and you get a fixed quote before any work starts.</p>
+        </div>
+        <div class="services" data-stagger>
+          {services.map((s) => (
+            <article class="service">
+              <span class="n">{s.n}</span>
+              <h3>{s.name}</h3>
+              <p>{s.line}</p>
+              <div class="chips">{s.chips.map((c) => <span class="chip">{c}</span>)}</div>
+              <span class="ref">{s.ref}</span>
+            </article>
+          ))}
+        </div>
+        <p class="services-note" data-reveal>Already have a site? I also take on ongoing work: new pages, CMS changes and fixes.</p>
       </div>
-      <div class="services" data-stagger>
-        {services.map((s) => (
-          <article class="service">
-            <span class="n">{s.n}</span>
-            <h3>{s.name}</h3>
-            <p>{s.line}</p>
-            <div class="chips">{s.chips.map((c) => <span class="chip">{c}</span>)}</div>
-            <span class="ref">{s.ref}</span>
-          </article>
-        ))}
-      </div>
-      <p class="services-note" data-reveal>Already have a site? I also take on ongoing work: new pages, CMS changes and fixes.</p>
-    </div>
-  </section>
-
-  <Gap size={120} />
+    </section>
+  )}
+  {SHOW_SERVICES && <Gap size={120} />}
 
   <!-- CAPABILITIES: every skill links to its proof -->
   <Capabilities />

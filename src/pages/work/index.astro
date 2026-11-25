@@ -1,9 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import Wire from '../../components/Wire.astro';
-import { Image } from 'astro:assets';
-import { asset } from '../../data/images';
+import CaseCard from '../../components/CaseCard.astro';
 
 // One index for every case study. URLs stay where they were (/work/… and /portfolio/…).
 const websites = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
@@ -49,20 +47,8 @@ const TAGS = ['Product design', 'Webflow', 'Code', 'CMS', 'Figma', 'UX', 'Design
     </div>
     <p class="mono muted" id="filter-status" aria-live="polite">Showing all {items.length}</p>
 
-    <div class="case-grid work-grid">
-      {items.map((i, n) => (
-        <a class="case" href={i.href} data-tags={i.tags.join('|')}>
-          <div class="mini">
-            {i.process ? <div class="mini-process" aria-hidden="true">{['Domain', 'Colours', 'Layouts', 'Flows', 'Screens', 'Prototype', 'Build', 'Test'].map((x, k) => <span><i>{String(k + 1).padStart(2, '0')}</i>{x}</span>)}</div> : i.cover ? <Image src={asset(i.cover)} alt="" widths={[400, 800]} sizes="(max-width: 760px) 100vw, 600px" loading={n === 0 ? "eager" : "lazy"} fetchpriority={n === 0 ? "high" : "auto"} /> : <Wire variant={i.mini} ann={false} />}
-          </div>
-          <div class="case-body">
-            <span class="n">{i.label}</span>
-            <h2>{i.title}</h2>
-            <p>{i.line}</p>
-            <div class="chips">{i.tags.map((t) => <span class="chip">{t}</span>)}</div>
-          </div>
-        </a>
-      ))}
+    <div class="case-grid three work-grid">
+      {items.map((i, n) => <CaseCard {...i} eager={n < 3} />)}
     </div>
     <div style="height:80px"></div>
   </div>
