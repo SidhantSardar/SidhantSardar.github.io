@@ -67,6 +67,8 @@ ul{margin:.4mm 0 0;padding-left:3.6mm;display:grid;gap:.5mm;color:#333}
 .pj a{font-family:ui-monospace,Menlo,monospace;font-size:7.8px;color:#1D4ED8;text-decoration:none}
 .tools{display:flex;flex-wrap:wrap;gap:1mm;margin:1.2mm 0 .4mm}
 .tools span{font-family:ui-monospace,Menlo,monospace;font-size:7.2px;padding:.3mm 1.8mm;border:1px solid #d2d2cc;border-radius:9mm;background:#fff}
+/* keep each group's label with its bullets */
+.g{break-inside:avoid}
 mark.kw{background:linear-gradient(transparent 52%,#FDE68A 52%);color:#111;font-weight:600;padding:0 .2mm}
 .projs{display:grid;grid-template-columns:1fr 1fr;gap:3mm 5mm}
 .sk{display:grid;gap:.4mm;padding-top:1.6mm;border-top:1px solid #e6e1d8}
@@ -91,7 +93,7 @@ mark.kw{background:linear-gradient(transparent 52%,#FDE68A 52%);color:#111;font-
         <div class="when"><b>${j.start.slice(0, 4)} – ${j.end ? j.end.slice(0, 4) : 'Now'}</b><span>${dates(j)}</span><span>${esc(j.where)}</span>${j.end ? '' : '<span class="pill">Current</span>'}</div>
         <span class="dot"></span>
         <div><h3>${esc(j.role)}</h3><p class="org"><b>${esc(j.org)}</b> · ${esc(j.note)}</p>${j.tools?.length ? `<div class="tools">${j.tools.map((t) => `<span>${esc(t)}</span>`).join('')}</div>` : ''}
-          ${j.groups.map((g) => `${g.k ? `<div class="k">${esc(g.k)}</div>` : ''}<ul>${g.points.map((p) => `<li>${kwHtml(p)}</li>`).join('')}</ul>`).join('')}
+          ${j.groups.map((g) => `<div class="g">${g.k ? `<div class="k">${esc(g.k)}</div>` : ''}<ul>${g.points.map((p) => `<li>${kwHtml(p)}</li>`).join('')}</ul></div>`).join('')}
         </div></li>`).join('')}
     </ol></section>
     <section class="panel proj"><h2 class="eyebrow">Featured projects</h2><div class="projs">

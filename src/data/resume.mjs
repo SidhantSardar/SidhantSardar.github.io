@@ -1,13 +1,13 @@
 // One source for the resume: the web page (src/pages/resume.astro), the PDF and the Word file
 // (scripts/resume-files.mjs) all read from here. Edit text here, then run `npm run resume:files`.
 
-export const tagline = 'UI/UX Designer · Webflow Developer · Claude Code · GA4';
-export const headline = ['Product and web designer', 'who builds and measures.'];
-export const profile = 'UI/UX designer with 3.5+ years of remote experience designing clean, user-friendly digital products. I own the full workflow (user flows, wireframes, prototypes and high-fidelity Figma UI), ship it myself through Webflow and Claude Code, and connect it to Google Analytics so every page is measured on conversions, not looks. Currently designing the product UI and web experience for an enterprise AI governance platform serving Tier-1 banks, with hands-on knowledge of how AI governance works end to end.';
+export const tagline = 'Product Designer (UI/UX) · Webflow Developer · Claude Code · GA4';
+export const headline = ['Product designer', 'who also builds and measures the website.'];
+export const profile = 'Product designer (UI/UX) with 3.5+ years of remote experience designing an AI-powered B2B SaaS platform end to end for enterprises and Tier-1 banks, making complex workflows simple and intuitive. I own the full process (user flows, wireframes, prototypes, dashboards and high-fidelity Figma UI on a shared design system) and work closely with product and development teams. I also design and build the marketing websites in Webflow and Claude Code, measured with Google Analytics.';
 export const education = { title: 'Graduation', org: 'Nagpur University', year: '2015' };
 
 export const skills = [
-  { k: 'UX', v: ['Human-centred design (HCD)', 'User flows', 'Page structure', 'Wireframing', 'Prototyping', 'Usability testing', 'Accessibility'] },
+  { k: 'Product & UX', v: ['End-to-end product design', 'Human-centred design (HCD)', 'User flows', 'Wireframing', 'Prototyping', 'Dashboard design', 'Complex workflows', 'Usability testing', 'Accessibility'] },
   { k: 'UI & visual', v: ['Visual hierarchy', 'Typography', 'Colour', 'Layout grids', 'Responsive & mobile-first', 'Conversion-focused layouts'] },
   { k: 'Design systems', v: ['Component libraries', 'Design tokens', 'Type & colour scales', '8pt spacing', 'Atomic design', 'Documentation'] },
   { k: 'Analytics & conversion', v: ['Google Analytics 4', 'Key events & conversion tracking', 'Search Console', 'Funnel analysis', 'Power BI', 'SQL'] },
@@ -15,29 +15,32 @@ export const skills = [
   { k: 'Domain', v: ['AI governance', 'Enterprise B2B SaaS', 'Policies, risk, audits & incidents'] },
 ];
 
-// Experience, newest first. Duration is worked out at build time, so it stays current.
 // Experience, newest first. **word** marks a skill: highlighted on the page and in the PDF, bold in Word.
 export const jobs = [
   {
-    role: 'UI/UX Designer & Webflow Developer',
+    role: 'Product Designer (UI/UX) & Webflow Developer',
     org: 'Aligne AI (Aligne Technologies Ltd)',
     note: 'Responsible AI governance for 50+ enterprises, including HSBC, MUFG, Vodafone, BP, Moody’s and Infosys',
     start: '2023-05',
     end: null,
     where: 'Remote',
-    tools: ['Human-centred design', 'Figma', 'Figma tokens', 'Prototyping', 'Webflow', 'CMS', 'Webflow Interactions', 'GSAP', 'Spline', 'Zapier', 'Claude Code', 'Google Analytics (GA4)', 'AI governance'],
+    tools: ['Product design', 'Human-centred design', 'Figma', 'Design systems', 'Figma tokens', 'Prototyping', 'Dashboards', 'Webflow', 'CMS', 'Webflow Interactions', 'GSAP', 'Spline', 'Zapier', 'Claude Code', 'Google Analytics (GA4)', 'AI governance'],
     groups: [
-      { k: 'Web app', points: [
-        'Designed the **Altrum AI web application** end to end in **Figma**: dashboards, policy management, audit logs and incident detection.',
-        'Own the full process with **human-centred design**: **user flows**, page structure, **wireframes**, **prototypes** and final **UI**.',
-        '**Test the web app end to end**: explore every flow, note issues and observations, and turn them into product improvements.',
+      { k: 'Product design · Altrum AI web app', points: [
+        'Designed the **Altrum AI product end to end**: every screen and frame of the full web application in **Figma**, from first concept to the shipped app.',
+        'Altrum AI is an **AI-powered B2B SaaS** platform used by enterprises and **Tier-1 banks** to govern their AI, so the product had to be clear, secure and trustworthy.',
+        'Made complex AI governance workflows **simple, intuitive and easy to follow** for compliance, risk and technical users.',
+        'Designed **data-rich dashboards** for policy enforcement, risk monitoring, audit logs and incident detection.',
+        'Created **user flows**, **wireframes**, **prototypes** and **high-fidelity UI** for multi-step workflows, with **human-centred design** and care for every state.',
+        'Built and maintained a consistent **design system** in Figma: **80+ UI components** and **Figma tokens**, shared by the product and both websites.',
+        'Worked with **product managers and developers** to turn requirements into designs and support developer handoff.',
+        '**Tested the web app end to end**: explored every flow, noted usability issues and observations, and turned them into product improvements.',
       ] },
       { k: 'Websites', points: [
         'Designed and built two full **CMS websites** in **Webflow**: first altrum.ai, then aligne.ai.',
         'Added motion with **Webflow Interactions** and **GSAP**, and integrated 3D and animation from tools like **Spline**.',
         'Built **Zapier** workflows and automations that connect the websites with other tools.',
         'When Altrum became part of Aligne, merged both into one site and rebuilt aligne.ai **in code with Claude Code**.',
-        'Built a shared **Figma component library** (80+ components) and **Figma tokens** used across both brands.',
       ] },
       { k: 'Domain', points: [
         'Deep **AI governance** knowledge from designing the platform end to end: how policies, risk, audits and incident detection work together for enterprise teams.',
@@ -84,7 +87,7 @@ export const span = (start, end) => {
 // Featured projects, in this order.
 export const projects = [
   { name: 'Altrum AI website', type: 'AI governance product site', role: 'UI/UX designer · Webflow developer', body: 'Designed and built the full Webflow CMS website for Altrum AI. When Altrum became part of Aligne, the site was merged into aligne.ai.' },
-  { name: 'Altrum AI web app', type: 'Enterprise AI governance platform', role: 'UI/UX designer · Figma', body: 'End-to-end UI for policy enforcement, audit logging, no-code governance and incident detection, tested end to end to find and fix issues.' },
+  { name: 'Altrum AI web app', type: 'AI-powered B2B SaaS product', role: 'Product designer · Figma', body: 'Designed the full product end to end: every screen for policy enforcement, audit logging, no-code governance, incident detection and dashboards, on one design system, then tested it end to end to find and fix issues.' },
   { name: 'Aligne AI', type: 'Responsible AI consulting & platform', role: 'UI/UX designer · Webflow developer → code', body: 'Designed and built as a full Webflow CMS site, then rebuilt in code with Claude Code as one site for Aligne and Altrum, with GA4 tracking.', url: 'https://aligne.ai' },
   { name: 'World of Gears', type: 'Sustainability consultancy', role: 'UI/UX designer · Webflow developer', body: 'A clean, editorial website for a supply-chain consultancy, with CMS structures for case studies and insights.' },
   { name: 'sidhantsardar.com', type: 'Portfolio, designed, built and measured', role: 'Figma · Claude Code + Astro · GA4', body: 'Designed in Figma, built in code with Claude Code. GA4 tracks every enquiry click as a key event, linked to Search Console to see which searches bring visitors.', url: 'https://www.sidhantsardar.com' },
