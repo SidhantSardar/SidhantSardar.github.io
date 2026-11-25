@@ -1,29 +1,86 @@
 ---
-// Resume as a web page: share the link instead of a PDF. The PDF and Word downloads are made from the
-// same text (src/data/resume.mjs) by `npm run resume:files`.
+// Resume as a web page: share the link instead of a PDF.
+// On screen it is a visual page: numbers, icons, tool logos and short lines, with the full text of each
+// job one click away under "Details". The PDF and Word downloads, and a print of this page
+// (components/ResumeSheet.astro), carry the full text. Everything reads from src/data/resume.mjs.
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import WorkArt from '../components/WorkArt.astro';
+import ResumeSheet from '../components/ResumeSheet.astro';
 import { Image } from 'astro:assets';
 import { asset } from '../data/images';
-import { EMAIL, PHONE, PHONE_TEL, LINKEDIN, YOUTUBE } from '../data/profile';
-import { skills, jobs, projects, brings, fmt, span, tagline, headline, profile, education, icons, contactList, kwHtml } from '../data/resume.mjs';
-const contacts = contactList({ EMAIL, PHONE, LINKEDIN, YOUTUBE });
+import { EMAIL, PHONE, LINKEDIN, YOUTUBE } from '../data/profile';
+import {
+  skills, jobs, projects, fmt, span, tagline, headline, education, icons, contactList, kwHtml,
+  lead, toolset, toolkit, loop, loopBack, glance, jobCards, projectArt, skillIcons, bringsShort,
+} from '../data/resume.mjs';
 
+const contacts = contactList({ EMAIL, PHONE, LINKEDIN, YOUTUBE });
+const host = (u) => u.replace(/^https:\/\/(www\.)?/, '').replace(/\/$/, '');
+
+// Career bar: one segment per job, oldest first, each as wide as the months it lasted.
+const ym = (s) => { const [y, m] = s.split('-').map(Number); return y * 12 + m - 1; };
+const today = new Date().getUTCFullYear() * 12 + new Date().getUTCMonth();
+const career = [...jobs].reverse().map((j, i, all) => ({
+  j,
+  months: (j.end ? ym(j.end) : today) - ym(j.start) + 1,
+  gap: i ? ym(j.start) - ym(all[i - 1].end) - 1 : 0,
+  // "Product Designer (UI/UX) & Webflow Developer" → "Product Designer"
+  role: j.role.split(/ \(| & /)[0],
+  org: j.org.split(' (')[0],
+}));
 ---
 <Base active="resume" title="Resume · Sidhant Sardar" description="Sidhant Sardar: UI/UX designer, Webflow developer and AI-assisted developer (Claude Code). 3.5+ years of remote product and web design." image="/sidhant-full.jpg" imageAlt="Sidhant Sardar">
   <div class="in cv">
-    <header class="cv-head">
-      <div class="intro-id">
-        <div class="avatar corners">
-          <Image class="portrait-img" src={asset('/sidhant.jpg')} alt="Sidhant Sardar" widths={[192, 384]} sizes="96px" loading="eager" />
+    <!-- Who, in one screen: name, headline, downloads, and how the work goes round -->
+    <header class="rs-head">
+      <div class="rs-id">
+        <div class="intro-id">
+          <div class="avatar corners">
+            <Image class="portrait-img" src={asset('/sidhant.jpg')} alt="Sidhant Sardar" widths={[192, 384]} sizes="96px" loading="eager" />
+          </div>
+          <div class="intro-name">
+            <b>Sidhant Sardar</b>
+            <span>{tagline}</span>
+            <span class="status mono"><i></i>Open to projects</span>
+          </div>
         </div>
-        <div class="intro-name">
-          <b>Sidhant Sardar</b>
-          <span>{tagline}</span>
-          <span class="status mono"><i></i>Open to projects</span>
+        <p class="eyebrow">Resume · 3.5+ years remote</p>
+        <h1 class="cv-title"><span class="hard gt">{headline[0]}</span> <span class="soft gt">{headline[1]}</span></h1>
+        <p class="cv-lead">{lead}</p>
+        <div class="actions">
+          <a class="btn primary" href="/sidhant-sardar-resume.pdf" download data-track="resume_download" data-track-format="pdf" data-track-location="resume">Download PDF <span class="ar">↓</span></a>
+          <a class="btn" href="/sidhant-sardar-resume.docx" download data-track="resume_download" data-track-format="word" data-track-location="resume">Download Word <span class="ar">↓</span></a>
+          <a class="btn" href="/">See my work <span class="ar">→</span></a>
         </div>
       </div>
-      <p class="eyebrow">Resume · 3.5+ years remote</p>
-      <h1 class="cv-title">{headline[0]} <span class="soft">{headline[1]}</span></h1>
+
+      <aside class="loop glass" aria-labelledby="loop-h" data-reveal>
+        <div class="loop-top">
+          <h2 class="rs-k" id="loop-h">How I work</h2>
+          <span class="loop-tag"><Icon name="repeat-2" size={14} />One loop</span>
+        </div>
+        <ol class="loop-steps">
+          <li class="loop-rail" aria-hidden="true"></li>
+          {loop.map((s) => (
+            <li class="loop-step">
+              <span class="loop-n"><Icon name={s.icon} size={19} /></span>
+              <div class="loop-b">
+                <h3>{s.k}</h3>
+                <p>{s.line}</p>
+                <ul class="tool-row" aria-label={`${s.k} tools`}>
+                  {s.tools.map((t) => <li class="tool"><Icon name={toolset[t].icon} size={15} /><span>{toolset[t].name}</span></li>)}
+                </ul>
+              </div>
+            </li>
+          ))}
+          <li class="loop-step again">
+            <span class="loop-n"><Icon name="repeat-2" size={17} /></span>
+            <p class="loop-b">{loopBack}</p>
+          </li>
+        </ol>
+      </aside>
+
       <ul class="contact">
         {contacts.map((c) => (
           <li><a href={c.href} {...(c.key === 'email' || c.key === 'phone' ? { 'data-track': 'contact_click', 'data-track-method': c.key, 'data-track-location': 'resume' } : { target: '_blank', rel: 'noopener' })}>
@@ -31,241 +88,454 @@ const contacts = contactList({ EMAIL, PHONE, LINKEDIN, YOUTUBE });
           </a></li>
         ))}
       </ul>
-      <div class="actions no-print">
-        <a class="btn primary" href="/sidhant-sardar-resume.pdf" download data-track="resume_download" data-track-format="pdf" data-track-location="resume">Download PDF <span class="ar">↓</span></a>
-        <a class="btn" href="/sidhant-sardar-resume.docx" download data-track="resume_download" data-track-format="word" data-track-location="resume">Download Word <span class="ar">↓</span></a>
-        <a class="btn" href="/">See my work <span class="ar">→</span></a>
-      </div>
     </header>
 
-    <div class="cv-grid">
-      <div class="main">
-        <section>
-          <h2 class="eyebrow">Profile</h2>
-          <p class="lead">{profile}</p>
-        </section>
+    <!-- Four numbers -->
+    <ul class="glance glass" aria-label="At a glance" data-reveal>
+      {glance.map((g) => (
+        <li>
+          <span class="g-i"><Icon name={g.icon} size={20} /></span>
+          <b><span class="gt">{g.n}</span>{g.unit && <small>{g.unit}</small>}</b>
+          <span class="g-l">{g.label}</span>
+        </li>
+      ))}
+    </ul>
 
-        <section class="panel exp">
-          <h2 class="eyebrow">Experience</h2>
-          <ol class="timeline">
-            {jobs.map((j) => (
-              <li class:list={['tl', { now: !j.end }]}>
-                <div class="tl-when">
-                  <b>{j.start.slice(0, 4)} – {j.end ? j.end.slice(0, 4) : 'Now'}</b>
-                  <span>{fmt(j.start)} – {j.end ? fmt(j.end) : 'Present'}</span>
-                  <span>{span(j.start, j.end)} · {j.where}</span>
-                  {!j.end && <span class="pill">Current</span>}
-                </div>
-                <span class="tl-dot" aria-hidden="true"></span>
-                <div class="tl-body">
+    <!-- Experience: the years as one bar, then a card per job -->
+    <section class="rs-sec" aria-labelledby="exp-h">
+      <h2 class="rs-h" id="exp-h"><Icon name="briefcase-business" size={16} /><span>Experience</span></h2>
+      <div class="career" aria-hidden="true" data-reveal>
+        {career.map((c) => (
+          <>
+            {c.gap > 0 && <div class="c-gap" style={`--m:${c.gap}`}><i></i></div>}
+            <div class:list={['c-seg', { now: !c.j.end }]} style={`--m:${c.months}`}>
+              <div class="c-years"><span>{c.j.start.slice(0, 4)}</span><span>{c.j.end ? c.j.end.slice(0, 4) : 'Now'}</span></div>
+              <i class="c-bar"></i>
+              <div class="c-l"><b>{c.role}</b><span>{c.org}</span></div>
+            </div>
+          </>
+        ))}
+      </div>
+
+      <div class="jobs">
+        {jobs.map((j, i) => {
+          const card = jobCards[i];
+          // "… for 50+ enterprises, including HSBC, MUFG and Infosys" → the line, and the names as chips
+          const [about, names] = j.note.split(', including ');
+          const clients = names ? names.split(/, | and /) : [];
+          return (
+            <article class:list={['job glass', { now: !j.end }]} data-reveal>
+              <header class="job-top">
+                <span class="job-mark" aria-hidden="true">{card.mark}</span>
+                <div class="job-id">
                   <h3>{j.role}</h3>
-                  <p class="org"><b>{j.org}</b> · {j.note}</p>
-                  {j.tools?.length > 0 && <ul class="tools" aria-label="Skills used">{j.tools.map((t) => <li>{t}</li>)}</ul>}
-                  {j.groups.map((g) => (
-                    <div class="grp">
-                      {g.k && <span class="grp-k mono">{g.k}</span>}
-                      <ul>{g.points.map((p) => <li set:html={kwHtml(p)} />)}</ul>
-                    </div>
-                  ))}
+                  <p>{j.org}{clients.length === 0 && ` · ${j.note}`}</p>
                 </div>
-              </li>
-            ))}
-          </ol>
-        </section>
+                <ul class="job-meta">
+                  {!j.end && <li class="pill">Current</li>}
+                  <li><Icon name="calendar-days" size={14} />{fmt(j.start)} – {j.end ? fmt(j.end) : 'Present'}</li>
+                  <li><Icon name="clock-3" size={14} />{span(j.start, j.end)}</li>
+                  <li><Icon name="map-pin" size={14} />{j.where}</li>
+                </ul>
+              </header>
+              {clients.length > 0 && (
+                <div class="job-clients">
+                  <p><Icon name="building-2" size={16} /><span>{about}</span></p>
+                  <ul>{clients.map((c) => <li>{c}</li>)}</ul>
+                </div>
+              )}
+              <div class="areas">
+                {j.groups.map((g, k) => {
+                  const a = card.areas[k];
+                  const name = g.k || a.title;
+                  return (
+                    <section class:list={['area', { wide: a.wide }]}>
+                      <header class="area-top">
+                        <span class="ico-tile"><Icon name={a.icon} size={18} /></span>
+                        <div class="area-id">
+                          <h4>{name}</h4>
+                          {a.sub && <p>{a.sub}</p>}
+                        </div>
+                        {a.tools && (
+                          <ul class="tool-row" aria-label="Tools">
+                            {a.tools.map((t) => <li class="tool"><Icon name={toolset[t].icon} size={15} /><span>{toolset[t].short ?? toolset[t].name}</span></li>)}
+                          </ul>
+                        )}
+                      </header>
+                      {a.items && (
+                        <ul class="pts">
+                          {a.items.map(([ic, text]) => <li><Icon name={ic} size={17} /><span>{text}</span></li>)}
+                        </ul>
+                      )}
+                      {a.grid && (
+                        <ul class="quad">
+                          {a.grid.map(([ic, text]) => <li><Icon name={ic} size={18} /><span>{text}</span></li>)}
+                        </ul>
+                      )}
+                      <details class="more">
+                        <summary><span>Details<span class="vh">: {name}</span></span><Icon name="chevron-down" size={14} /></summary>
+                        <ul class="full">{g.points.map((p) => <li set:html={kwHtml(p)} />)}</ul>
+                      </details>
+                    </section>
+                  );
+                })}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
 
-        <section class="panel proj">
-          <h2 class="eyebrow">Featured projects</h2>
-          <div class="projects">
-            {projects.map((p) => (
-              <article class:list={{ featured: p.featured }}>
-                {p.featured && <span class="feat-tag mono">{p.featured}</span>}
-                <h3>{p.name} <span class="muted">· {p.type}</span></h3>
-                <span class="mono muted">{p.role}</span>
-                <p>{p.body}</p>
-                {p.url && <a class="link mono" href={p.url} target="_blank" rel="noopener">{p.url.replace(/^https:\/\/(www\.)?/, '')} ↗</a>}
-                {p.caseStudy && <a class="card-link" href={p.caseStudy}>See the full product design process <span class="ar">→</span></a>}
-              </article>
-            ))}
+    <!-- Toolkit: every tool with its logo -->
+    <section class="rs-sec" aria-labelledby="kit-h">
+      <h2 class="rs-h" id="kit-h"><Icon name="wrench" size={16} /><span>Toolkit</span></h2>
+      <ul class="kit" data-stagger>
+        {toolkit.map((k) => (
+          <li class="kit-t glass">
+            <Icon name={toolset[k].icon} size={28} />
+            <b>{toolset[k].name}</b>
+            {toolset[k].note && <small>{toolset[k].note}</small>}
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- Core skills, grouped -->
+    <section class="rs-sec" aria-labelledby="sk-h">
+      <h2 class="rs-h" id="sk-h"><Icon name="layers" size={16} /><span>Core skills</span></h2>
+      <div class="skills" data-stagger>
+        {skills.filter((s) => s.k !== 'Tools & build').map((s) => (
+          <article class="sk glass">
+            <header><span class="ico-tile"><Icon name={skillIcons[s.k]} size={18} /></span><h3>{s.k}</h3></header>
+            <ul class="tags">{s.v.map((v) => <li>{v}</li>)}</ul>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Featured projects -->
+    <section class="rs-sec" aria-labelledby="pj-h">
+      <h2 class="rs-h" id="pj-h"><Icon name="layout-grid" size={16} /><span>Featured projects</span></h2>
+      {projects.filter((p) => p.featured).map((p) => {
+        const a = projectArt[p.name];
+        return (
+          <article class="pf glass" data-reveal>
+            <div class="pf-copy">
+              <span class="feat-tag mono">{p.featured}</span>
+              <h3>{p.name}</h3>
+              <p class="pf-type">{p.type}</p>
+              <ul class="tags">{a.chips.map((c) => <li>{c}</li>)}</ul>
+              <ul class="tool-row" aria-label="Tools">
+                {a.tools.map((t) => <li class="tool"><Icon name={toolset[t].icon} size={15} /><span>{toolset[t].name}</span></li>)}
+              </ul>
+              <a class="card-link" href={p.caseStudy}>See the full product design process <span class="ar">→</span></a>
+            </div>
+            <div class="pf-art glow-card" aria-hidden="true"><WorkArt kind="product" /></div>
+          </article>
+        );
+      })}
+      <ul class="pgrid" data-stagger>
+        {projects.filter((p) => !p.featured).map((p) => {
+          const a = projectArt[p.name];
+          return (
+            <li class="pj glass">
+              <span class="ico-tile"><Icon name={a.icon} size={18} /></span>
+              <h3>{p.name}</h3>
+              <p>{p.type}</p>
+              <ul class="tool-row" aria-label="Tools">
+                {a.tools.map((t) => <li class="tool"><Icon name={toolset[t].icon} size={15} /><span>{toolset[t].short ?? toolset[t].name}</span></li>)}
+              </ul>
+              <div class="pj-links">
+                {a.page && <a class="link" href={a.page}>How I built it <span class="ar">→</span></a>}
+                {p.url && <a class="link" href={p.url} target="_blank" rel="noopener">{host(p.url)} <Icon name="arrow-up-right" size={13} /></a>}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+
+    <!-- What I bring, then education and links -->
+    <section class="rs-sec" aria-labelledby="br-h">
+      <h2 class="rs-h" id="br-h"><Icon name="sparkles" size={16} /><span>What I bring</span></h2>
+      <ul class="brings" data-stagger>
+        {bringsShort.map((b) => (
+          <li class="glass">
+            <span class="ico-tile"><Icon name={b.icon} size={18} /></span>
+            <b>{b.k}</b>
+            <p>{b.line}</p>
+          </li>
+        ))}
+      </ul>
+      <div class="tail" data-stagger>
+        <section class="glass" aria-labelledby="edu-h">
+          <span class="ico-tile"><Icon name="graduation-cap" size={18} /></span>
+          <div>
+            <h2 class="rs-k" id="edu-h">Education</h2>
+            <b>{education.title}</b>
+            <p>{education.org} · {education.year}</p>
+          </div>
+        </section>
+        <section class="glass" aria-labelledby="ln-h">
+          <span class="ico-tile"><Icon name="link" size={18} /></span>
+          <div>
+            <h2 class="rs-k" id="ln-h">Links</h2>
+            <p class="cv-links">
+              <a class="link" href="/">sidhantsardar.com</a>
+              {projects.filter((p) => p.url && !p.url.includes('sidhantsardar')).map((p) => <a class="link" href={p.url} target="_blank" rel="noopener">{host(p.url)} <Icon name="arrow-up-right" size={13} /></a>)}
+            </p>
           </div>
         </section>
       </div>
-
-      <aside class="side panel">
-        <section>
-          <h2 class="eyebrow">Core skills</h2>
-          {skills.map((s) => (
-            <div class="skill"><b>{s.k}</b><p>{s.v.join(' · ')}</p></div>
-          ))}
-        </section>
-        <section>
-          <h2 class="eyebrow">What I bring</h2>
-          <ul class="brings">{brings.map((b) => <li>{b}</li>)}</ul>
-        </section>
-        <section>
-          <h2 class="eyebrow">Education</h2>
-          <p><b>{education.title}</b><br /><span class="muted">{education.org} · {education.year}</span></p>
-        </section>
-        <section>
-          <h2 class="eyebrow">Links</h2>
-          <p class="cv-links"><a class="link" href="/">sidhantsardar.com</a>{projects.filter((p) => p.url && !p.url.includes('sidhantsardar')).map((p) => <a class="link" href={p.url} target="_blank" rel="noopener">{p.url.replace(/^https:\/\/(www\.)?/, '')} ↗</a>)}</p>
-        </section>
-      </aside>
-    </div>
+    </section>
   </div>
+
+  <ResumeSheet />
 </Base>
 
-
 <style>
-  /* Section backgrounds, all inside the site's palette: two light greys and one very light blue */
-  .cv{padding-block:56px 96px;display:grid;gap:40px;--t-exp:#F5F5F5;--t-proj:#F0F1FF;--t-side:#F8F8F8}
-  :global(:root[data-theme="dark"]) .cv{--t-exp:#101010;--t-proj:#0D0E1C;--t-side:#141414}
-  .panel{border-radius:14px;padding:clamp(18px,3vw,28px)}
-  .exp{background:var(--t-exp)}
-  .proj{background:var(--t-proj)}
-  .side.panel{background:var(--t-side);align-self:start}
-  .timeline{list-style:none;margin:0;padding:0;display:grid;gap:28px;position:relative}
-  .timeline::before{content:"";position:absolute;left:172px;top:8px;bottom:8px;width:1px;background:var(--line-2)}
-  .tl{display:grid;grid-template-columns:150px 44px 1fr;align-items:start}
-  .tl-when{display:grid;gap:3px;justify-items:start}
-  .tl-when b{font-family:var(--display);font-size:20px;letter-spacing:-.02em;line-height:1.1}
-  .tl-when span{font-family:var(--mono);font-size:11px;color:var(--muted)}
-  .pill{margin-top:6px;padding:2px 8px;border-radius:999px;background:var(--accent-fill);color:var(--on-accent)!important}
-  .tl-dot{justify-self:center;margin-top:6px;width:11px;height:11px;border-radius:50%;background:var(--bg);border:2px solid var(--ink);position:relative;z-index:1}
-  .tl.now .tl-dot{background:var(--accent-fill);border-color:var(--accent-fill);box-shadow:0 0 0 4px var(--accent-soft)}
-  .tl-body{display:grid;gap:8px;min-width:0}
-  .grp{display:grid;gap:4px;margin-top:4px}
-  /* Links and the skill highlight use the site's blue: solid for links, a pale wash behind skills */
-  .cv{--link:var(--accent);--link-bg:var(--accent-soft);--kw:rgba(0,0,255,.13)}
-  :global(:root[data-theme="dark"]) .cv{--kw:rgba(143,155,255,.3)}
-  .tools{list-style:none;margin:2px 0 2px;padding:0;display:flex;flex-wrap:wrap;gap:6px}
-  .tools li{font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:999px;background:var(--surface);border:1px solid var(--line-2);color:var(--ink)}
-  .grp :global(mark.kw){background:linear-gradient(transparent 52%,var(--kw) 52%);color:var(--ink);font-weight:600;padding:0 1px}
-  .link{color:var(--link)!important;text-decoration:none;border-radius:4px;padding:1px 3px;margin:0 -3px;background-image:linear-gradient(currentColor,currentColor);background-size:0 1px;background-position:3px 100%;background-repeat:no-repeat;transition:background-size .25s ease,background-color .2s}
-  .link:hover,.link:focus-visible{background-color:var(--link-bg);background-size:calc(100% - 6px) 1px}
-  .grp-k{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim)}
-  .grp ul{margin:0;padding-left:18px;display:grid;gap:5px;font-size:15px;color:var(--muted)}
-  @media (max-width:340px){.cv-head .actions{grid-template-columns:1fr!important}}
-  /* phones and tablets: finger-sized links */
+  /* This page's own tokens: tiles sit inside cards, chips sit inside tiles */
+  .cv{--card-line:var(--line);--tile:#F7F7F8;--tile-line:var(--line);--chip:var(--surface);--chip-line:var(--line-2);--kw:rgba(0,0,255,.13);
+    padding-block:40px 96px;display:grid;gap:clamp(52px,6.5vw,80px)}
+  :global(:root[data-theme="dark"]) .cv{--card-line:rgba(255,255,255,.08);--tile:rgba(255,255,255,.035);--tile-line:rgba(255,255,255,.07);--chip:rgba(255,255,255,.05);--chip-line:rgba(255,255,255,.12);--kw:rgba(143,155,255,.3)}
+  .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  ul,ol{list-style:none;margin:0;padding:0}
+
+  /* ---------- header ---------- */
+  .rs-head{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:32px clamp(32px,5vw,72px);align-items:center}
+  .rs-id{display:grid;gap:16px;justify-items:start;min-width:0}
+  .rs-id .intro-id{margin-bottom:12px}
+  .cv-title{font-size:clamp(36px,4.5vw,64px);line-height:.98;letter-spacing:-.045em}
+  .cv-title span{display:block}
+  .cv-title .soft{color:var(--accent);max-width:17ch}
+  .cv-lead{color:var(--muted);font-size:17px;line-height:1.55;max-width:50ch}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+  /* small label used inside cards */
+  .rs-k{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+
+  /* "How I work": three lit steps on one line, and the way back to the start */
+  .loop{padding:clamp(18px,2.4vw,26px);display:grid;gap:20px}
+  /* dark theme: a little blue light in the card's top corner, and on the lit steps */
+  :global(:root[data-theme="dark"]) .loop{background:radial-gradient(90% 70% at 100% 0%,rgba(92,104,255,.16),transparent 62%),linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02))}
+  :global(:root[data-theme="dark"]) .loop-step:not(.again) .loop-n{background:linear-gradient(180deg,#4652FF,#2632F0);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 8px 18px -10px rgba(46,59,255,.9)}
+  :global(:root[data-theme="dark"]) .loop-step.again .loop-n{background:#0C0C10}
+  .loop-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .loop-tag{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-family:var(--mono);font-size:11px}
+  .loop-steps{position:relative;display:grid}
+  /* the line behind the steps, with a light that runs down it */
+  .loop-rail{position:absolute;left:19px;top:20px;bottom:16px;width:2px;border-radius:2px;background-color:var(--line-2);
+    background-image:linear-gradient(transparent,var(--accent),transparent);background-size:100% 64px;background-repeat:no-repeat;background-position:0 -64px;animation:loopRun 3.6s linear infinite}
+  @keyframes loopRun{to{background-position:0 calc(100% + 64px)}}
+  .loop-step{position:relative;display:grid;grid-template-columns:40px minmax(0,1fr);gap:0 16px;align-items:start;padding-bottom:22px}
+  .loop-step:last-child{padding-bottom:0}
+  .loop-n{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--accent-fill);color:var(--on-accent)}
+  .loop-b h3{font-size:19px;line-height:1.1;letter-spacing:-.02em;padding-top:2px}
+  .loop-b p{color:var(--muted);font-size:14px;margin-top:3px}
+  .loop-step.again{align-items:center}
+  .loop-step.again .loop-n{width:32px;height:32px;margin-left:4px;border-radius:50%;background:var(--bg);border:1px solid var(--line-2);color:var(--accent)}
+  p.loop-b{color:var(--muted);font-size:14px}
+
+  /* a tool: its logo and its name */
+  .tool-row{display:flex;flex-wrap:wrap;gap:6px}
+  .loop .tool-row{margin-top:10px}
+  .tool{display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 8px;border-radius:999px;border:1px solid var(--chip-line);background:var(--chip);font-size:12.5px;line-height:1.2;white-space:nowrap}
+  /* a plain tag */
+  .tags{display:flex;flex-wrap:wrap;gap:6px}
+  .tags li{padding:5px 10px;border-radius:999px;border:1px solid var(--chip-line);background:var(--chip);color:var(--muted);font-size:12.5px;line-height:1.2}
+
+  /* contact chips: one row under both columns */
+  .contact{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;padding-top:24px;border-top:1px solid var(--line)}
+  .contact a{display:inline-flex;align-items:center;gap:8px;padding:8px 14px 8px 11px;border:1px solid var(--chip-line);border-radius:999px;background:var(--chip);text-decoration:none;font-size:14px;line-height:1.2;transition:border-color .2s,color .2s}
+  .contact a:hover{border-color:var(--accent);color:var(--accent)}
+  .contact svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+  /* ---------- four numbers ---------- */
+  .glance{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+  .glance li{display:grid;gap:8px;align-content:start;padding:clamp(18px,2.2vw,26px)}
+  .glance li+li{border-left:1px solid var(--card-line)}
+  .g-i{color:var(--accent);display:flex}
+  .glance b{font-family:var(--display);font-size:clamp(34px,3.8vw,52px);font-weight:700;line-height:1;letter-spacing:-.045em}
+  .glance small{margin-left:5px;font-size:.36em;font-weight:500;letter-spacing:0;color:var(--muted)}
+  .g-l{color:var(--muted);font-size:13.5px;line-height:1.4}
+
+  /* ---------- sections ---------- */
+  .rs-sec{display:grid;gap:22px}
+  .rs-h{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .rs-h :global(.ico){color:var(--accent)}
+  .rs-h::after{content:"";flex:1;height:1px;margin-left:6px;background:linear-gradient(90deg,var(--line-2),transparent)}
+
+  /* the years as one bar: each job as wide as it lasted, the current one in blue */
+  .career{display:flex;align-items:flex-start;gap:6px}
+  .c-seg,.c-gap{flex:var(--m) 1 0;min-width:0;display:grid;grid-template-rows:16px 6px auto;gap:8px}
+  .c-years{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;line-height:16px;color:var(--dim)}
+  .c-bar{display:block;border-radius:6px;background:var(--line-2)}
+  .c-seg.now .c-bar{position:relative;background:linear-gradient(90deg,var(--accent-fill),var(--accent))}
+  .c-seg.now .c-bar::after{content:"";position:absolute;right:-2px;top:50%;width:12px;height:12px;margin-top:-6px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+  .c-gap i{grid-row:2;align-self:center;height:0;border-top:2px dotted var(--line-2)}
+  .c-l{display:grid;gap:1px;font-size:13.5px;line-height:1.3}
+  .c-l b{font-weight:600}
+  .c-l span{color:var(--muted);font-size:12.5px}
+
+  /* ---------- a job ---------- */
+  .jobs{display:grid;gap:20px}
+  .job{padding:clamp(16px,2.4vw,28px);display:grid;gap:18px}
+  .job-top{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px 16px;align-items:center}
+  .job-mark{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;border:1px solid var(--chip-line);background:var(--tile);font-family:var(--display);font-size:21px;font-weight:700;letter-spacing:-.03em}
+  .job.now .job-mark{background:var(--accent-fill);border-color:transparent;color:var(--on-accent)}
+  :global(:root[data-theme="dark"]) .job.now .job-mark{background:linear-gradient(180deg,#4652FF,#2632F0);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 8px 18px -10px rgba(46,59,255,.9)}
+  .job-id h3{font-size:clamp(19px,2vw,24px);line-height:1.15;letter-spacing:-.025em}
+  .job-id p{color:var(--muted);font-size:15px;margin-top:4px}
+  .job-meta{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+  .job-meta li{display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 8px;border-radius:999px;border:1px solid var(--chip-line);background:var(--chip);color:var(--muted);font-family:var(--mono);font-size:11.5px;line-height:1.3;white-space:nowrap}
+  .job-meta .pill{padding-left:10px;background:var(--accent-fill);border-color:transparent;color:var(--on-accent)}
+  .job-clients{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding:13px 16px;border-radius:12px;border:1px solid var(--tile-line);background:var(--tile)}
+  .job-clients p{display:flex;align-items:center;gap:9px;font-size:14.5px}
+  .job-clients p :global(.ico){color:var(--accent)}
+  .job-clients ul{display:flex;flex-wrap:wrap;gap:6px}
+  .job-clients li{padding:4px 9px;border-radius:6px;border:1px solid var(--chip-line);color:var(--muted);font-family:var(--mono);font-size:11.5px;line-height:1.3}
+
+  /* what the job covered: one tile per area, short lines with an icon each */
+  .areas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  .area{display:grid;grid-template-rows:auto 1fr;gap:16px;align-content:start;padding:18px;border-radius:14px;border:1px solid var(--tile-line);background:var(--tile);min-width:0}
+  .area.wide,.area:only-child{grid-column:1/-1}
+  .area-top{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px}
+  .area-id{flex:1 1 180px;min-width:0}
+  .area-id h4{margin:0;font-family:var(--display);font-size:16.5px;font-weight:600;line-height:1.2;letter-spacing:-.015em}
+  .area-id p{color:var(--muted);font-size:13px;margin-top:3px}
+  .pts{display:grid;gap:11px;align-content:start}
+  .area.wide .pts{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 22px}
+  .area:only-child .pts{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 22px}
+  .pts li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;font-size:14.5px;line-height:1.35}
+  .pts :global(.ico){color:var(--accent);margin-top:1px}
+  /* four things side by side, each with its icon (the parts of AI governance) */
+  .quad{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-content:start}
+  .quad li{display:grid;gap:8px;align-content:start;padding:12px;border-radius:10px;border:1px solid var(--chip-line);background:var(--chip);font-size:13.5px;line-height:1.25}
+  .quad :global(.ico){color:var(--accent)}
+  /* the full text of an area, closed until asked for */
+  .more{border-top:1px solid var(--tile-line);margin-top:-2px}
+  .more summary{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding-top:6px;cursor:pointer;list-style:none;color:var(--muted);font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;transition:color .2s}
+  .more summary::-webkit-details-marker{display:none}
+  .more summary:hover{color:var(--accent)}
+  .more summary :global(.ico){transition:rotate .25s}
+  .more[open] summary :global(.ico){rotate:180deg}
+  .full{list-style:disc;padding:6px 0 4px 18px;color:var(--muted);font-size:14.5px;line-height:1.5}
+  .full li+li{margin-top:6px}
+  .area.wide .full{columns:2;column-gap:36px}
+  .area.wide .full li{break-inside:avoid}
+  .full :global(mark.kw){background:linear-gradient(transparent 52%,var(--kw) 52%);color:var(--ink);font-weight:600;padding:0 1px}
+
+  /* ---------- toolkit ---------- */
+  .kit{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:12px}
+  .kit-t{display:grid;justify-items:center;align-content:center;gap:3px;min-height:124px;padding:18px 8px 16px;text-align:center;transition:border-color .25s,translate .35s cubic-bezier(.2,.7,.2,1)}
+  .kit-t :global(.ico){margin-bottom:9px;transition:color .25s}
+  /* dark theme: each logo stands under a soft light */
+  :global(:root[data-theme="dark"]) .kit-t{background:radial-gradient(80% 60% at 50% 0%,rgba(143,155,255,.1),transparent 70%),linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02))}
+  .kit-t b{font-size:13.5px;font-weight:600;line-height:1.2;letter-spacing:-.01em}
+  .kit-t small{color:var(--dim);font-family:var(--mono);font-size:10px;letter-spacing:.02em}
+  @media (hover:hover){
+    .kit-t:hover{translate:0 -3px;border-color:color-mix(in srgb,var(--accent) 55%,transparent)}
+    .kit-t:hover :global(.ico){color:var(--accent)}
+  }
+
+  /* ---------- core skills ---------- */
+  .skills{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px}
+  .sk{grid-column:span 2;padding:20px;display:grid;gap:14px;align-content:start}
+  .sk:nth-child(-n+2){grid-column:span 3}
+  .sk header{display:flex;align-items:center;gap:12px}
+  .sk h3{font-size:17px;font-weight:600;letter-spacing:-.015em}
+
+  /* ---------- projects ---------- */
+  .pf{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.86fr);align-items:stretch;transition:border-color .25s}
+  .pf:hover{border-color:color-mix(in srgb,var(--accent) 55%,transparent)}
+  .pf-copy{display:grid;gap:12px;align-content:center;justify-items:start;padding:clamp(20px,3vw,34px)}
+  .pf-copy h3{font-size:clamp(24px,2.8vw,34px);line-height:1.05;letter-spacing:-.035em}
+  .pf-type{color:var(--muted);font-size:15.5px;margin-top:-6px}
+  .feat-tag{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--accent-fill);color:var(--on-accent)}
+  .pf-art{position:relative;margin:10px;min-height:230px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg-2)}
+  .pf-art :global(.wa){position:absolute;inset:0;padding:14px}
+  /* the whole card opens the case study: the link's ::after covers it */
+  .card-link{display:inline-flex;align-items:center;gap:6px;margin-top:6px;color:var(--accent);font-weight:600;font-size:14.5px;text-decoration:none}
+  .card-link::after{content:"";position:absolute;inset:0;z-index:4;border-radius:inherit}
+  .card-link .ar{transition:translate .2s}
+  .pf:hover .card-link .ar{translate:3px 0}
+  .pf:hover .card-link{text-decoration:underline;text-underline-offset:4px}
+  .card-link:focus-visible{outline:none}
+  .pf:has(.card-link:focus-visible){outline:2px solid var(--accent);outline-offset:3px}
+
+  .pgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+  .pj{padding:18px;display:grid;grid-template-rows:auto auto auto 1fr auto;gap:8px;align-content:start;justify-items:start}
+  .pj h3{font-size:17px;font-weight:600;line-height:1.2;letter-spacing:-.015em;margin-top:6px;overflow-wrap:anywhere}
+  .pj p{color:var(--muted);font-size:13.5px;line-height:1.4}
+  .pj .tool-row{margin-top:4px;align-self:start}
+  .pj-links{display:grid;gap:2px;justify-items:start;font-size:13.5px}
+  .link{display:inline-flex;align-items:center;gap:4px;color:var(--accent);text-decoration:none;border-radius:4px;text-underline-offset:4px}
+  .link:hover,.link:focus-visible{text-decoration:underline}
+  .link .ar{transition:translate .2s}
+  .link:hover .ar{translate:3px 0}
+
+  /* ---------- what I bring, education, links ---------- */
+  .brings{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+  .brings li{padding:18px;display:grid;gap:6px;align-content:start;justify-items:start}
+  .brings b{font-size:15.5px;font-weight:600;line-height:1.25;letter-spacing:-.01em;margin-top:8px}
+  .brings p{color:var(--muted);font-size:13.5px;line-height:1.45}
+  .tail{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:14px}
+  .tail section{display:flex;align-items:flex-start;gap:14px;padding:18px}
+  .tail b{display:block;font-size:15.5px;font-weight:600;margin-top:6px}
+  .tail p{color:var(--muted);font-size:14.5px}
+  .cv-links{display:flex;flex-wrap:wrap;gap:4px 20px;margin-top:6px}
+
+  /* ---------- smaller screens ---------- */
+  @media (max-width:1100px){
+    .kit{grid-template-columns:repeat(5,minmax(0,1fr))}
+    .pgrid,.brings{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .area.wide .pts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media (max-width:1000px){
+    .rs-head{grid-template-columns:1fr}
+    /* one column: the title has the full width, so it can be larger */
+    .cv-title{font-size:clamp(34px,7.4vw,60px)}
+    .cv-title .soft{max-width:none}
+  }
   @media (max-width:900px){
+    /* finger-sized links */
     .contact a{min-height:44px}
-    .projects a,.cv-links a{display:inline-flex;align-items:center;min-height:44px}
+    .more summary{min-height:44px}
+    .link{min-height:40px}
+    .areas{grid-template-columns:1fr}
+    .area.wide .full{columns:1}
+    .job-top{grid-template-columns:auto minmax(0,1fr)}
+    .job-meta{grid-column:1/-1;justify-content:flex-start;max-width:none}
+    .skills{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .sk,.sk:nth-child(-n+2){grid-column:auto}
+    .sk:last-child{grid-column:1/-1}
+    .pf{grid-template-columns:1fr}
+    .pf-art{order:-1;min-height:0;aspect-ratio:16/9}
+  }
+  @media (max-width:760px){
+    .kit{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .glance{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .glance li:nth-child(3){border-left:0}
+    .glance li:nth-child(n+3){border-top:1px solid var(--card-line)}
+    .tail{grid-template-columns:1fr}
   }
   @media (max-width:720px){
     .contact a{font-size:14.5px}
-    .projects h3 span{display:block;margin-top:2px}
-    .cv-head .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .cv-head .actions .btn{justify-content:center;white-space:nowrap;padding:12px 10px}
-    .cv-head .actions .btn:last-child{grid-column:1/-1}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;justify-self:stretch}
+    .actions .btn{justify-content:center;white-space:nowrap;padding:12px 10px}
+    .actions .btn:last-child{grid-column:1/-1}
+    .pgrid,.brings{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .area:only-child .pts{grid-template-columns:1fr}
   }
-  @media (max-width:640px){.timeline::before{left:5px}.tl{grid-template-columns:22px 1fr}.tl-dot{grid-row:1;grid-column:1;justify-self:start;margin-top:5px}.tl-when{grid-column:2;margin-bottom:10px}.tl-body{grid-column:2}}
-  .cv-head{display:grid;gap:18px;border-bottom:1px solid var(--line);padding-bottom:24px}
-  .intro-id{margin-bottom:34px}
-  .cv-title{font-size:clamp(36px,4.6vw,66px);line-height:.98;letter-spacing:-.045em;max-width:16ch}
-  .cv-title .soft{color:var(--accent)}
-  /* Same 24px above the chips (to the line) as below the buttons (to the line) */
-  .contact{list-style:none;margin:6px 0 0;padding:24px 0 0;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px}
-  .contact a{display:inline-flex;align-items:center;gap:8px;padding:8px 14px 8px 11px;border:1px solid var(--line-2);border-radius:999px;background:var(--surface);text-decoration:none;font-size:14px;line-height:1.2;transition:border-color .2s,background-color .2s}
-  .contact a:hover{border-color:var(--accent);color:var(--accent)}
-  .contact svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-  .actions{display:flex;gap:10px;flex-wrap:wrap}
-  .cv-grid{display:grid;grid-template-columns:1fr 320px;gap:56px}
-  .main,.side{display:grid;gap:40px;align-content:start}
-  section{display:grid;gap:14px;align-content:start}
-  .lead{font-size:17px;line-height:1.6;color:var(--muted)}
-  .job{display:grid;gap:8px;padding-bottom:22px}
-  .job+.job{border-top:1px solid var(--line);padding-top:22px}
-  .job-top{display:flex;justify-content:space-between;gap:8px 16px;flex-wrap:wrap;align-items:baseline}
-  h3{font-size:19px;letter-spacing:-.015em}
-  .org{font-size:15px;color:var(--muted)}
-  .org b{color:var(--ink);font-weight:600}
-  .job ul,.brings{margin:4px 0 0;padding-left:18px;display:grid;gap:6px;font-size:15px;color:var(--muted)}
-  .projects{display:grid;gap:20px}
-  .projects article{display:grid;gap:6px;border-top:1px solid var(--line);padding-top:14px}
-  .projects h3 span{font-weight:400;font-size:15px}
-  .projects p{font-size:15px;color:var(--muted)}
-  .projects a{text-decoration:none;justify-self:start}
-  .projects article.featured{border:1.5px solid var(--accent);border-radius:12px;padding:16px 18px;background:var(--surface)}
-  .projects article.featured h3{font-size:22px}
-  /* The whole featured card is clickable: the link's ::after covers the card */
-  .projects article.featured{position:relative;transition:box-shadow .2s}
-  .projects article.featured:hover{box-shadow:0 0 0 1.5px var(--accent)}
-  .card-link{justify-self:start;display:inline-flex;align-items:center;gap:6px;margin-top:4px;font-weight:600;font-size:14.5px;color:var(--link)!important;text-decoration:none}
-  .card-link::after{content:"";position:absolute;inset:0;border-radius:12px}
-  .card-link .ar{transition:transform .2s}
-  .projects article.featured:hover .card-link .ar{transform:translateX(3px)}
-  .projects article.featured:hover .card-link{text-decoration:underline;text-underline-offset:4px}
-  .feat-tag{justify-self:start;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--accent-fill);color:var(--on-accent)}
-  .skill{display:grid;gap:4px;border-top:1px solid var(--line);padding-top:10px}
-  .skill b{font-size:14.5px;font-weight:600}
-  .skill p{font-size:14px;color:var(--muted);line-height:1.55}
-  .side p{font-size:15px}
-  .cv-links{display:grid;gap:6px;justify-items:start;text-align:left}
-  .cv-links a{text-decoration:none}
-  @media (max-width:860px){.cv-grid{grid-template-columns:1fr;gap:40px}}
-
-  /* Print / Save as PDF: plain A4, black on white, no site chrome */
-  @media print{
-    @page{size:A4;margin:14mm 14mm}
-    :global(html),:global(body){background:#fff!important;color:#111!important}
-    :global(nav),:global(footer),:global(.skip),.no-print{display:none!important}
-    .cv{padding:0 1mm!important}
-    :global(*){color:#111!important;transition:none!important;animation:none!important;opacity:1!important;transform:none!important}
-    .cv{padding:0;gap:18px;font-size:12px}
-    .cv-head{padding-bottom:12px;gap:10px}
-    .intro-id{margin-bottom:4px;gap:14px}
-    .avatar{width:58px;height:68px}
-    .avatar::before,.avatar::after{display:none!important}
-    .intro-name .status{font-size:9.5px!important;margin-top:1px}
-    .intro-name b{font-size:18px}
-    .intro-name>span{font-size:11.5px!important}
-    .cv-title{font-size:24px;max-width:none}
-    .cv-title .soft{color:#666!important}
-    .contact{gap:4px;border-top:0;padding-top:0;margin-top:0}
-    .contact a{font-size:10.5px;padding:3px 9px 3px 7px;gap:5px}
-    .contact svg{width:11px;height:11px}
-    .cv-grid{grid-template-columns:1fr 220px;gap:24px}
-    .main,.side{gap:16px}
-    section{gap:8px}
-    .lead,.job ul,.brings,.projects p,.side p,.skill p,.org{font-size:11px;line-height:1.45}
-    h3{font-size:13.5px}
-    .job{padding-bottom:10px;gap:4px;break-inside:avoid}
-    .job+.job{padding-top:10px}
-    .projects{gap:8px}
-    .projects article{padding-top:8px;gap:3px;break-inside:avoid}
-    a{text-decoration:none!important;border:0!important}
-    @page{margin:11mm 12mm}
-    .cv{gap:12px}
-    .mono,.eyebrow{font-size:9px!important}
-    .skill b,.org b{font-size:11.5px}
-    .projects h3 span{font-size:11px}
-    .job ul,.brings{gap:2px;margin-top:2px}
-    .skill{padding-top:6px;gap:2px}
-    .side{gap:12px}
-    .cv-links{gap:2px;font-size:11px}
-    .lead{font-size:11px}
-    .lead,.job ul,.brings,.projects p,.org{font-size:10.5px!important;line-height:1.4!important}
-    .main{gap:12px}
-    .job{padding-bottom:6px}
-    .job+.job{padding-top:6px}
-    .panel{padding:10px 12px;border-radius:8px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-    .timeline{gap:10px}
-    .timeline::before{left:96px}
-    .tl{grid-template-columns:84px 24px 1fr}
-    .tl-when b{font-size:13px}
-    .tl-when span{font-size:8.5px!important}
-    .pill{color:#fff!important;padding:1px 6px}
-    .tl-dot{width:8px;height:8px;margin-top:3px}
-    .tl-body{gap:3px}
-    .grp{gap:1px;margin-top:1px}
-    .grp-k{font-size:8px!important}
-    .tools{gap:3px;margin:1px 0}
-    .tools li{font-size:8px!important;padding:1px 5px}
-    .grp :global(mark.kw){-webkit-print-color-adjust:exact;print-color-adjust:exact}
-    .link{color:#0000FF!important}
-    .grp ul{font-size:10.2px!important;line-height:1.38;gap:1px}
-    /* Two clean pages: profile + experience on page 1, projects on page 2 */
-    .proj{break-before:page}
-    .side section{break-inside:avoid}
-    .tl{break-inside:avoid}
+  @media (max-width:560px){
+    .kit{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .skills{grid-template-columns:1fr}
+    .area.wide .pts{grid-template-columns:1fr}
+    .job-mark{width:42px;height:42px;border-radius:12px;font-size:19px}
+    .c-l{font-size:12.5px}
+    .c-l span{font-size:11.5px}
   }
+  @media (max-width:440px){
+    .pgrid,.brings{grid-template-columns:1fr}
+  }
+  @media (max-width:340px){.actions{grid-template-columns:1fr}}
 </style>

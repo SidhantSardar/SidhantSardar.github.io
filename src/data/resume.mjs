@@ -124,3 +124,116 @@ export function contactList({ EMAIL, PHONE, LINKEDIN, YOUTUBE }) {
     YOUTUBE && { key: 'youtube', label: clean(YOUTUBE).replace(/^youtube\.com\//, 'YouTube · '), href: YOUTUBE },
   ].filter(Boolean);
 }
+
+// ---------- The web page only (src/pages/resume.astro) ----------
+// On screen the resume is shown as pictures: short lines, icons and tool logos. Every short line below
+// is taken from the full text above, and the page still shows that full text under "Details".
+// The PDF and Word files do not read anything below this line.
+
+/** One sentence under the page title (from the profile above). */
+export const lead = '3.5+ years remote. I design an AI-powered B2B SaaS platform end to end for enterprises and Tier-1 banks, and build and measure its marketing websites.';
+
+/** Tools and the icon each one gets: a logo from data/icons.ts, or a plain icon where there is no logo. */
+export const toolset = {
+  figma: { name: 'Figma', icon: 'figma', note: 'Expert' },
+  figjam: { name: 'FigJam', icon: 'sticky-note' },
+  make: { name: 'Figma Make', icon: 'wand-sparkles' },
+  webflow: { name: 'Webflow', icon: 'webflow', note: 'CMS · Interactions' },
+  gsap: { name: 'GSAP', icon: 'gsap' },
+  spline: { name: 'Spline', icon: 'box' },
+  zapier: { name: 'Zapier', icon: 'zap', note: 'Automations' },
+  claude: { name: 'Claude Code', icon: 'claude' },
+  html: { name: 'HTML / CSS', icon: 'html5' },
+  notion: { name: 'Notion', icon: 'notion' },
+  ga4: { name: 'Google Analytics 4', short: 'GA4', icon: 'ga4' },
+  gsc: { name: 'Search Console', icon: 'gsc' },
+  powerbi: { name: 'Power BI', icon: 'chart-column' },
+  sql: { name: 'SQL', icon: 'database' },
+  astro: { name: 'Astro', icon: 'astro' },
+  code: { name: 'Custom code', icon: 'code-xml' },
+};
+/** The "Toolkit" grid, in this order: the tools from "Tools & build" and "Analytics & conversion" above. */
+export const toolkit = ['figma', 'figjam', 'make', 'webflow', 'gsap', 'spline', 'zapier', 'claude', 'html', 'notion', 'ga4', 'gsc', 'powerbi', 'sql'];
+
+/** "How I work": the three steps of the headline (designs, builds, measures) and the tools for each. */
+export const loop = [
+  { k: 'Design', icon: 'pen-tool', line: 'User flows, wireframes, prototypes and UI', tools: ['figma', 'figjam', 'make'] },
+  { k: 'Build', icon: 'code-xml', line: 'CMS websites, motion and code', tools: ['webflow', 'gsap', 'spline', 'zapier', 'claude'] },
+  { k: 'Measure', icon: 'chart-line', line: 'Visitors, key events and conversion', tools: ['ga4', 'gsc'] },
+];
+export const loopBack = 'GA4 data decides what to improve next';
+
+/** Four numbers, each one stated in the text above (the websites: Altrum AI, Aligne AI, World of Gears). */
+export const glance = [
+  { n: '3.5+', unit: 'yrs', label: 'Remote product and web design', icon: 'calendar-days' },
+  { n: '80+', label: 'UI components in one design system', icon: 'component' },
+  { n: '50+', label: 'Enterprises served by Aligne AI', icon: 'building-2' },
+  { n: '3', label: 'Client websites, in Webflow and code', icon: 'globe' },
+];
+
+/** The picture version of each job, in the same order as `jobs`, with one area per group of that job. */
+export const jobCards = [
+  {
+    mark: 'A',
+    areas: [
+      { icon: 'app-window', wide: true, sub: 'AI-powered B2B SaaS for enterprises and Tier-1 banks', tools: ['figma'], items: [
+        ['frame', 'Every screen, end to end in Figma'],
+        ['workflow', 'User flows, wireframes and prototypes'],
+        ['layout-dashboard', 'Data-rich dashboards'],
+        ['mouse-pointer-click', 'Interaction logic for every screen'],
+        ['palette', 'Colour palette, typography and layout'],
+        ['component', 'Design system: 80+ components'],
+        ['users-round', 'Handoff with PMs and developers'],
+        ['search-check', 'Tested end to end'],
+      ] },
+      { icon: 'panels-top-left', tools: ['webflow', 'gsap', 'spline', 'zapier', 'claude'], items: [
+        ['globe', 'Two CMS websites in Webflow'],
+        ['sparkles', 'Motion: Webflow Interactions and GSAP'],
+        ['box', '3D and animation from Spline'],
+        ['zap', 'Zapier automations'],
+        ['code-xml', 'aligne.ai rebuilt in code'],
+      ] },
+      { icon: 'shield-check', sub: 'AI governance, learned by designing the platform', grid: [
+        ['file-check-2', 'Policies'], ['triangle-alert', 'Risk'], ['list-checks', 'Audits'], ['siren', 'Incident detection'],
+      ] },
+      { icon: 'chart-line', tools: ['ga4'], items: [
+        ['chart-column', 'GA4 set up on both websites'],
+        ['mouse-pointer-click', 'Visitors and key events tracked'],
+        ['trending-up', 'Pages improved for conversion'],
+      ] },
+    ],
+  },
+  {
+    mark: 'N',
+    areas: [
+      { icon: 'chart-column', title: 'Dashboards and data', tools: ['powerbi', 'sql'], items: [
+        ['layout-dashboard', 'Power BI dashboards from many data sources'],
+        ['database', 'Data modelling and SQL'],
+        ['file-text', 'Business needs turned into specs and visuals'],
+      ] },
+    ],
+  },
+];
+
+/** Icon and tools for each featured project, by name. `chips` replace the long sentence on the page;
+    `page` is the project's own page on this site. */
+export const projectArt = {
+  'Altrum AI web app': { icon: 'app-window', tools: ['figma'], chips: ['Policy enforcement', 'Audit logging', 'No-code governance', 'Incident detection', 'Dashboards'] },
+  'Altrum AI website': { icon: 'globe', tools: ['webflow'], page: '/work/altrum-website/' },
+  'Aligne AI': { icon: 'git-merge', tools: ['webflow', 'claude', 'ga4'], page: '/work/aligne-ai/' },
+  'World of Gears': { icon: 'cog', tools: ['webflow'], page: '/work/world-of-gears/' },
+  'sidhantsardar.com': { icon: 'user-round', tools: ['figma', 'claude', 'astro', 'ga4'] },
+  'Prabuddha Pathak': { icon: 'library', tools: ['code'] },
+};
+
+/** Icon for each group of core skills, by name. "Tools & build" is shown as the Toolkit instead. */
+export const skillIcons = { 'Product & UX': 'square-mouse-pointer', 'UI & visual': 'palette', 'Design systems': 'component', 'Analytics & conversion': 'chart-line', 'Tools & build': 'wrench', Domain: 'shield-check' };
+
+/** "What I bring", short: same five points as `brings`, in the same order. */
+export const bringsShort = [
+  { icon: 'heart-handshake', k: 'Human-centred', line: 'Designs from real use cases, with care for every state.' },
+  { icon: 'eye', k: 'Visual foundation', line: 'Typography, colour, grids and hierarchy.' },
+  { icon: 'blocks', k: 'Systems mindset', line: 'Reusable components, not one-off screens.' },
+  { icon: 'target', k: 'Conversion focus', line: 'Design, build and measure in one loop.' },
+  { icon: 'message-square-text', k: 'Reliable remote partner', line: '3.5+ years of clear written communication.' },
+];

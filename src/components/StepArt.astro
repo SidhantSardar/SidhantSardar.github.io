@@ -62,10 +62,10 @@ const notes: [string, string, number, number][] = [['Fixed', 'wa-b', 56, 40], ['
 ---
 <svg class="wa sa" viewBox={`0 ${vy[kind]} 400 300`} aria-hidden="true" focusable="false">
   <defs>
-    <radialGradient id={`sa-halo-${kind}`}><stop offset="0" stop-color="#2E3BFF" stop-opacity=".5" /><stop offset="1" stop-color="#2E3BFF" stop-opacity="0" /></radialGradient>
+    <radialGradient id={`sa-halo-${kind}`}><stop offset="0" stop-color="#2E3BFF" stop-opacity=".36" /><stop offset="1" stop-color="#2E3BFF" stop-opacity="0" /></radialGradient>
     <filter id={`sa-glow-${kind}`} filterUnits="userSpaceOnUse" x="0" y="0" width="400" height="300" color-interpolation-filters="sRGB">
       <feGaussianBlur stdDeviation="3" result="b" />
-      <feComponentTransfer in="b" result="g"><feFuncA type="linear" slope="2.4" /></feComponentTransfer>
+      <feComponentTransfer in="b" result="g"><feFuncA type="linear" slope="1.5" /></feComponentTransfer>
       <feMerge><feMergeNode in="g" /><feMergeNode in="SourceGraphic" /></feMerge>
     </filter>
   </defs>

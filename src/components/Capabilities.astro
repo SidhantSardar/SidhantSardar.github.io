@@ -1,5 +1,8 @@
 ---
 import { skills, GROUPS } from '../data/skills';
+import Icon from './Icon.astro';
+// one icon per group (data/icons.ts)
+const groupIcon: Record<string, string> = { Design: 'pen-tool', Webflow: 'webflow', Code: 'code-xml', Systems: 'component', Growth: 'trending-up' };
 const shown = skills.filter((s) => s.status === 'shown').length;
 ---
 <section id="capabilities">
@@ -11,7 +14,7 @@ const shown = skills.filter((s) => s.status === 'shown').length;
     <div class="caps" data-stagger>
       {GROUPS.map((g) => (
         <div class="cap-col">
-          <h3 class="eyebrow">{g}</h3>
+          <h3 class="eyebrow"><Icon name={groupIcon[g]} size={15} />{g}</h3>
           <ul>
             {skills.filter((s) => s.group === g).map((s) => (
               <li id={`skill-${s.id}`}>

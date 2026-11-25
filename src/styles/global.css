@@ -10,6 +10,8 @@
   /* --accent: blue as text or line on the page. --accent-fill: blue as a solid shape, always with --on-accent text. */
   --accent:#0000FF; --accent-fill:#0000FF; --accent-hover:#0000C8; --accent-soft:rgba(0,0,255,.07); --on-accent:#FFFFFF;
   --proto:#0000FF; --proto-soft:rgba(0,0,255,.14);
+  /* page titles are filled with a gradient: --title-grad for the main words, --soft-grad for the blue ones */
+  --title-grad:linear-gradient(180deg,#0A0A0A 30%,#43434F 100%); --soft-grad:linear-gradient(100deg,#0000FF 0%,#2A2AFF 50%,#5C5CFF 100%);
   --nav-bg:rgba(255,255,255,.86);
   --layer-bg:rgba(255,255,255,.78); --layer-grid:rgba(255,255,255,.62); --layer-wire:rgba(255,255,255,.82);
   --layer-ui:rgba(255,255,255,.97); --layer-code:rgba(244,244,244,.92); --img-tint:#E4E4E4;
@@ -28,6 +30,8 @@
   /* On black: #8F9BFF text is 8.3:1; white on the #2E3BFF fill is 6.6:1 */
   --accent:#8F9BFF; --accent-fill:#2E3BFF; --accent-hover:#4B56FF; --accent-soft:rgba(143,155,255,.16); --on-accent:#FFFFFF;
   --proto:#8F9BFF; --proto-soft:rgba(143,155,255,.2);
+  /* on black the lightest and darkest blue of --soft-grad are 14:1 and 4.6:1 */
+  --title-grad:linear-gradient(180deg,#FFFFFF 30%,#B2B7D1 100%); --soft-grad:linear-gradient(100deg,#DADEFF 0%,#8F9BFF 46%,#5562FF 100%);
   --nav-bg:rgba(0,0,0,.78);
   --layer-bg:rgba(7,7,8,.7); --layer-grid:rgba(5,5,6,.85); --layer-wire:rgba(9,9,10,.82);
   --layer-ui:rgba(14,14,16,.95); --layer-code:rgba(3,3,4,.82); --img-tint:#262626;
@@ -115,6 +119,7 @@ main:focus{outline:none}
    width, and its height too, so the buttons stay on screen on short laptop screens. */
 .hero h1{font-size:clamp(44px,min(6.6vw,11.5vh),88px);line-height:.96;letter-spacing:-.045em;font-weight:700;margin-top:14px}
 /* the second half of the headline is the one place a title turns blue, on a line of its own */
+.hero h1 .hard{display:block}
 .hero h1 .soft{color:var(--accent);display:block}
 .hero .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
 @media (max-width:900px){
@@ -238,6 +243,8 @@ main:focus{outline:none}
 .site-text p{color:var(--muted);max-width:42ch}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{font-family:var(--mono);font-size:11px;padding:4px 9px;border:1px solid var(--line-2);border-radius:4px;color:var(--muted)}
+/* a tag that names a tool starts with that tool's logo */
+.chip .ico{vertical-align:-2px;margin-right:6px;color:var(--ink)}
 .site-links{display:flex;gap:18px;flex-wrap:wrap;margin-top:4px}
 @media (max-width:860px){.site{grid-template-columns:1fr;gap:28px}.site:nth-child(even) .site-visual{order:0}}
 
@@ -734,7 +741,8 @@ main:focus{outline:none}
 /* ---------- capabilities: every skill links to its proof ---------- */
 .caps{display:grid;grid-template-columns:repeat(5,1fr);gap:24px;border-top:1px solid var(--line);padding-top:24px}
 .cap-col{display:grid;gap:14px;align-content:start}
-.cap-col h3{font-weight:400}
+.cap-col h3{font-weight:400;display:flex;align-items:center;gap:8px}
+.cap-col h3 .ico{color:var(--accent)}
 .cap-col ul{list-style:none;margin:0;padding:0;display:grid;gap:4px}
 .cap-col li a,.cap-col li .wip{display:grid;gap:2px;padding:10px 0;border-bottom:1px solid var(--line);text-decoration:none}
 .cap-col li a span{font-weight:500}
@@ -934,26 +942,68 @@ a.chip:hover{color:var(--ink);border-color:var(--ink)}
 @keyframes waSpark{to{stroke-dashoffset:0}}
 @media (prefers-reduced-motion:reduce){.wa .wa-spark{display:none}}
 
-/* ============ Dark theme: light and shine ============
-   Still black, grey and one blue. What the dark theme adds is light: a blue glow and a faint grid
-   behind the top of every page, glass-like cards whose edge lights up under the pointer, and blue
-   marks that glow. Text colours stay as they are. */
+/* ============ Titles: filled with a gradient (both themes) ============
+   .gt marks a piece of title text that is filled with a gradient instead of one colour: near-white
+   fading to silver in the dark theme, black to charcoal in the light one, and the blue words run from
+   a light blue to a deep one. Page titles (.page-head h1) get it without the class.
+   A title that rises in word by word (data-split) is cut into words, so each word paints its own
+   piece of the same gradient: scripts/motion.ts tells it where it sits (--gw, --gh, --gx, --gy). */
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .gt,.page-head h1{--g:var(--title-grad);background-image:var(--g);background-repeat:no-repeat;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    /* room for the tails of g, p and y, which hang below a tight line */
+    padding-bottom:.14em;margin-bottom:-.14em}
+  .gt.soft{--g:var(--soft-grad)}
+  .is-split .gt{background-image:none}
+  .is-split .gt .split-w>span{background-image:var(--g);background-repeat:no-repeat;background-size:var(--gw,100%) calc(var(--gh,100%) + .3em);background-position:var(--gx,0) var(--gy,0);
+    -webkit-background-clip:text;background-clip:text;padding-bottom:.14em;margin-bottom:-.14em}
+  .gt::selection,.gt *::selection,.page-head h1::selection{-webkit-text-fill-color:var(--on-accent)}
+  /* on paper, and where the system forces its own colours, titles go back to one plain colour */
+  @media print{.gt,.gt *,.page-head h1{background-image:none!important;-webkit-text-fill-color:currentColor!important}}
+  @media (forced-colors:active){.gt,.gt *,.page-head h1{background-image:none!important;-webkit-text-fill-color:currentColor!important}}
+}
+
+/* ============ The grid behind the top of every page (both themes) ============
+   Fine lines every 64px, a small cross where every fourth pair meets, fading out downwards.
+   main::before is the grid. main::after is the same grid in blue, shown only in a circle around the
+   pointer: scripts/motion.ts sets --gx and --gy and adds "grid-lit" while the pointer is over it. */
 main{position:relative;isolation:isolate}
-:root[data-theme="dark"] main::before{content:"";position:absolute;z-index:-1;left:0;right:0;top:-61px;height:min(980px,100%);pointer-events:none;
+main::before,main::after{content:"";position:absolute;z-index:-1;left:0;right:0;top:-61px;height:min(980px,100%);pointer-events:none}
+main::before{--gl:rgba(10,10,10,.05);--gp:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cpath d='M96.5 123v11M91 128.5h11' stroke='%23000' stroke-opacity='.16'/%3E%3C/svg%3E");
+  --glow:linear-gradient(transparent,transparent);
   background:
-    radial-gradient(46% 52% at 20% 4%,rgba(46,59,255,.4),transparent 72%),
-    radial-gradient(34% 40% at 86% 10%,rgba(143,155,255,.16),transparent 72%),
-    linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px) 50% 0/64px 64px,
-    linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px) 50% 0/64px 64px;
+    var(--glow),
+    var(--gp) 50% 0/256px 256px,
+    linear-gradient(var(--gl) 1px,transparent 1px) 50% 0/64px 64px,
+    linear-gradient(90deg,var(--gl) 1px,transparent 1px) 50% 0/64px 64px;
   -webkit-mask-image:radial-gradient(120% 100% at 50% 0%,#000 0%,rgba(0,0,0,.5) 48%,transparent 80%);mask-image:radial-gradient(120% 100% at 50% 0%,#000 0%,rgba(0,0,0,.5) 48%,transparent 80%)}
+main::after{--gh:rgba(0,0,255,.2);--gs:rgba(0,0,255,.035);opacity:0;transition:opacity .5s;
+  background:
+    linear-gradient(var(--gh) 1px,transparent 1px) 50% 0/64px 64px,
+    linear-gradient(90deg,var(--gh) 1px,transparent 1px) 50% 0/64px 64px,
+    radial-gradient(260px circle at var(--gx,50%) var(--gy,0px),var(--gs),transparent 70%);
+  -webkit-mask-image:radial-gradient(230px circle at var(--gx,50%) var(--gy,0px),#000 0%,transparent 72%),linear-gradient(#000 50%,transparent 96%);
+  mask-image:radial-gradient(230px circle at var(--gx,50%) var(--gy,0px),#000 0%,transparent 72%),linear-gradient(#000 50%,transparent 96%);
+  -webkit-mask-composite:source-in;mask-composite:intersect}
+main.grid-lit::after{opacity:1}
+@media print{main::before,main::after{display:none}}
+
+/* ============ Dark theme: light and shine ============
+   Still black, grey and one blue. What the dark theme adds is light, used sparingly: a soft blue
+   light behind the grid at the top of every page, glass-like cards whose edge lights up under the
+   pointer, and blue marks that stand on a soft blue shadow instead of a bright halo. */
+/* the grid behind the top of the page is set up above ("The grid behind the top of every page");
+   here the dark theme lays its blue light over it */
+:root[data-theme="dark"] main::before{--gl:rgba(255,255,255,.065);--gp:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cpath d='M96.5 123v11M91 128.5h11' stroke='%23fff' stroke-opacity='.18'/%3E%3C/svg%3E");
+  --glow:radial-gradient(46% 52% at 20% 4%,rgba(46,59,255,.27),transparent 72%),radial-gradient(34% 40% at 86% 10%,rgba(143,155,255,.1),transparent 72%)}
+:root[data-theme="dark"] main::after{--gh:rgba(143,155,255,.5);--gs:rgba(92,104,255,.1)}
 
 /* menu bar: darker glass, with a line of light along its lower edge */
 :root[data-theme="dark"] .site-nav{background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(18px) saturate(160%);backdrop-filter:blur(18px) saturate(160%);border-bottom-color:rgba(255,255,255,.08)}
 :root[data-theme="dark"] .site-nav::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;pointer-events:none;opacity:.55;
   background:linear-gradient(90deg,transparent,rgba(143,155,255,.6) 35%,rgba(143,155,255,.6) 65%,transparent)}
-:root[data-theme="dark"] .logo span{text-shadow:0 0 14px rgba(143,155,255,.9)}
+:root[data-theme="dark"] .logo span{text-shadow:0 0 12px rgba(143,155,255,.5)}
 @media (min-width:721px){
-  :root[data-theme="dark"] .links a.nav-cta{background:linear-gradient(180deg,#4652FF,#2632F0);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 6px 22px -8px rgba(46,59,255,.95)}
+  :root[data-theme="dark"] .links a.nav-cta{background:linear-gradient(180deg,#4652FF,#2632F0);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 1px 2px rgba(0,0,0,.5),0 8px 18px -12px rgba(46,59,255,.8)}
   :root[data-theme="dark"] .links a.nav-cta:hover{background:linear-gradient(180deg,#5661FF,#323EFF)}
 }
 
@@ -961,15 +1011,13 @@ main{position:relative;isolation:isolate}
    White on these blues is at least 5.3:1. */
 :root[data-theme="dark"] main .btn{background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.03));border-color:rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.09)}
 :root[data-theme="dark"] main .btn:hover{border-color:rgba(255,255,255,.45)}
-:root[data-theme="dark"] main .btn.primary{background:linear-gradient(180deg,#4652FF,#2632F0);border-color:#5F6AFF;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 10px 32px -10px rgba(46,59,255,.95),0 0 0 1px rgba(46,59,255,.3)}
-:root[data-theme="dark"] main .btn.primary:hover{background:linear-gradient(180deg,#5661FF,#323EFF);border-color:#8690FF;box-shadow:inset 0 1px 0 rgba(255,255,255,.36),0 14px 44px -8px #2E3BFF,0 0 0 1px rgba(143,155,255,.4)}
+:root[data-theme="dark"] main .btn.primary{background:linear-gradient(180deg,#4652FF,#2632F0);border-color:#5F6AFF;box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 1px 2px rgba(0,0,0,.5),0 10px 24px -14px rgba(46,59,255,.8)}
+:root[data-theme="dark"] main .btn.primary:hover{background:linear-gradient(180deg,#5661FF,#323EFF);border-color:#8690FF;box-shadow:inset 0 1px 0 rgba(255,255,255,.34),0 1px 2px rgba(0,0,0,.5),0 14px 30px -14px rgba(46,59,255,.95)}
 
-/* hero: the blue line of the headline glows, and so does the selected photo */
-.hero h1 .soft{transition:text-shadow .9s}
+/* hero: the selected photo stands on a soft blue shadow (the headline's colour is in "Titles") */
 .split-done .split-w{overflow:visible}
-:root[data-theme="dark"] .hero h1:not(.is-split) .soft,:root[data-theme="dark"] .hero h1.split-done .soft{text-shadow:0 0 44px rgba(92,104,255,.6)}
-:root[data-theme="dark"] .hero-portrait{box-shadow:0 50px 130px -40px rgba(46,59,255,.85),0 0 70px -20px rgba(46,59,255,.45)}
-:root[data-theme="dark"] .hero-portrait::before,:root[data-theme="dark"] .avatar::before{border-color:#6B76FF;box-shadow:0 0 18px rgba(46,59,255,.75),inset 0 0 18px rgba(46,59,255,.2)}
+:root[data-theme="dark"] .hero-portrait{box-shadow:0 44px 90px -50px rgba(46,59,255,.75),0 30px 60px -40px rgba(0,0,0,.9)}
+:root[data-theme="dark"] .hero-portrait::before,:root[data-theme="dark"] .avatar::before{border-color:#6B76FF;box-shadow:0 0 14px -2px rgba(46,59,255,.45)}
 
 /* cards (.case) and art panels (.glow-card): dark glass, a hairline edge that is brighter at the top,
    and a light that follows the pointer, on the surface (::before) and along the edge (::after) */
@@ -979,23 +1027,23 @@ main{position:relative;isolation:isolate}
 :root[data-theme="dark"] :is(.case,.glow-card)::after{content:"";position:absolute;inset:0;z-index:3;border-radius:inherit;padding:1px;pointer-events:none;
   background:radial-gradient(360px circle at var(--mx,50%) var(--my,0%),rgba(143,155,255,var(--ra)),transparent 65%),linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.06) 42%,rgba(143,155,255,.22));
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
-:root[data-theme="dark"] :is(.case,.glow-card):hover{--ra:.95;box-shadow:0 44px 90px -46px rgba(46,59,255,.9),0 30px 60px -44px #000}
+:root[data-theme="dark"] :is(.case,.glow-card):hover{--ra:.9;box-shadow:0 36px 70px -50px rgba(46,59,255,.65),0 30px 60px -44px #000}
 :root[data-theme="dark"] :is(.case,.glow-card):hover::before{opacity:1}
 :root[data-theme="dark"] .case:hover{translate:0 -4px}
 /* the picture area of a card: black, a fine grid, and blue light rising from its lower edge */
 :root[data-theme="dark"] .case .mini{border-bottom-color:rgba(255,255,255,.08);background:
-  radial-gradient(85% 75% at 50% 122%,rgba(46,59,255,.42),transparent 70%),
+  radial-gradient(85% 75% at 50% 122%,rgba(46,59,255,.3),transparent 70%),
   radial-gradient(circle,rgba(255,255,255,.1) 1px,transparent 1.2px) 0 0/18px 18px,#08080B}
 :root[data-theme="dark"] .case .mini.media,:root[data-theme="dark"] .glow-card{background:
-  radial-gradient(85% 75% at 50% 122%,rgba(46,59,255,.5),transparent 70%),
+  radial-gradient(85% 75% at 50% 122%,rgba(46,59,255,.34),transparent 70%),
   linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px) 0 0/20px 20px,
   linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px) 0 0/20px 20px,#08080B}
 :root[data-theme="dark"] .case .mini .card-go{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.2);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-:root[data-theme="dark"] .case:hover .mini .card-go{background:linear-gradient(180deg,#4652FF,#2632F0);border-color:#7A84FF;box-shadow:0 0 22px rgba(46,59,255,.95)}
+:root[data-theme="dark"] .case:hover .mini .card-go{background:linear-gradient(180deg,#4652FF,#2632F0);border-color:#7A84FF;box-shadow:0 6px 16px -6px rgba(46,59,255,.85)}
 :root[data-theme="dark"] .chip:not([aria-pressed="true"]){background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.11)}
 /* the small label above a card title starts with a lit dot */
 :root[data-theme="dark"] .case-body .n{display:flex;align-items:center;gap:8px}
-:root[data-theme="dark"] .case-body .n::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px 1px rgba(143,155,255,.9)}
+:root[data-theme="dark"] .case-body .n::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px rgba(143,155,255,.6)}
 
 /* drawn art on black: glass frames, brighter blue, and the glows switched on */
 :root[data-theme="dark"] .wa{--wa-text:#9C9CA6;--wa-on:#A9B2FF}
@@ -1016,17 +1064,17 @@ main{position:relative;isolation:isolate}
 :root[data-theme="dark"] .wa .wa-halo{opacity:1}
 
 /* home, case studies: the square journey */
-:root[data-theme="dark"] .cs-square{border-color:rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 50px 110px -60px rgba(46,59,255,.9);background:
-  radial-gradient(80% 70% at 50% 118%,rgba(46,59,255,.45),transparent 70%),
+:root[data-theme="dark"] .cs-square{border-color:rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 40px 90px -60px rgba(46,59,255,.6);background:
+  radial-gradient(80% 70% at 50% 118%,rgba(46,59,255,.32),transparent 70%),
   radial-gradient(circle,rgba(255,255,255,.1) 1px,transparent 1.2px) 0 0/18px 18px,#08080B}
 :root[data-theme="dark"] .cs-node{background:#14141A;border-color:rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
-:root[data-theme="dark"] .cs-step.on .cs-node{background:linear-gradient(180deg,#4652FF,#2632F0);border-color:#7A84FF;box-shadow:0 0 0 4px rgba(46,59,255,.22),0 0 34px rgba(46,59,255,.95),inset 0 1px 0 rgba(255,255,255,.3)}
-:root[data-theme="dark"] .cs-step:nth-child(1)::after,:root[data-theme="dark"] .cs-step:nth-child(4)::after,:root[data-theme="dark"] .cs-ring::after{box-shadow:0 0 12px rgba(143,155,255,.75)}
-:root[data-theme="dark"] .cs-dot{background:#fff;box-shadow:0 0 0 3px rgba(143,155,255,.35),0 0 16px 3px rgba(143,155,255,.95)}
+:root[data-theme="dark"] .cs-step.on .cs-node{background:linear-gradient(180deg,#4652FF,#2632F0);border-color:#7A84FF;box-shadow:0 0 0 4px rgba(46,59,255,.18),0 8px 20px -8px rgba(46,59,255,.85),inset 0 1px 0 rgba(255,255,255,.3)}
+:root[data-theme="dark"] .cs-step:nth-child(1)::after,:root[data-theme="dark"] .cs-step:nth-child(4)::after,:root[data-theme="dark"] .cs-ring::after{box-shadow:0 0 8px rgba(143,155,255,.45)}
+:root[data-theme="dark"] .cs-dot{background:#fff;box-shadow:0 0 0 3px rgba(143,155,255,.3),0 0 10px 1px rgba(143,155,255,.7)}
 
 /* diagrams and figures */
 :root[data-theme="dark"] .fig .canvas{background-color:#08080B;border-color:rgba(255,255,255,.09)}
-:root[data-theme="dark"] .flow .st.acc{box-shadow:0 0 26px -8px rgba(46,59,255,.95)}
+:root[data-theme="dark"] .flow .st.acc{box-shadow:0 8px 22px -12px rgba(46,59,255,.8)}
 
 /* footer: the same blue, lit from the top-left corner, with a bright line along its upper edge.
    White text on the lightest part of the blue is 5:1 or more. */
@@ -1034,3 +1082,15 @@ main{position:relative;isolation:isolate}
   radial-gradient(70% 90% at 10% 0%,rgba(120,132,255,.42),transparent 62%),
   radial-gradient(60% 90% at 100% 100%,rgba(0,0,120,.7),transparent 62%),var(--fb)}
 :root[data-theme="dark"] .site-footer::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75) 30%,rgba(255,255,255,.75) 70%,transparent)}
+
+/* ============ Icons, tool logos and calm cards (used by the resume page) ============ */
+/* An icon or a tool logo (components/Icon.astro). Icons are lines; logos are one filled shape.
+   Both take the colour of the text around them. */
+.ico{flex:none;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.ico-logo{fill:currentColor;stroke:none}
+/* an icon in a small blue-tinted square */
+.ico-tile{flex:none;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:var(--accent);background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 20%,transparent)}
+/* A calm card: a hairline edge and a soft shadow. In the dark theme it is glass: a little lighter
+   at the top, with a faint highlight along its upper edge. */
+.glass{position:relative;border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:0 1px 2px rgba(10,10,10,.04),0 18px 36px -30px rgba(10,10,10,.28)}
+:root[data-theme="dark"] .glass{border-color:rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 24px 48px -34px rgba(0,0,0,.95)}

@@ -150,9 +150,32 @@ function splitWords(el: Element) {
   });
 }
 
+/* A gradient title (.gt in styles/global.css) is one gradient across the whole piece of text. Once the
+   title is cut into words, each word paints its own part of that gradient, so each word is told how
+   big the whole piece is and where the word sits in it. Measured again when the text reflows. */
+function gradientWords(el: HTMLElement) {
+  const hosts = [el, ...$$('.gt', el)].filter((h) => h.classList.contains('gt'));
+  if (!hosts.length) return;
+  const place = () => hosts.forEach((h) => {
+    const hr = h.getBoundingClientRect();
+    $$('.split-w', h).forEach((w) => {
+      const r = w.getBoundingClientRect();
+      const word = w.firstElementChild as HTMLElement;
+      word.style.setProperty('--gw', `${hr.width.toFixed(1)}px`);
+      word.style.setProperty('--gh', `${hr.height.toFixed(1)}px`);
+      word.style.setProperty('--gx', `${(hr.left - r.left).toFixed(1)}px`);
+      word.style.setProperty('--gy', `${(hr.top - r.top).toFixed(1)}px`);
+    });
+  });
+  place();
+  document.fonts?.ready.then(place);
+  new ResizeObserver(place).observe(el);
+}
+
 function headings() {
   $$('[data-split]').forEach((el) => {
     splitWords(el);
+    gradientWords(el);
     // "is-split" while the words are clipped for the rise; "split-done" once they have landed,
     // so anything that reaches outside a word (like a glow) can show again.
     el.classList.add('is-split');
@@ -462,6 +485,28 @@ function story() {
   });
 }
 
+/* ---------- the grid behind the top of the page lights up around the pointer ---------- */
+function gridLight() {
+  const m = $('main');
+  if (!finePointer || !m) return;
+  let frame = 0, x = 0, y = 0;
+  addEventListener('pointermove', (e) => {
+    x = e.clientX; y = e.clientY;
+    if (frame) return;
+    frame = requestAnimationFrame(() => {
+      frame = 0;
+      const r = m.getBoundingClientRect();
+      const gy = y - r.top + 61; // the grid starts 61px above <main>, behind the menu bar
+      const over = gy >= 0 && gy < 1000;
+      m.classList.toggle('grid-lit', over);
+      if (!over) return;
+      m.style.setProperty('--gx', `${Math.round(x - r.left)}px`);
+      m.style.setProperty('--gy', `${Math.round(gy)}px`);
+    });
+  }, { passive: true });
+  document.documentElement.addEventListener('pointerleave', () => m.classList.remove('grid-lit'));
+}
+
 function nav() {
   const n = $('.site-nav');
   if (!n) return;
@@ -483,6 +528,7 @@ if (!reduce) {
   diagrams();
   magnetic();
   spotlight();
+  gridLight();
   story();
   nav();
 }

@@ -1,0 +1,39 @@
+---
+// The resume as the designed A4 sheet, for printing the page (Cmd or Ctrl + P). Never shown on screen.
+// It is the same HTML and CSS the PDF download is printed from (src/data/resume-sheet.mjs), so a
+// print of the page and the PDF always look the same, whatever theme the site is in.
+// The sheet sits in a shadow root: the site's own styles cannot reach in, and the sheet's cannot leak out.
+import { getImage } from 'astro:assets';
+import { asset } from '../data/images';
+import { EMAIL, PHONE, LINKEDIN, YOUTUBE } from '../data/profile';
+import { sheetCss, sheetBody } from '../data/resume-sheet.mjs';
+
+// The same file as the photo at the top of the page (its largest size), so nothing extra is downloaded.
+const photo = (await getImage({ src: asset('/sidhant.jpg'), width: 384 })).src;
+// In the PDF these text settings sit on <html>; a shadow root has no <html>, so they sit on the sheet.
+const base = ':host{all:initial;display:block}.page{background:#fff;color:#111;font-family:"Geist Variable",Geist,system-ui,sans-serif;font-size:10.2px;line-height:1.42}';
+const html = `<style>${base}\n${sheetCss}</style>${sheetBody({ photo, EMAIL, PHONE, LINKEDIN, YOUTUBE })}`;
+---
+<div class="cv-sheet"><template shadowrootmode="open" set:html={html}></template></div>
+
+<script is:inline>
+  // Browsers from before 2024 do not read the template above on their own: attach it for them.
+  document.querySelectorAll('.cv-sheet > template[shadowrootmode]').forEach(function (t) {
+    t.parentElement.attachShadow({ mode: 'open' }).appendChild(t.content);
+    t.remove();
+  });
+</script>
+
+<style is:global>
+  .cv-sheet{display:none}
+  @media print{
+    @page{size:A4;margin:11mm 0 10mm}
+    /* paper is white in both themes, margins included (a dark colour scheme would paint them dark) */
+    :root{color-scheme:light!important}
+    html,body{background:#fff!important}
+    /* only the sheet prints: no menu, no footer, no background light, none of the on-screen resume */
+    .skip,.site-nav,.site-footer,.cv{display:none!important}
+    main::before,main::after{display:none!important}
+    .cv-sheet{display:block}
+  }
+</style>

@@ -20,10 +20,10 @@ const halo = { product: [192, 128, 215, 135], merge: [289, 134, 150, 135], cms: 
 ---
 <svg class="wa" viewBox="0 0 400 250" aria-hidden="true" focusable="false">
   <defs>
-    <radialGradient id={`wa-halo-${kind}`}><stop offset="0" stop-color="#2E3BFF" stop-opacity=".5" /><stop offset="1" stop-color="#2E3BFF" stop-opacity="0" /></radialGradient>
+    <radialGradient id={`wa-halo-${kind}`}><stop offset="0" stop-color="#2E3BFF" stop-opacity=".36" /><stop offset="1" stop-color="#2E3BFF" stop-opacity="0" /></radialGradient>
     <filter id={`wa-glow-${kind}`} filterUnits="userSpaceOnUse" x="0" y="0" width="400" height="250" color-interpolation-filters="sRGB">
       <feGaussianBlur stdDeviation="3" result="b" />
-      <feComponentTransfer in="b" result="g"><feFuncA type="linear" slope="2.4" /></feComponentTransfer>
+      <feComponentTransfer in="b" result="g"><feFuncA type="linear" slope="1.5" /></feComponentTransfer>
       <feMerge><feMergeNode in="g" /><feMergeNode in="SourceGraphic" /></feMerge>
     </filter>
   </defs>
