@@ -7,8 +7,8 @@ export const profile = 'Product designer (UI/UX) with 3.5+ years of remote exper
 export const education = { title: 'Graduation', org: 'Nagpur University', year: '2015' };
 
 export const skills = [
-  { k: 'Product & UX', v: ['End-to-end product design', 'Human-centred design (HCD)', 'User flows', 'Wireframing', 'Prototyping', 'Dashboard design', 'Complex workflows', 'Usability testing', 'Accessibility'] },
-  { k: 'UI & visual', v: ['Visual hierarchy', 'Typography', 'Colour', 'Layout grids', 'Responsive & mobile-first', 'Conversion-focused layouts'] },
+  { k: 'Product & UX', v: ['End-to-end product design', 'Human-centred design (HCD)', 'User flows', 'Wireframing', 'Prototyping', 'Dashboard design', 'Interaction logic', 'Complex workflows', 'Usability testing', 'Accessibility'] },
+  { k: 'UI & visual', v: ['Visual direction', 'Colour palettes', 'Visual hierarchy', 'Typography', 'Layout grids', 'Responsive & mobile-first', 'Conversion-focused layouts'] },
   { k: 'Design systems', v: ['Component libraries', 'Design tokens', 'Type & colour scales', '8pt spacing', 'Atomic design', 'Documentation'] },
   { k: 'Analytics & conversion', v: ['Google Analytics 4', 'Key events & conversion tracking', 'Search Console', 'Funnel analysis', 'Power BI', 'SQL'] },
   { k: 'Tools & build', v: ['Figma (expert)', 'FigJam', 'Figma Make', 'Webflow (CMS, Interactions)', 'GSAP', 'Spline', 'Zapier automations', 'Claude Code', 'HTML / CSS', 'Notion'] },
@@ -32,6 +32,8 @@ export const jobs = [
         'Made complex AI governance workflows **simple, intuitive and easy to follow** for compliance, risk and technical users.',
         'Designed **data-rich dashboards** for policy enforcement, risk monitoring, audit logs and incident detection.',
         'Created **user flows**, **wireframes**, **prototypes** and **high-fidelity UI** for multi-step workflows, with **human-centred design** and care for every state.',
+        'Defined how the product works: the **interaction logic** of every screen (what each button does and where it leads), and **validated user flows** with the team before build.',
+        'Set the product’s **visual direction**: chose the **colour palette** and **accent colour**, **typography**, **layout** and **UI components**.',
         'Built and maintained a consistent **design system** in Figma: **80+ UI components** and **Figma tokens**, shared by the product and both websites.',
         'Worked with **product managers and developers** to turn requirements into designs and support developer handoff.',
         '**Tested the web app end to end**: explored every flow, noted usability issues and observations, and turned them into product improvements.',
