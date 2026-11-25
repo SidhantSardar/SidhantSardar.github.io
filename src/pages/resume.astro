@@ -9,6 +9,7 @@ const skills = [
   { k: 'UX', v: ['Human-centred design', 'User flows', 'Information architecture', 'Wireframing', 'Prototyping', 'Usability testing', 'Accessibility'] },
   { k: 'UI & visual', v: ['Visual hierarchy', 'Typography', 'Colour', 'Layout grids', 'Responsive & mobile-first', 'Conversion-focused layouts'] },
   { k: 'Design systems', v: ['Component libraries', 'Design tokens', 'Type & colour scales', '8pt spacing', 'Atomic design', 'Documentation'] },
+  { k: 'Analytics & conversion', v: ['Google Analytics 4', 'Key events & conversion tracking', 'Search Console', 'Funnel analysis', 'Power BI', 'SQL'] },
   { k: 'Tools & build', v: ['Figma (expert)', 'FigJam', 'Figma Make', 'Webflow (CMS, interactions)', 'Claude Code', 'HTML / CSS', 'Notion'] },
 ];
 
@@ -20,11 +21,11 @@ const jobs = [
     when: 'May 2023 – Present',
     where: 'Remote',
     points: [
-      'Designed the complete Altrum AI product UI (dashboards, policy management, audit logs, incident detection), making complex governance workflows intuitive for enterprise users.',
-      'Own the end-to-end design process: user flows, IA, wireframes, interactive prototypes and pixel-perfect high-fidelity UI.',
-      'Built a shared design system across two brands: 80+ Figma components, semantic colour tokens, a 4-level type scale, 8pt grid, dark and light modes.',
-      'Designed and built aligne.ai and altrum.ai end to end, from Figma to responsive Webflow builds with CMS, animations and accessibility-aware structure for UK, EU, UAE and KSA markets.',
-      'Partner with founders, PMs, marketers and engineers, turning dense compliance content into clear, conversion-focused pages for executive buyers.',
+      'Designed the full Altrum AI product UI: dashboards, policies, audit logs, incident detection.',
+      'Own the design process end to end: flows, IA, wireframes, prototypes, high-fidelity UI.',
+      'Built a two-brand design system: 80+ components, semantic tokens, dark and light modes.',
+      'Designed and built aligne.ai and altrum.ai in Webflow: CMS, animations, accessible structure.',
+      'Turn dense compliance content into conversion-focused pages for executive buyers.',
     ],
   },
   {
@@ -34,14 +35,15 @@ const jobs = [
     when: 'Nov 2019 – Jan 2023',
     where: 'Pune',
     points: [
-      'Built and maintained Power BI reports and dashboards, connecting multiple data sources and turning them into clear business visuals.',
-      'Data modelling and SQL: tabular models, dataset relationships, query and performance tuning.',
-      'Translated business requirements into technical specs and resolved defects through root-cause analysis.',
+      'Built Power BI dashboards from multiple data sources.',
+      'Data modelling and SQL: tabular models, relationships, query tuning.',
+      'Turned business needs into technical specs and clear visuals.',
     ],
   },
 ];
 
 const projects = [
+  { name: 'sidhantsardar.com', type: 'Portfolio, designed, built and measured', role: 'Design · Claude Code + Astro · GA4', body: 'Designed in Figma, built in code with Claude Code. GA4 tracks every enquiry click as a key event, linked to Search Console to see which searches bring visitors.', url: 'https://www.sidhantsardar.com' },
   { name: 'Altrum AI', type: 'Enterprise AI governance platform', role: 'Product designer · web app UI + marketing site', body: 'Complete Figma UI for policy enforcement, audit logging, no-code governance and incident detection, plus the marketing site, all on one design system.', url: 'https://altrum.ai' },
   { name: 'Aligne AI', type: 'Responsible AI consulting & platform', role: 'UI/UX designer · Figma → Webflow', body: 'Corporate site end to end: information architecture for a multi-service offering, wireframes, prototypes and a responsive build.', url: 'https://aligne.ai' },
   { name: 'World of Gears', type: 'Sustainability consultancy', role: 'Web designer', body: 'A clean, editorial website for a supply-chain consultancy, with CMS structures for case studies and insights.' },
@@ -51,6 +53,7 @@ const brings = [
   'Human-centred problem solver: designs from real use cases outward, with care for every state and interaction.',
   'Strong visual foundation: typography, colour, grids and hierarchy.',
   'Systems mindset: reusable components and guidelines, not one-off screens.',
+  'Conversion focus: design, build and measure in one loop, using GA4 data to decide what to improve.',
   'Reliable remote partner: 3.5+ years managing multiple projects with clear written communication, using modern Figma and AI-assisted tooling.',
 ];
 ---
@@ -61,7 +64,7 @@ const brings = [
         <Image class="photo" src={asset('/sidhant.jpg')} alt="Sidhant Sardar" widths={[160, 320]} sizes="96px" loading="eager" />
         <div>
           <h1>Sidhant Sardar</h1>
-          <p class="title">UI/UX Designer · Webflow Developer · AI-Assisted Developer (Claude Code)</p>
+          <p class="title">UI/UX Designer · Webflow Developer · AI-Assisted Developer (Claude Code) · GA4 Conversion Tracking</p>
         </div>
       </div>
       <ul class="contact">
@@ -80,7 +83,7 @@ const brings = [
       <div class="main">
         <section>
           <h2 class="eyebrow">Profile</h2>
-          <p class="lead">UI/UX designer with 3.5+ years of remote experience designing clean, user-friendly digital products. I own the full workflow (user flows, wireframes, prototypes and high-fidelity Figma UI) and ship it myself through Webflow and Claude Code. Currently designing the product UI and web experience for an enterprise SaaS platform serving Tier-1 banks.</p>
+          <p class="lead">UI/UX designer with 3.5+ years of remote experience designing clean, user-friendly digital products. I own the full workflow (user flows, wireframes, prototypes and high-fidelity Figma UI) ship it myself through Webflow and Claude Code, and connect it to Google Analytics so every page is measured on conversions, not looks. Currently designing the product UI and web experience for an enterprise SaaS platform serving Tier-1 banks.</p>
         </section>
 
         <section>
