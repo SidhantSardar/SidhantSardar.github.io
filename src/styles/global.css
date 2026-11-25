@@ -765,3 +765,10 @@ a.chip:hover{color:var(--ink);border-color:var(--ink)}
   .hero-photo figcaption{justify-items:start;margin-top:0}
   .hero-photo figcaption b{font-size:22px}
 }
+
+/* Work: lead card for the product design case study (process strip instead of a screenshot) */
+.mini-process{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;max-width:520px;margin:auto}
+.mini-process span{display:grid;gap:4px;padding:10px;border:1px solid var(--line-2);border-radius:8px;background:var(--surface);font-size:13px;font-weight:500}
+.mini-process span:first-child{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.mini-process i{font-style:normal;font-family:var(--mono);font-size:10px;opacity:.6}
+@media (max-width:420px){.mini-process{grid-template-columns:repeat(2,1fr)}}

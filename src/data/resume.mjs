@@ -88,7 +88,7 @@ export const span = (start, end) => {
 
 // Featured projects, in this order.
 export const projects = [
-  { featured: 'Featured · Product design', name: 'Altrum AI web app', type: 'AI-powered B2B SaaS product', role: 'Product designer · Figma', body: 'Designed the full product end to end: every screen for policy enforcement, audit logging, no-code governance, incident detection and dashboards, on one design system, then tested it end to end to find and fix issues.' },
+  { featured: 'Featured · Product design', caseStudy: '/work/altrum-product-design/', name: 'Altrum AI web app', type: 'AI-powered B2B SaaS product', role: 'Product designer · Figma', body: 'Designed the full product end to end: every screen for policy enforcement, audit logging, no-code governance, incident detection and dashboards, on one design system, then tested it end to end to find and fix issues.' },
   { name: 'Altrum AI website', type: 'AI governance product site', role: 'UI/UX designer · Webflow developer', body: 'Designed and built the full Webflow CMS website for Altrum AI. When Altrum became part of Aligne, the site was merged into aligne.ai.' },
   { name: 'Aligne AI', type: 'Responsible AI consulting & platform', role: 'UI/UX designer · Webflow developer → code', body: 'Designed and built as a full Webflow CMS site, then rebuilt in code with Claude Code as one site for Aligne and Altrum, with GA4 tracking.', url: 'https://aligne.ai' },
   { name: 'World of Gears', type: 'Sustainability consultancy', role: 'UI/UX designer · Webflow developer', body: 'A clean, editorial website for a supply-chain consultancy, with CMS structures for case studies and insights.' },

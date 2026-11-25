@@ -9,13 +9,20 @@ import { asset } from '../../data/images';
 const websites = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
 const ux = (await getCollection('portfolio')).sort((a, b) => a.data.order - b.data.order);
 
-type Item = { href: string; label: string; title: string; line: string; tags: string[]; cover?: string; mini?: any };
+type Item = { href: string; label: string; title: string; line: string; tags: string[]; cover?: string; mini?: any; process?: boolean };
 const webTags: Record<string, string[]> = {
   'altrum-website': ['Webflow', 'Code'],
   'aligne-ai': ['Webflow', 'Code', 'CMS'],
   'world-of-gears': ['Webflow', 'CMS'],
 };
 const items: Item[] = [
+  // Lead card: the whole product design process for the Altrum AI web app.
+  {
+    href: '/work/altrum-product-design/', label: 'Product design · Client project', process: true,
+    title: 'Designing an AI governance product, end to end',
+    line: 'The Altrum AI web app: domain, colours, layouts, user flows, every screen, Figma Make prototypes, build follow-up and testing.',
+    tags: ['Product design', 'Figma', 'UX'],
+  },
   ...websites.map((w) => ({
     href: `/work/${w.id}/`, label: `Website · ${w.data.kind === 'client' ? 'Client project' : 'Practice project'}`,
     title: w.data.title, line: w.data.summary, tags: webTags[w.id] ?? [], cover: w.data.cover,
@@ -26,14 +33,14 @@ const items: Item[] = [
   })),
 ];
 // Only offer filters that have at least one case study behind them.
-const TAGS = ['Webflow', 'Code', 'CMS', 'Figma', 'UX', 'Design system'].filter((t) => items.some((i) => i.tags.includes(t)));
+const TAGS = ['Product design', 'Webflow', 'Code', 'CMS', 'Figma', 'UX', 'Design system'].filter((t) => items.some((i) => i.tags.includes(t)));
 ---
 <Base title="Work · Sidhant Sardar" description="Every case study in one place: Webflow and code websites, and UX case studies designed in Figma." active="work">
   <div class="in">
     <header class="page-head">
       <span class="spec">Page / Work · <b>{items.length} case studies</b></span>
       <h1>Work</h1>
-      <p class="sum">Websites built in Webflow and in code, and UX case studies from a web app designed in Figma. Filter by what you're hiring for.</p>
+      <p class="sum">Product design for an AI web app, websites built in Webflow and in code, and UX case studies designed in Figma. Filter by what you're hiring for.</p>
     </header>
 
     <div class="filters" role="group" aria-label="Filter case studies">
@@ -46,7 +53,7 @@ const TAGS = ['Webflow', 'Code', 'CMS', 'Figma', 'UX', 'Design system'].filter((
       {items.map((i, n) => (
         <a class="case" href={i.href} data-tags={i.tags.join('|')}>
           <div class="mini">
-            {i.cover ? <Image src={asset(i.cover)} alt="" widths={[400, 800]} sizes="(max-width: 760px) 100vw, 600px" loading={n === 0 ? "eager" : "lazy"} fetchpriority={n === 0 ? "high" : "auto"} /> : <Wire variant={i.mini} ann={false} />}
+            {i.process ? <div class="mini-process" aria-hidden="true">{['Domain', 'Colours', 'Layouts', 'Flows', 'Screens', 'Prototype', 'Build', 'Test'].map((x, k) => <span><i>{String(k + 1).padStart(2, '0')}</i>{x}</span>)}</div> : i.cover ? <Image src={asset(i.cover)} alt="" widths={[400, 800]} sizes="(max-width: 760px) 100vw, 600px" loading={n === 0 ? "eager" : "lazy"} fetchpriority={n === 0 ? "high" : "auto"} /> : <Wire variant={i.mini} ann={false} />}
           </div>
           <div class="case-body">
             <span class="n">{i.label}</span>

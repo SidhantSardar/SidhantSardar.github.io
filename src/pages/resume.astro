@@ -84,6 +84,7 @@ const contacts = contactList({ EMAIL, PHONE, LINKEDIN, YOUTUBE });
                 <span class="mono muted">{p.role}</span>
                 <p>{p.body}</p>
                 {p.url && <a class="link mono" href={p.url} target="_blank" rel="noopener">{p.url.replace(/^https:\/\/(www\.)?/, '')} ↗</a>}
+                {p.caseStudy && <a class="card-link" href={p.caseStudy}>See the full product design process <span class="ar">→</span></a>}
               </article>
             ))}
           </div>
@@ -179,6 +180,14 @@ const contacts = contactList({ EMAIL, PHONE, LINKEDIN, YOUTUBE });
   .projects a{text-decoration:none;justify-self:start}
   .projects article.featured{border:1.5px solid var(--ink);border-radius:12px;padding:16px 18px;background:var(--surface)}
   .projects article.featured h3{font-size:22px}
+  /* The whole featured card is clickable: the link's ::after covers the card */
+  .projects article.featured{position:relative;transition:box-shadow .2s,transform .2s}
+  .projects article.featured:hover{box-shadow:0 10px 28px -14px rgba(0,0,0,.3);transform:translateY(-2px)}
+  .card-link{justify-self:start;display:inline-flex;align-items:center;gap:6px;margin-top:4px;font-weight:600;font-size:14.5px;color:var(--link)!important;text-decoration:none}
+  .card-link::after{content:"";position:absolute;inset:0;border-radius:12px}
+  .card-link .ar{transition:transform .2s}
+  .projects article.featured:hover .card-link .ar{transform:translateX(3px)}
+  .projects article.featured:hover .card-link{text-decoration:underline;text-underline-offset:4px}
   .feat-tag{justify-self:start;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--ink);color:var(--bg)}
   .skill{display:grid;gap:4px;border-top:1px solid var(--line);padding-top:10px}
   .skill b{font-size:14.5px;font-weight:600}

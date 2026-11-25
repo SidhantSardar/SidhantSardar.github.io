@@ -100,7 +100,7 @@ mark.kw{background:linear-gradient(transparent 52%,#FDE68A 52%);color:#111;font-
         </div></li>`).join('')}
     </ol></section>
     <section class="panel proj"><h2 class="eyebrow">Featured projects</h2><div class="projs">
-      ${projects.map((p) => `<div class="pj${p.featured ? ' feat' : ''}">${p.featured ? `<span class="ft">${esc(p.featured)}</span>` : ''}<h3>${esc(p.name)} <span>${esc(p.type)}</span></h3><span class="r">${esc(p.role)}</span><p>${esc(p.body)}</p>${p.url ? `<a href="${p.url}">${esc(clean(p.url))} ↗</a>` : ''}</div>`).join('')}
+      ${projects.map((p) => `<div class="pj${p.featured ? ' feat' : ''}">${p.featured ? `<span class="ft">${esc(p.featured)}</span>` : ''}<h3>${esc(p.name)} <span>${esc(p.type)}</span></h3><span class="r">${esc(p.role)}</span><p>${esc(p.body)}</p>${p.url ? `<a href="${p.url}">${esc(clean(p.url))} ↗</a>` : ''}${p.caseStudy ? `<a href="${SITE}${p.caseStudy}">See the full product design process ↗</a>` : ''}</div>`).join('')}
     </div></section>
   </div>
   <aside class="side">
@@ -166,6 +166,7 @@ async function word() {
       new Paragraph({ children: [run(p.role, { italics: true, color: '666666', size: 18 })] }),
       new Paragraph({ spacing: { after: 40 }, children: [run(p.body)] }),
       ...(p.url ? [new Paragraph({ children: [link(clean(p.url), p.url)] })] : []),
+      ...(p.caseStudy ? [new Paragraph({ children: [link('See the full product design process', SITE + p.caseStudy)] })] : []),
     ]),
 
     heading('Core skills'),
