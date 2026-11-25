@@ -150,11 +150,12 @@ const contacts = contactList({ EMAIL, PHONE, LINKEDIN, YOUTUBE });
     .cv-head .actions .btn:last-child{grid-column:1/-1}
   }
   @media (max-width:640px){.timeline::before{left:5px}.tl{grid-template-columns:22px 1fr}.tl-dot{grid-row:1;grid-column:1;justify-self:start;margin-top:5px}.tl-when{grid-column:2;margin-bottom:10px}.tl-body{grid-column:2}}
-  .cv-head{display:grid;gap:18px;border-bottom:1px solid var(--line);padding-bottom:28px}
+  .cv-head{display:grid;gap:18px;border-bottom:1px solid var(--line);padding-bottom:24px}
   .intro-id{margin-bottom:22px}
   .cv-title{font-size:clamp(36px,4.6vw,66px);line-height:.98;max-width:16ch}
   .cv-title .soft{color:var(--dim)}
-  .contact{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+  /* Same 24px above the chips (to the line) as below the buttons (to the line) */
+  .contact{list-style:none;margin:6px 0 0;padding:24px 0 0;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px}
   .contact a{display:inline-flex;align-items:center;gap:8px;padding:8px 14px 8px 11px;border:1px solid var(--line-2);border-radius:999px;background:var(--surface);text-decoration:none;font-size:14px;line-height:1.2;transition:border-color .2s,background-color .2s}
   .contact a:hover{border-color:var(--ink);background:var(--bg-2)}
   .contact svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
@@ -200,7 +201,7 @@ const contacts = contactList({ EMAIL, PHONE, LINKEDIN, YOUTUBE });
     .intro-name>span{font-size:11.5px!important}
     .cv-title{font-size:24px;max-width:none}
     .cv-title .soft{color:#666!important}
-    .contact{gap:4px}
+    .contact{gap:4px;border-top:0;padding-top:0;margin-top:0}
     .contact a{font-size:10.5px;padding:3px 9px 3px 7px;gap:5px}
     .contact svg{width:11px;height:11px}
     .cv-grid{grid-template-columns:1fr 220px;gap:24px}
