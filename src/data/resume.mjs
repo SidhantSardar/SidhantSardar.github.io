@@ -81,3 +81,24 @@ export const brings = [
   'Conversion focus: design, build and measure in one loop, using GA4 data to decide what to improve.',
   'Reliable remote partner: 3.5+ years managing multiple projects with clear written communication, using modern Figma and AI-assisted tooling.',
 ];
+
+// Contact icons (24×24, stroke = currentColor), shared by the web page and the PDF.
+export const icons = {
+  email: '<rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 7 9 6 9-6"/>',
+  phone: '<path d="M5.5 3.5h3.2l1.8 4.4-2.3 1.4a11 11 0 0 0 6.5 6.5l1.4-2.3 4.4 1.8v3.2a2 2 0 0 1-2.2 2A17 17 0 0 1 3.5 5.7a2 2 0 0 1 2-2.2z"/>',
+  site: '<circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5a14 14 0 0 1 0 19M12 2.5a14 14 0 0 0 0 19"/>',
+  linkedin: '<rect x="2.5" y="2.5" width="19" height="19" rx="4"/><path d="M7.5 10.5v6M7.5 7.3v.2M11.5 16.5v-6M11.5 13a2.5 2.5 0 0 1 5 0v3.5"/>',
+  youtube: '<rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9.2 4.8 2.8-4.8 2.8z" fill="currentColor"/>',
+};
+
+/** Contact links in display order. Labels are shown as-is; `key` picks the icon. */
+export function contactList({ EMAIL, PHONE, LINKEDIN, YOUTUBE }) {
+  const clean = (u) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+  return [
+    { key: 'email', label: EMAIL, href: `mailto:${EMAIL}` },
+    PHONE && { key: 'phone', label: PHONE, href: `tel:${PHONE.replace(/[^+\d]/g, '')}` },
+    { key: 'site', label: 'sidhantsardar.com', href: 'https://www.sidhantsardar.com' },
+    LINKEDIN && { key: 'linkedin', label: `LinkedIn · ${clean(LINKEDIN).split('/').pop()}`, href: LINKEDIN },
+    YOUTUBE && { key: 'youtube', label: clean(YOUTUBE).replace(/^youtube\.com\//, 'YouTube · '), href: YOUTUBE },
+  ].filter(Boolean);
+}

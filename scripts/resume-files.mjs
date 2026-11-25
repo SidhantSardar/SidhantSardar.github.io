@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 import {
   Document, Packer, Paragraph, TextRun, ExternalHyperlink, AlignmentType, BorderStyle, TabStopType,
 } from 'docx';
-import { skills, jobs, projects, brings, fmt, tagline, headline, profile, education } from '../src/data/resume.mjs';
+import { skills, jobs, projects, brings, fmt, tagline, headline, profile, education, icons, contactList } from '../src/data/resume.mjs';
 import { EMAIL, PHONE, LINKEDIN, YOUTUBE } from '../src/data/profile.ts';
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -19,13 +19,7 @@ const NAME = 'Sidhant Sardar';
 const SITE = 'https://www.sidhantsardar.com';
 const clean = (u) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
 const dates = (j) => `${fmt(j.start)} – ${j.end ? fmt(j.end) : 'Present'}`;
-const contacts = [
-  { text: EMAIL, href: `mailto:${EMAIL}` },
-  PHONE && { text: PHONE, href: `tel:${PHONE.replace(/[^+\d]/g, '')}` },
-  { text: clean(SITE), href: SITE },
-  LINKEDIN && { text: clean(LINKEDIN), href: LINKEDIN },
-  YOUTUBE && { text: clean(YOUTUBE), href: YOUTUBE },
-].filter(Boolean);
+const contacts = contactList({ EMAIL, PHONE, LINKEDIN, YOUTUBE }).map((c) => ({ ...c, text: c.label }));
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 /* ---------------- PDF ---------------- */
@@ -45,8 +39,9 @@ header{display:grid;grid-template-columns:auto 1fr;gap:2mm 5mm;align-items:cente
 h1{margin:0;font-size:22px;letter-spacing:-.03em;line-height:1}
 .tag{color:#525252;font-size:10.5px}
 .head{font-size:15px;font-weight:700;letter-spacing:-.02em;line-height:1.15}.head span{color:#8a8a8a}
-.contact{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:1mm 5mm;font-size:9.6px;margin-top:1mm}
-.contact a{color:#111;text-decoration:none}
+.contact{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:1.3mm;margin-top:1.5mm}
+.contact a{display:inline-flex;align-items:center;gap:1.1mm;padding:1mm 2.2mm 1mm 1.8mm;border:1px solid #d6d6d6;border-radius:9mm;color:#111;text-decoration:none;font-size:8.6px;line-height:1.2}
+.contact svg{width:2.9mm;height:2.9mm;fill:none;stroke:#111;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .cols{display:grid;grid-template-columns:1fr 57mm;gap:6mm;align-items:start}
 .main{display:grid;gap:4.5mm}
 .lead{margin:0;color:#3a3a3a;font-size:10.2px}
@@ -83,7 +78,7 @@ ul{margin:.4mm 0 0;padding-left:3.6mm;display:grid;gap:.5mm;color:#333}
   <h1>${NAME}</h1>
   <div class="tag">${esc(tagline)}</div>
   <div class="head">${esc(headline[0])} <span>${esc(headline[1])}</span></div>
-  <div class="contact">${contacts.map((c) => `<a href="${c.href}">${esc(c.text)}</a>`).join('')}</div>
+  <div class="contact">${contacts.map((c) => `<a href="${c.href}"><svg viewBox="0 0 24 24">${icons[c.key]}</svg>${esc(c.text)}</a>`).join('')}</div>
 </header>
 <div class="cols">
   <div class="main">
@@ -136,7 +131,7 @@ async function word() {
     new Paragraph({ children: [run(NAME, { bold: true, size: 44 })] }),
     new Paragraph({ spacing: { after: 60 }, children: [run(tagline, { color: '525252', size: 22 })] }),
     new Paragraph({ spacing: { after: 120 }, children: [run(`${headline[0]} ${headline[1]}`, { bold: true, size: 24 })] }),
-    new Paragraph({ children: contacts.flatMap((c, i) => [...(i ? [run('   ·   ', { color: '999999' })] : []), link(c.text, c.href)]) }),
+    new Paragraph({ children: contacts.flatMap((c, i) => [...(i ? [run('   |   ', { color: 'BBBBBB' })] : []), link(c.text, c.href)]) }),
 
     heading('Profile'),
     new Paragraph({ children: [run(profile)] }),
