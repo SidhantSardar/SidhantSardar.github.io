@@ -6,7 +6,7 @@ import JsonLd from '../components/JsonLd.astro';
 import Capabilities from '../components/Capabilities.astro';
 import { Image } from 'astro:assets';
 import { asset } from '../data/images';
-import { LINKEDIN, CV, EMAIL, PHONE, PHONE_TEL, AVAILABILITY } from '../data/profile';
+import { LINKEDIN, YOUTUBE, CV, EMAIL, PHONE, PHONE_TEL, AVAILABILITY } from '../data/profile';
 import { skills } from '../data/skills';
 
 const SITE = 'https://www.sidhantsardar.com/';
@@ -23,7 +23,7 @@ const schema = [
     ...(PHONE_TEL ? { telephone: PHONE_TEL } : {}),
     // Only skills that have a proof page on the site
     knowsAbout: skills.filter((s) => s.status === 'shown').map((s) => s.label),
-    ...(LINKEDIN ? { sameAs: [LINKEDIN] } : {}),
+    ...(LINKEDIN || YOUTUBE ? { sameAs: [LINKEDIN, YOUTUBE].filter(Boolean) } : {}),
   },
   {
     '@context': 'https://schema.org',
@@ -238,6 +238,7 @@ const services = [
       {(LINKEDIN || CV) && (
         <div class="contact-links">
           {LINKEDIN && <a class="link-arrow" href={LINKEDIN} target="_blank" rel="noopener">LinkedIn <span class="ar">↗</span></a>}
+          {YOUTUBE && <a class="link-arrow" href={YOUTUBE} target="_blank" rel="noopener">YouTube <span class="ar">↗</span></a>}
           {CV && <a class="link-arrow" href={CV}>Resume <span class="ar">→</span></a>}
         </div>
       )}
