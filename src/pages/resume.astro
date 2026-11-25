@@ -3,49 +3,71 @@
 import Base from '../layouts/Base.astro';
 import { Image } from 'astro:assets';
 import { asset } from '../data/images';
-import { EMAIL, PHONE, PHONE_TEL, LINKEDIN } from '../data/profile';
+import { EMAIL, PHONE, PHONE_TEL, LINKEDIN, YOUTUBE } from '../data/profile';
 
 const skills = [
-  { k: 'UX', v: ['Human-centred design', 'User flows', 'Information architecture', 'Wireframing', 'Prototyping', 'Usability testing', 'Accessibility'] },
+  { k: 'UX', v: ['Human-centred design', 'User flows', 'Page structure', 'Wireframing', 'Prototyping', 'Usability testing', 'Accessibility'] },
   { k: 'UI & visual', v: ['Visual hierarchy', 'Typography', 'Colour', 'Layout grids', 'Responsive & mobile-first', 'Conversion-focused layouts'] },
   { k: 'Design systems', v: ['Component libraries', 'Design tokens', 'Type & colour scales', '8pt spacing', 'Atomic design', 'Documentation'] },
   { k: 'Analytics & conversion', v: ['Google Analytics 4', 'Key events & conversion tracking', 'Search Console', 'Funnel analysis', 'Power BI', 'SQL'] },
   { k: 'Tools & build', v: ['Figma (expert)', 'FigJam', 'Figma Make', 'Webflow (CMS, interactions)', 'Claude Code', 'HTML / CSS', 'Notion'] },
 ];
 
+// Experience, newest first. Duration is worked out at build time, so it stays current.
 const jobs = [
   {
     role: 'UI/UX Designer & Webflow Developer',
     org: 'Aligne AI (Aligne Technologies Ltd)',
     note: 'Responsible AI governance for 50+ enterprises, including HSBC, MUFG, Vodafone, BP, Moody’s and Infosys',
-    when: 'May 2023 – Present',
+    start: '2023-05',
+    end: null as string | null,
     where: 'Remote',
-    points: [
-      'Designed the full Altrum AI product UI: dashboards, policies, audit logs, incident detection.',
-      'Own the design process end to end: flows, IA, wireframes, prototypes, high-fidelity UI.',
-      'Built a two-brand design system: 80+ components, semantic tokens, dark and light modes.',
-      'Designed and built aligne.ai and altrum.ai in Webflow: CMS, animations, accessible structure.',
-      'Turn dense compliance content into conversion-focused pages for executive buyers.',
+    groups: [
+      { k: 'Web app', points: [
+        'Designed the Altrum AI web application end to end in Figma: dashboards, policy management, audit logs and incident detection.',
+        'Own the full process: user flows, page structure, wireframes, prototypes and final UI.',
+      ] },
+      { k: 'Websites', points: [
+        'Designed and built two full CMS websites in Webflow: first altrum.ai, then aligne.ai.',
+        'When Altrum became part of Aligne, merged both into one site and rebuilt aligne.ai in code with Claude Code.',
+        'Built a shared Figma component library (80+ components) used across both brands.',
+      ] },
+      { k: 'Analytics', points: [
+        'Set up Google Analytics on both websites: tracking visitors and key events to see which pages bring enquiries.',
+        'Used that data to improve pages for conversion with executive buyers.',
+      ] },
     ],
   },
   {
     role: 'Power BI Developer',
     org: 'Nimbja Security Solutions',
     note: 'Full-time',
-    when: 'Nov 2019 – Jan 2023',
+    start: '2019-11',
+    end: '2023-01',
     where: 'Pune',
-    points: [
-      'Built Power BI dashboards from multiple data sources.',
-      'Data modelling and SQL: tabular models, relationships, query tuning.',
-      'Turned business needs into technical specs and clear visuals.',
+    groups: [
+      { k: '', points: [
+        'Built Power BI dashboards from multiple data sources.',
+        'Data modelling and SQL: tabular models, relationships, query tuning.',
+        'Turned business needs into technical specs and clear visuals.',
+      ] },
     ],
   },
 ];
 
+const fmt = (ym: string) => new Date(`${ym}-01T00:00:00Z`).toLocaleDateString('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+const span = (start: string, end: string | null) => {
+  const [sy, sm] = start.split('-').map(Number);
+  const e = end ? end.split('-').map(Number) : [new Date().getUTCFullYear(), new Date().getUTCMonth() + 1];
+  const months = (e[0] - sy) * 12 + (e[1] - sm) + 1;
+  const y = Math.floor(months / 12), m = months % 12;
+  return [y && `${y} yr${y > 1 ? 's' : ''}`, m && `${m} mo${m > 1 ? 's' : ''}`].filter(Boolean).join(' ');
+};
+
 const projects = [
-  { name: 'sidhantsardar.com', type: 'Portfolio, designed, built and measured', role: 'Design · Claude Code + Astro · GA4', body: 'Designed in Figma, built in code with Claude Code. GA4 tracks every enquiry click as a key event, linked to Search Console to see which searches bring visitors.', url: 'https://www.sidhantsardar.com' },
-  { name: 'Altrum AI', type: 'Enterprise AI governance platform', role: 'Product designer · web app UI + marketing site', body: 'Complete Figma UI for policy enforcement, audit logging, no-code governance and incident detection, plus the marketing site, all on one design system.', url: 'https://altrum.ai' },
-  { name: 'Aligne AI', type: 'Responsible AI consulting & platform', role: 'UI/UX designer · Figma → Webflow', body: 'Corporate site end to end: information architecture for a multi-service offering, wireframes, prototypes and a responsive build.', url: 'https://aligne.ai' },
+  { name: 'sidhantsardar.com', type: 'Portfolio, designed, built and measured', role: 'Figma · Claude Code + Astro · GA4', body: 'Designed in Figma, built in code with Claude Code. GA4 tracks every enquiry click as a key event, linked to Search Console to see which searches bring visitors.', url: 'https://www.sidhantsardar.com' },
+  { name: 'Altrum AI web app', type: 'Enterprise AI governance platform', role: 'Product designer · Figma', body: 'End-to-end UI for policy enforcement, audit logging, no-code governance and incident detection.' },
+  { name: 'Aligne AI', type: 'Responsible AI consulting & platform', role: 'Webflow CMS → rebuilt in code', body: 'Designed and built as a full Webflow CMS site, with altrum.ai alongside it. Now one site, rebuilt in code with Claude Code, with GA4 tracking.', url: 'https://aligne.ai' },
   { name: 'World of Gears', type: 'Sustainability consultancy', role: 'Web designer', body: 'A clean, editorial website for a supply-chain consultancy, with CMS structures for case studies and insights.' },
 ];
 
@@ -78,6 +100,7 @@ const brings = [
         {PHONE && <li><a href={`tel:${PHONE_TEL}`} data-track="contact_click" data-track-method="phone" data-track-location="resume">{PHONE}</a></li>}
         <li><a href="/">sidhantsardar.com</a></li>
         {LINKEDIN && <li><a href={LINKEDIN} target="_blank" rel="noopener">linkedin.com/in/sidhant-sardar</a></li>}
+        {YOUTUBE && <li><a href={YOUTUBE} target="_blank" rel="noopener">{YOUTUBE.replace(/^https?:\/\/(www\.)?/, '')}</a></li>}
       </ul>
       <div class="actions no-print">
         <button class="btn primary" type="button" id="print-cv" data-track="resume_download" data-track-location="resume">Save as PDF <span class="ar">↓</span></button>
@@ -92,21 +115,34 @@ const brings = [
           <p class="lead">UI/UX designer with 3.5+ years of remote experience designing clean, user-friendly digital products. I own the full workflow (user flows, wireframes, prototypes and high-fidelity Figma UI) ship it myself through Webflow and Claude Code, and connect it to Google Analytics so every page is measured on conversions, not looks. Currently designing the product UI and web experience for an enterprise SaaS platform serving Tier-1 banks.</p>
         </section>
 
-        <section>
+        <section class="panel exp">
           <h2 class="eyebrow">Experience</h2>
-          {jobs.map((j) => (
-            <article class="job">
-              <div class="job-top">
-                <h3>{j.role}</h3>
-                <span class="mono muted">{j.when} · {j.where}</span>
-              </div>
-              <p class="org"><b>{j.org}</b> · {j.note}</p>
-              <ul>{j.points.map((p) => <li>{p}</li>)}</ul>
-            </article>
-          ))}
+          <ol class="timeline">
+            {jobs.map((j) => (
+              <li class:list={['tl', { now: !j.end }]}>
+                <div class="tl-when">
+                  <b>{j.start.slice(0, 4)} – {j.end ? j.end.slice(0, 4) : 'Now'}</b>
+                  <span>{fmt(j.start)} – {j.end ? fmt(j.end) : 'Present'}</span>
+                  <span>{span(j.start, j.end)} · {j.where}</span>
+                  {!j.end && <span class="pill">Current</span>}
+                </div>
+                <span class="tl-dot" aria-hidden="true"></span>
+                <div class="tl-body">
+                  <h3>{j.role}</h3>
+                  <p class="org"><b>{j.org}</b> · {j.note}</p>
+                  {j.groups.map((g) => (
+                    <div class="grp">
+                      {g.k && <span class="grp-k mono">{g.k}</span>}
+                      <ul>{g.points.map((p) => <li>{p}</li>)}</ul>
+                    </div>
+                  ))}
+                </div>
+              </li>
+            ))}
+          </ol>
         </section>
 
-        <section>
+        <section class="panel proj">
           <h2 class="eyebrow">Featured projects</h2>
           <div class="projects">
             {projects.map((p) => (
@@ -121,7 +157,7 @@ const brings = [
         </section>
       </div>
 
-      <aside class="side">
+      <aside class="side panel">
         <section>
           <h2 class="eyebrow">Core skills</h2>
           {skills.map((s) => (
@@ -138,7 +174,7 @@ const brings = [
         </section>
         <section>
           <h2 class="eyebrow">Links</h2>
-          <p class="cv-links"><a href="/">Portfolio · sidhantsardar.com</a><a href="https://aligne.ai" target="_blank" rel="noopener">aligne.ai ↗</a><a href="https://altrum.ai" target="_blank" rel="noopener">altrum.ai ↗</a></p>
+          <p class="cv-links"><a href="/">Portfolio · sidhantsardar.com</a><a href="https://aligne.ai" target="_blank" rel="noopener">aligne.ai ↗</a></p>
         </section>
       </aside>
     </div>
@@ -150,7 +186,26 @@ const brings = [
 </script>
 
 <style>
-  .cv{padding-block:56px 96px;display:grid;gap:40px}
+  .cv{padding-block:56px 96px;display:grid;gap:40px;--t-exp:#F6F6F3;--t-proj:#F2F5F8;--t-side:#F7F5F1}
+  :global(:root[data-theme="dark"]) .cv{--t-exp:#101010;--t-proj:#0C0F13;--t-side:#13110E}
+  .panel{border-radius:14px;padding:clamp(18px,3vw,28px)}
+  .exp{background:var(--t-exp)}
+  .proj{background:var(--t-proj)}
+  .side.panel{background:var(--t-side);align-self:start}
+  .timeline{list-style:none;margin:0;padding:0;display:grid;gap:28px;position:relative}
+  .timeline::before{content:"";position:absolute;left:172px;top:8px;bottom:8px;width:1px;background:var(--line-2)}
+  .tl{display:grid;grid-template-columns:150px 44px 1fr;align-items:start}
+  .tl-when{display:grid;gap:3px;justify-items:start}
+  .tl-when b{font-family:var(--display);font-size:20px;letter-spacing:-.02em;line-height:1.1}
+  .tl-when span{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .pill{margin-top:6px;padding:2px 8px;border-radius:999px;background:var(--ink);color:var(--bg)!important}
+  .tl-dot{justify-self:center;margin-top:6px;width:11px;height:11px;border-radius:50%;background:var(--bg);border:2px solid var(--ink);position:relative;z-index:1}
+  .tl.now .tl-dot{background:var(--ink);box-shadow:0 0 0 4px var(--accent-soft)}
+  .tl-body{display:grid;gap:8px;min-width:0}
+  .grp{display:grid;gap:4px;margin-top:4px}
+  .grp-k{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim)}
+  .grp ul{margin:0;padding-left:18px;display:grid;gap:5px;font-size:15px;color:var(--muted)}
+  @media (max-width:640px){.timeline::before{left:5px}.tl{grid-template-columns:22px 1fr}.tl-dot{grid-row:1;grid-column:1;justify-self:start;margin-top:5px}.tl-when{grid-column:2;margin-bottom:10px}.tl-body{grid-column:2}}
   .cv-head{display:grid;gap:18px;border-bottom:1px solid var(--line);padding-bottom:28px}
   .intro-id{margin-bottom:22px}
   .cv-title{font-size:clamp(36px,4.6vw,66px);line-height:.98;max-width:16ch}
@@ -193,7 +248,8 @@ const brings = [
     .cv-head{padding-bottom:12px;gap:10px}
     .intro-id{margin-bottom:4px;gap:14px}
     .avatar{width:58px;height:68px}
-    .avatar .dims,.intro-name .status{display:none}
+    .avatar .dims{display:none}
+    .intro-name .status{font-size:9.5px!important;margin-top:1px}
     .intro-name b{font-size:18px}
     .intro-name>span{font-size:11.5px!important}
     .cv-title{font-size:24px;max-width:none}
@@ -223,5 +279,21 @@ const brings = [
     .main{gap:12px}
     .job{padding-bottom:6px}
     .job+.job{padding-top:6px}
+    .panel{padding:10px 12px;border-radius:8px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .timeline{gap:10px}
+    .timeline::before{left:96px}
+    .tl{grid-template-columns:84px 24px 1fr}
+    .tl-when b{font-size:13px}
+    .tl-when span{font-size:8.5px!important}
+    .pill{color:#fff!important;padding:1px 6px}
+    .tl-dot{width:8px;height:8px;margin-top:3px}
+    .tl-body{gap:3px}
+    .grp{gap:1px;margin-top:1px}
+    .grp-k{font-size:8px!important}
+    .grp ul{font-size:10.2px!important;line-height:1.38;gap:1px}
+    /* Two clean pages: profile + experience on page 1, projects on page 2 */
+    .proj{break-before:page}
+    .side section{break-inside:avoid}
+    .tl{break-inside:avoid}
   }
 </style>

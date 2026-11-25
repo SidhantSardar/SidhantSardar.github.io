@@ -4,6 +4,9 @@
 // LinkedIn profile (from the Oct 2026 resume).
 export const LINKEDIN = 'https://www.linkedin.com/in/sidhant-sardar/';
 
+// YouTube channel URL (the Brightfold video series). Empty = not shown.
+export const YOUTUBE = '';
+
 // The resume page. Shared as a link instead of a PDF ("Save as PDF" on the page prints one).
 export const CV = '/resume/';
 
