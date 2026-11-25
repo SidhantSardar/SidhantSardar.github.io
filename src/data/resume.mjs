@@ -3,15 +3,16 @@
 
 export const tagline = 'UI/UX Designer · Webflow Developer · Claude Code · GA4';
 export const headline = ['Product and web designer', 'who builds and measures.'];
-export const profile = 'UI/UX designer with 3.5+ years of remote experience designing clean, user-friendly digital products. I own the full workflow (user flows, wireframes, prototypes and high-fidelity Figma UI), ship it myself through Webflow and Claude Code, and connect it to Google Analytics so every page is measured on conversions, not looks. Currently designing the product UI and web experience for an enterprise SaaS platform serving Tier-1 banks.';
+export const profile = 'UI/UX designer with 3.5+ years of remote experience designing clean, user-friendly digital products. I own the full workflow (user flows, wireframes, prototypes and high-fidelity Figma UI), ship it myself through Webflow and Claude Code, and connect it to Google Analytics so every page is measured on conversions, not looks. Currently designing the product UI and web experience for an enterprise AI governance platform serving Tier-1 banks, with hands-on knowledge of how AI governance works end to end.';
 export const education = { title: 'Graduation', org: 'Nagpur University', year: '2015' };
 
 export const skills = [
-  { k: 'UX', v: ['Human-centred design', 'User flows', 'Page structure', 'Wireframing', 'Prototyping', 'Usability testing', 'Accessibility'] },
+  { k: 'UX', v: ['Human-centred design (HCD)', 'User flows', 'Page structure', 'Wireframing', 'Prototyping', 'Usability testing', 'Accessibility'] },
   { k: 'UI & visual', v: ['Visual hierarchy', 'Typography', 'Colour', 'Layout grids', 'Responsive & mobile-first', 'Conversion-focused layouts'] },
   { k: 'Design systems', v: ['Component libraries', 'Design tokens', 'Type & colour scales', '8pt spacing', 'Atomic design', 'Documentation'] },
   { k: 'Analytics & conversion', v: ['Google Analytics 4', 'Key events & conversion tracking', 'Search Console', 'Funnel analysis', 'Power BI', 'SQL'] },
-  { k: 'Tools & build', v: ['Figma (expert)', 'FigJam', 'Figma Make', 'Webflow (CMS, interactions)', 'Claude Code', 'HTML / CSS', 'Notion'] },
+  { k: 'Tools & build', v: ['Figma (expert)', 'FigJam', 'Figma Make', 'Webflow (CMS, Interactions)', 'GSAP', 'Spline', 'Zapier automations', 'Claude Code', 'HTML / CSS', 'Notion'] },
+  { k: 'Domain', v: ['AI governance', 'Enterprise B2B SaaS', 'Policies, risk, audits & incidents'] },
 ];
 
 // Experience, newest first. Duration is worked out at build time, so it stays current.
@@ -24,17 +25,22 @@ export const jobs = [
     start: '2023-05',
     end: null,
     where: 'Remote',
-    tools: ['Figma', 'Figma tokens', 'Prototyping', 'Webflow', 'CMS', 'Claude Code', 'Google Analytics (GA4)'],
+    tools: ['Human-centred design', 'Figma', 'Figma tokens', 'Prototyping', 'Webflow', 'CMS', 'Webflow Interactions', 'GSAP', 'Spline', 'Zapier', 'Claude Code', 'Google Analytics (GA4)', 'AI governance'],
     groups: [
       { k: 'Web app', points: [
         'Designed the **Altrum AI web application** end to end in **Figma**: dashboards, policy management, audit logs and incident detection.',
-        'Own the full process: **user flows**, page structure, **wireframes**, **prototypes** and final **UI**.',
+        'Own the full process with **human-centred design**: **user flows**, page structure, **wireframes**, **prototypes** and final **UI**.',
         '**Test the web app end to end**: explore every flow, note issues and observations, and turn them into product improvements.',
       ] },
       { k: 'Websites', points: [
         'Designed and built two full **CMS websites** in **Webflow**: first altrum.ai, then aligne.ai.',
+        'Added motion with **Webflow Interactions** and **GSAP**, and integrated 3D and animation from tools like **Spline**.',
+        'Built **Zapier** workflows and automations that connect the websites with other tools.',
         'When Altrum became part of Aligne, merged both into one site and rebuilt aligne.ai **in code with Claude Code**.',
         'Built a shared **Figma component library** (80+ components) and **Figma tokens** used across both brands.',
+      ] },
+      { k: 'Domain', points: [
+        'Deep **AI governance** knowledge from designing the platform end to end: how policies, risk, audits and incident detection work together for enterprise teams.',
       ] },
       { k: 'Analytics', points: [
         'Set up **Google Analytics (GA4)** on both websites: tracking visitors and **key events** to see which pages bring enquiries.',
