@@ -76,12 +76,6 @@ main:focus{outline:none}
     linear-gradient(var(--c),var(--c)) 100% 100%/10px 1px no-repeat, linear-gradient(var(--c),var(--c)) 100% 100%/1px 10px no-repeat}
 /* plain space between sections (components/Gap.astro): full height on desktop, less on phones */
 .gap{height:clamp(calc(var(--h,120px) * .6),10vw,var(--h,120px))}
-/* layout grid overlay */
-.grid-overlay{position:fixed;inset:0;pointer-events:none;z-index:50;opacity:0;transition:opacity .25s}
-.grid-overlay .in{height:100%;display:grid;grid-template-columns:repeat(12,1fr);gap:24px}
-.grid-overlay i{background:color-mix(in srgb,var(--accent) 6%,transparent);border-inline:1px solid color-mix(in srgb,var(--accent) 20%,transparent)}
-body.grid-on .grid-overlay{opacity:1}
-@media (max-width:700px){.grid-overlay .in{grid-template-columns:repeat(4,1fr);gap:16px}.grid-overlay i:nth-child(n+5){display:none}}
 
 /* ---------- nav (the main bar only: other <nav> elements, like the footer's, are not sticky) ---------- */
 .site-nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--nav-bg);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
@@ -95,15 +89,11 @@ body.grid-on .grid-overlay{opacity:1}
 .links a[aria-current="page"]{color:var(--ink);text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:8px}
 /* Contact is the nav's one call to action */
 .links a.nav-cta{color:var(--accent);font-weight:500}
-.toggle{display:flex;align-items:center;gap:8px;border:1px solid var(--line-2);background:none;border-radius:6px;padding:6px 10px;font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
-.toggle[aria-pressed="true"]{color:var(--accent);border-color:var(--accent)}
-/* tablets: the grid toggle makes way for the menu */
-@media (max-width:900px){.toggle{display:none}}
 @media (min-width:721px){
   .links a.nav-cta{background:var(--accent-fill);color:var(--on-accent);padding:8px 14px;border-radius:7px;transition:background-color .2s}
   .links a.nav-cta:hover{background:var(--accent-hover);color:var(--on-accent)}
 }
-@media (max-width:720px){.links{gap:16px}.links a.hide-sm{display:none}.toggle{display:none}.site-nav .in{gap:16px}}
+@media (max-width:720px){.links{gap:16px}.links a.hide-sm{display:none}.site-nav .in{gap:16px}}
 @media (max-width:420px){.links{gap:12px}.site-nav .in{gap:10px}.links a{font-size:13.5px}.logo{font-size:17px}}
 /* the smallest phones: the logo already links home, so the Home item makes way */
 @media (max-width:380px){.links a:first-child{display:none}}
