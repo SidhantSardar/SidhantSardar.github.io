@@ -740,3 +740,11 @@ a.chip:hover{color:var(--ink);border-color:var(--ink)}
 .case-cta h2{font-size:clamp(26px,3.2vw,36px);font-weight:700;line-height:1.05}
 .case-cta p{color:var(--muted);font-size:16.5px;max-width:52ch}
 .case-cta .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+
+/* Phones: every text link gets a finger-sized tap area (about 44px tall) without changing how it looks. */
+@media (max-width:720px){
+  .link-arrow,.back{display:inline-flex;align-items:center;min-height:44px}
+  .mail a{display:inline-flex;align-items:center;min-height:44px}
+  .mail button{min-height:44px;padding:0 16px}
+  .filters .chip{min-height:40px;padding:0 14px;display:inline-flex;align-items:center}
+}
