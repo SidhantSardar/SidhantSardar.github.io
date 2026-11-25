@@ -78,7 +78,8 @@ const contacts = contactList({ EMAIL, PHONE, LINKEDIN, YOUTUBE });
           <h2 class="eyebrow">Featured projects</h2>
           <div class="projects">
             {projects.map((p) => (
-              <article>
+              <article class:list={{ featured: p.featured }}>
+                {p.featured && <span class="feat-tag mono">{p.featured}</span>}
                 <h3>{p.name} <span class="muted">· {p.type}</span></h3>
                 <span class="mono muted">{p.role}</span>
                 <p>{p.body}</p>
@@ -176,6 +177,9 @@ const contacts = contactList({ EMAIL, PHONE, LINKEDIN, YOUTUBE });
   .projects h3 span{font-weight:400;font-size:15px}
   .projects p{font-size:15px;color:var(--muted)}
   .projects a{text-decoration:none;justify-self:start}
+  .projects article.featured{border:1.5px solid var(--ink);border-radius:12px;padding:16px 18px;background:var(--surface)}
+  .projects article.featured h3{font-size:22px}
+  .feat-tag{justify-self:start;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--ink);color:var(--bg)}
   .skill{display:grid;gap:4px;border-top:1px solid var(--line);padding-top:10px}
   .skill b{font-size:14.5px;font-weight:600}
   .skill p{font-size:14px;color:var(--muted);line-height:1.55}

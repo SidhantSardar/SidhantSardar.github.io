@@ -70,6 +70,9 @@ ul{margin:.4mm 0 0;padding-left:3.6mm;display:grid;gap:.5mm;color:#333}
 /* keep each group's label with its bullets */
 .g{break-inside:avoid}
 mark.kw{background:linear-gradient(transparent 52%,#FDE68A 52%);color:#111;font-weight:600;padding:0 .2mm}
+.pj.feat{grid-column:1/-1;border:1.4px solid #111;border-radius:2.5mm;padding:3mm 3.5mm;background:#fff}
+.pj.feat h3{font-size:13px}
+.ft{justify-self:start;font-family:ui-monospace,Menlo,monospace;font-size:7px;letter-spacing:.08em;text-transform:uppercase;background:#111;color:#fff;border-radius:9mm;padding:.5mm 2mm;margin-bottom:.5mm}
 .projs{display:grid;grid-template-columns:1fr 1fr;gap:3mm 5mm}
 .sk{display:grid;gap:.4mm;padding-top:1.6mm;border-top:1px solid #e6e1d8}
 .sk:first-of-type{border-top:0;padding-top:0}
@@ -97,7 +100,7 @@ mark.kw{background:linear-gradient(transparent 52%,#FDE68A 52%);color:#111;font-
         </div></li>`).join('')}
     </ol></section>
     <section class="panel proj"><h2 class="eyebrow">Featured projects</h2><div class="projs">
-      ${projects.map((p) => `<div class="pj"><h3>${esc(p.name)} <span>${esc(p.type)}</span></h3><span class="r">${esc(p.role)}</span><p>${esc(p.body)}</p>${p.url ? `<a href="${p.url}">${esc(clean(p.url))} ↗</a>` : ''}</div>`).join('')}
+      ${projects.map((p) => `<div class="pj${p.featured ? ' feat' : ''}">${p.featured ? `<span class="ft">${esc(p.featured)}</span>` : ''}<h3>${esc(p.name)} <span>${esc(p.type)}</span></h3><span class="r">${esc(p.role)}</span><p>${esc(p.body)}</p>${p.url ? `<a href="${p.url}">${esc(clean(p.url))} ↗</a>` : ''}</div>`).join('')}
     </div></section>
   </div>
   <aside class="side">
@@ -158,6 +161,7 @@ async function word() {
 
     heading('Featured projects'),
     ...projects.flatMap((p) => [
+      ...(p.featured ? [new Paragraph({ spacing: { before: 120 }, children: [run(p.featured.toUpperCase(), { bold: true, size: 16, color: 'FFFFFF', shading: { fill: '111111' }, characterSpacing: 30 })] })] : []),
       new Paragraph({ spacing: { before: 120 }, children: [run(p.name, { bold: true, size: 22 }), run(` · ${p.type}`, { color: '525252' })] }),
       new Paragraph({ children: [run(p.role, { italics: true, color: '666666', size: 18 })] }),
       new Paragraph({ spacing: { after: 40 }, children: [run(p.body)] }),
