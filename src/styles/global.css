@@ -1127,36 +1127,20 @@ main.grid-lit::after{opacity:1}
    mirror of the line along the footer's upper edge.
    Inside the hero the site's colour tokens are swapped for white ones, so every part (label, text,
    facts, focus ring, selection) follows without rules of its own.
-   The grid is drawn on the blue in white (::before) and brightens very slightly around the pointer
-   (::after): a wide, faint light, so the text over it stays easy to read. */
+   Like the footer, the blue is plain: no grid, only the footer's faint light in the dark theme. */
 .hero{--hb:#0000FF;--hm:rgba(255,255,255,.86);--hl:rgba(255,255,255,.28);
   --ink:#fff;--muted:var(--hm);--dim:var(--hm);--line:var(--hl);--line-2:rgba(255,255,255,.5);
   --accent:#fff;--accent-fill:#fff;--accent-soft:rgba(255,255,255,.14);--on-accent:var(--hb);--bg:var(--hb);
   /* the headline: white fading to a pale blue; its second line a little softer (on this blue, 4.5:1 or more) */
-  --title-grad:linear-gradient(180deg,#FFFFFF 38%,#D9DDFF 100%);--soft-grad:linear-gradient(100deg,#FFFFFF 0%,#C9CFFF 48%,#A9B2FF 100%);
-  /* the changing word: a clear pale blue, the hero's accent (4.2:1 or more on this blue) */
-  --word-grad:linear-gradient(100deg,#C6CCFF 0%,#A3ADFF 100%);
+  --title-grad:linear-gradient(180deg,#FFFFFF 30%,#C9CFFF 100%);--soft-grad:linear-gradient(100deg,#FFFFFF 0%,#C9CFFF 48%,#A9B2FF 100%);
+  /* the changing word: pure white, the brightest thing on the blue, so it stands out from the lines above */
+  --word-grad:linear-gradient(#FFFFFF,#FFFFFF);
+  /* and the lines above it soften a little more towards the bottom, so the word leads */
   position:relative;isolation:isolate;padding-block:36px 56px;background:var(--hb);color:#fff}
 :root[data-theme="dark"] .hero{background:
   linear-gradient(90deg,transparent,rgba(255,255,255,.75) 30%,rgba(255,255,255,.75) 70%,transparent) 0 100%/100% 1px no-repeat,
   radial-gradient(70% 90% at 10% 0%,rgba(120,132,255,.42),transparent 62%),
   radial-gradient(60% 90% at 100% 100%,rgba(0,0,120,.7),transparent 62%),var(--hb)}
-/* the grid, in white. It starts 61px up so its lines meet the ones behind the menu bar. */
-.hero::before,.hero::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none}
-.hero::before{--gl:rgba(255,255,255,.09);
-  background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cpath d='M96.5 123v11M91 128.5h11' stroke='%23fff' stroke-opacity='.36'/%3E%3C/svg%3E") 50% -61px/256px 256px,
-    linear-gradient(var(--gl) 1px,transparent 1px) 50% -61px/64px 64px,
-    linear-gradient(90deg,var(--gl) 1px,transparent 1px) 50% -61px/64px 64px;
-  -webkit-mask-image:linear-gradient(#000 45%,rgba(0,0,0,.3));mask-image:linear-gradient(#000 45%,rgba(0,0,0,.3))}
-.hero::after{--gh:rgba(255,255,255,.14);opacity:0;transition:opacity .6s;
-  background:
-    linear-gradient(var(--gh) 1px,transparent 1px) 50% -61px/64px 64px,
-    linear-gradient(90deg,var(--gh) 1px,transparent 1px) 50% -61px/64px 64px,
-    radial-gradient(420px circle at var(--gx,50%) calc(var(--gy,0px) - 61px),rgba(255,255,255,.04),transparent 70%);
-  -webkit-mask-image:radial-gradient(360px circle at var(--gx,50%) calc(var(--gy,0px) - 61px),#000 0%,transparent 75%);
-  mask-image:radial-gradient(360px circle at var(--gx,50%) calc(var(--gy,0px) - 61px),#000 0%,transparent 75%)}
-main.grid-lit .hero::after{opacity:1}
 /* buttons, as in the footer: white for the main one, a white outline for the other */
 :root[data-theme] main .hero .btn{background:transparent;border-color:rgba(255,255,255,.6);color:#fff;box-shadow:none}
 :root[data-theme] main .hero .btn:hover{border-color:#fff;background:rgba(255,255,255,.12)}
@@ -1166,7 +1150,7 @@ main.grid-lit .hero::after{opacity:1}
 :root[data-theme] .hero .hero-portrait{box-shadow:0 44px 80px -44px rgba(0,0,50,.9)}
 .hero .hero-photo .status i{box-shadow:0 0 0 4px rgba(74,222,128,.25);background:#4ADE80}
 /* on paper the blue is not printed, so the hero goes back to black on white */
-@media print{.hero{background:none!important;color:#000;--ink:#0A0A0A;--muted:#525252;--dim:#6B6B6B;--line:#E8E8E8;--line-2:#D4D4D4;--accent:#0000FF;--accent-fill:#0000FF;--on-accent:#fff;--bg:#fff}.hero::before,.hero::after{display:none}}
+@media print{.hero{background:none!important;color:#000;--ink:#0A0A0A;--muted:#525252;--dim:#6B6B6B;--line:#E8E8E8;--line-2:#D4D4D4;--accent:#0000FF;--accent-fill:#0000FF;--on-accent:#fff;--bg:#fff}}
 /* short laptop screens: the hero closes up, and the photo gets a little smaller with the screen, so the
    two buttons stay on the first screen */
 @media (min-width:901px) and (max-height:760px){.hero{padding-block:16px 40px}.hero h1{font-size:clamp(44px,min(6.6vw,10.2vh),88px)}.hero .lede{margin-top:8px}.hero .hero-portrait{width:min(100%,440px,calc((100vh - 230px) * .8))}}

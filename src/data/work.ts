@@ -12,7 +12,7 @@ export interface WorkItem {
   line: string;
   tags: string[];
   /** Which drawn cover to show (components/WorkArt.astro). Covers are graphics, not screenshots. */
-  art: 'product' | 'merge' | 'cms';
+  art: 'product' | 'merge' | 'cms' | 'site';
   links: WorkLink[];
 }
 

@@ -1,54 +1,217 @@
 ---
+// Portfolio: every case study, grouped by what was designed.
+//   Web application        the six UX case studies from the Altrum AI web app
+//   B2B SaaS websites      Altrum AI and Aligne AI
+//   Consultancy website    World of Gears
+//   Concept projects       the Lab: a made-up product built end to end in public
+// The buttons at the top show one group at a time (script at the end). Without scripts every group shows.
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ToolText from '../../components/ToolText.astro';
+import Icon from '../../components/Icon.astro';
 import Wire from '../../components/Wire.astro';
+import WorkCard from '../../components/WorkCard.astro';
 import Releases from '../../components/Releases.astro';
-import Gap from '../../components/Gap.astro';
+import { work, type WorkItem } from '../../data/work';
+import { chapters } from '../../lab/brightfold/chapters';
 
 const cases = (await getCollection('portfolio')).sort((a, b) => a.data.order - b.data.order);
+const byHref = (href: string) => work.find((w) => w.href === href)!;
+const built = chapters.filter((c) => c.status === 'built').length;
+
+const altrumSite: WorkItem = {
+  href: '/work/altrum-website/',
+  kind: 'Website',
+  label: 'Website · Webflow → Astro',
+  title: 'Altrum AI website',
+  line: 'The public pages for Altrum AI, an AI governance platform: first designed and built in Webflow, now rebuilt in code as part of aligne.ai.',
+  tags: ['Webflow', 'Astro', 'Figma'],
+  art: 'site',
+  links: [
+    { text: 'How I built it', href: '/work/altrum-website/' },
+    { text: 'Visit site', href: 'https://www.aligne.ai/altrum/', external: true },
+  ],
+};
+const saas = [altrumSite, byHref('/work/aligne-ai/')];
+const consultancy = [byHref('/work/world-of-gears/')];
+
+const groups = [
+  { id: 'web-app', label: 'Web application', icon: 'app-window', count: cases.length },
+  { id: 'saas', label: 'B2B SaaS websites', icon: 'globe', count: saas.length },
+  { id: 'consultancy', label: 'Consultancy website', icon: 'building-2', count: consultancy.length },
+  { id: 'concept', label: 'Concept projects', icon: 'sparkles', count: 2 },
+];
+const total = groups.reduce((n, g) => n + g.count, 0);
 ---
-<Base title="Portfolio · Sidhant Sardar" description="UX case studies from the AltrumAI web app, designed in Figma from 2023 to now." active="portfolio" image="/og/portfolio.png" imageAlt="Portfolio: UX case studies from the AltrumAI web app">
+<Base title="Portfolio · Sidhant Sardar" description="Case studies grouped by what I designed: the Altrum AI web application, B2B SaaS websites, a consultancy website and concept projects." active="portfolio" image="/og/portfolio.png" imageAlt="Portfolio: UX case studies">
   <div class="in">
     <header class="page-head">
       <h1>Portfolio</h1>
-      <p class="sum">UX case studies from the AltrumAI web app. I've designed it in Figma since 2023. Each study is one problem and how I solved it, shown in screens and diagrams.</p>
+      <p class="sum">Case studies, grouped by what I designed: a web application, B2B SaaS websites, a consultancy website and concept projects. Pick a group, or see them all.</p>
+    </header>
+
+    <nav class="pf-cats" aria-label="Case study groups">
+      <button class="pf-cat" type="button" data-cat="all" aria-pressed="true"><span>All</span><small>{total}</small></button>
+      {groups.map((g) => (
+        <button class="pf-cat" type="button" data-cat={g.id} aria-pressed="false" aria-controls={g.id}>
+          <Icon name={g.icon} size={16} /><span>{g.label}</span><small>{g.count}</small>
+        </button>
+      ))}
+    </nav>
+
+    <!-- 1. Web application -->
+    <section class="pf-group" id="web-app" data-cat="web-app" aria-labelledby="web-app-h">
+      <header class="pf-head">
+        <span class="ico-tile"><Icon name="app-window" size={18} /></span>
+        <div class="pf-title">
+          <p class="pf-k mono">01 · Web application</p>
+          <h2 id="web-app-h">Altrum AI web app</h2>
+          <p>An AI governance web app for enterprises and Tier-1 banks. I've designed it in Figma since 2023. Each case study is one problem and how I solved it, in screens and diagrams.</p>
+        </div>
+        <a class="link-arrow pf-more" href="/work/altrum-product-design/">The full design process <span class="ar">→</span></a>
+      </header>
       <div class="snap">
         <div><span>Product</span><b>AI governance web app</b></div>
-        <div><span>My role</span><b>UX + UI designer</b></div>
+        <div><span>My role</span><b>UI/UX designer</b></div>
         <div><span>Tool</span><b><ToolText text="Figma" size={16} /></b></div>
         <div><span>Timeline</span><b>2023 → now</b></div>
       </div>
-    </header>
-
-    <figure class="fig">
-      <div class="canvas"><Releases /></div>
-      <figcaption><b>Fig 0</b>The user's journey through the product. Each case study solves one stage.</figcaption>
-    </figure>
-  </div>
-
-  <Gap size={72} />
-
-  <section>
-    <div class="in">
-      <div class="section-head">
-        <h2>Case studies</h2>
-      </div>
+      <figure class="fig">
+        <div class="canvas"><Releases /></div>
+        <figcaption><b>Fig 0</b>The user's journey through the product. Each case study solves one stage.</figcaption>
+      </figure>
       <div class="case-grid">
         {cases.map((c) => (
           <a class="case" href={`/portfolio/${c.id}/`}>
             <div class="mini"><Wire variant={c.data.mini} ann={false} /></div>
             <div class="case-body">
-              <span class="n">Case study {String(c.data.order).padStart(2, '0')}</span>
+              <span class="n">Case study {String(c.data.order).padStart(2, '0')} · Web application</span>
               <h3>{c.data.title}</h3>
               <p>{c.data.problem}</p>
             </div>
           </a>
         ))}
       </div>
-      <p class="mono muted" style="margin-top:32px">Screens are redrawn with sample data. No real customer data is shown.</p>
-    </div>
-  </section>
+      <p class="mono muted pf-note">Screens are redrawn with sample data. No real customer data is shown.</p>
+    </section>
 
-  <Gap size={72} />
+    <!-- 2. B2B SaaS websites -->
+    <section class="pf-group" id="saas" data-cat="saas" aria-labelledby="saas-h">
+      <header class="pf-head">
+        <span class="ico-tile"><Icon name="globe" size={18} /></span>
+        <div class="pf-title">
+          <p class="pf-k mono">02 · B2B SaaS websites</p>
+          <h2 id="saas-h">Websites for AI software companies</h2>
+          <p>Product sites that explain complex AI software to buyers who are not engineers, built so the marketing team can publish on their own.</p>
+        </div>
+      </header>
+      <div class="case-grid three pf-cards">{saas.map((w) => <WorkCard {...w} />)}</div>
+    </section>
+
+    <!-- 3. Consultancy website -->
+    <section class="pf-group" id="consultancy" data-cat="consultancy" aria-labelledby="consultancy-h">
+      <header class="pf-head">
+        <span class="ico-tile"><Icon name="building-2" size={18} /></span>
+        <div class="pf-title">
+          <p class="pf-k mono">03 · Consultancy website</p>
+          <h2 id="consultancy-h">Websites for consultancies</h2>
+          <p>Service-led sites where the work is advice, not software: clear services, proof of expertise and content the team keeps up to date.</p>
+        </div>
+      </header>
+      <div class="case-grid three pf-cards">{consultancy.map((w) => <WorkCard {...w} />)}</div>
+    </section>
+
+    <!-- 4. Concept projects (the Lab) -->
+    <section class="pf-group" id="concept" data-cat="concept" aria-labelledby="concept-h">
+      <header class="pf-head">
+        <span class="ico-tile"><Icon name="sparkles" size={18} /></span>
+        <div class="pf-title">
+          <p class="pf-k mono">04 · Concept projects</p>
+          <h2 id="concept-h">Made-up businesses, built in public</h2>
+          <p>Sample projects that show what I can do next: a fictional B2B product taken from idea to first client, step by step.</p>
+        </div>
+        <a class="link-arrow pf-more" href="/lab/">Open the Lab <span class="ar">→</span></a>
+      </header>
+      <div class="case-grid">
+        <a class="case" href="/lab/brightfold/">
+          <div class="mini"><div class="bf-mini" aria-hidden="true"><b>Brightfold</b><span>Proposals your clients actually read.</span><i></i></div></div>
+          <div class="case-body">
+            <span class="n">Concept · {built} of {chapters.length} chapters built</span>
+            <h3>Brightfold: one product, from idea to first client</h3>
+            <p>A fictional B2B SaaS: research, product UX, design system, website, motion, analytics, A/B test and an AI feature.</p>
+          </div>
+        </a>
+        <a class="case" href="/lab/brightfold/path/">
+          <div class="mini"><div class="path-mini" aria-hidden="true">{['Idea', 'Product', 'Website', 'Growth', 'Client'].map((x, i) => <span><i>{i + 1}</i>{x}</span>)}</div></div>
+          <div class="case-body">
+            <span class="n">Guide · 14 steps · a video for each</span>
+            <h3>The path: from idea to first client</h3>
+            <p>Every step to turn a product idea into a website that converts and a client you win, including the steps most people skip.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+  </div>
 </Base>
+
+<script>
+  // One group at a time. The choice is kept in the address (#saas), so it can be shared and survives a reload.
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('.pf-cat'));
+  const groups = Array.from(document.querySelectorAll<HTMLElement>('.pf-group'));
+  const show = (cat: string, scroll = false) => {
+    if (!buttons.some((b) => b.dataset.cat === cat)) cat = 'all';
+    buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cat === cat)));
+    groups.forEach((g) => (g.hidden = cat !== 'all' && g.dataset.cat !== cat));
+    // let the scroll animations measure the page again
+    dispatchEvent(new Event('resize'));
+    if (scroll) document.querySelector('.pf-cats')?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  };
+  buttons.forEach((b) => b.addEventListener('click', () => {
+    const cat = b.dataset.cat || 'all';
+    history.replaceState(null, '', cat === 'all' ? location.pathname : `#${cat}`);
+    show(cat, true);
+  }));
+  show(location.hash.slice(1) || 'all');
+</script>
+
+<style>
+  .pf-cats{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 56px;scroll-margin-top:84px}
+  .pf-cat{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:8px 14px;border-radius:999px;border:1px solid var(--line-2);background:var(--surface);color:var(--muted);font-size:14px;line-height:1.2;transition:border-color .2s,color .2s,background-color .2s}
+  .pf-cat :global(.ico){color:var(--accent)}
+  .pf-cat small{font-family:var(--mono);font-size:11px;color:var(--dim);padding:1px 7px;border-radius:999px;border:1px solid var(--line-2)}
+  .pf-cat:hover{border-color:var(--accent);color:var(--ink)}
+  .pf-cat[aria-pressed="true"]{background:var(--accent-fill);border-color:var(--accent-fill);color:var(--on-accent)}
+  .pf-cat[aria-pressed="true"] :global(.ico),.pf-cat[aria-pressed="true"] small{color:inherit;border-color:rgba(255,255,255,.4)}
+  :global(:root[data-theme="dark"]) .pf-cat:not([aria-pressed="true"]){background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.12)}
+  :global(:root[data-theme="dark"]) .pf-cat[aria-pressed="true"]{background:linear-gradient(180deg,#4652FF,#2632F0);border-color:#5F6AFF;box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 8px 18px -12px rgba(46,59,255,.8)}
+
+  .pf-group{display:grid;gap:28px;padding-top:40px;margin-bottom:72px;border-top:1px solid var(--line);scroll-margin-top:84px}
+  .pf-group[hidden]{display:none}
+  .pf-head{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:16px 18px;align-items:start}
+  .pf-head .ico-tile{width:44px;height:44px;border-radius:12px;margin-top:4px}
+  .pf-title{display:grid;gap:8px}
+  .pf-k{color:var(--accent);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase}
+  .pf-title h2{font-size:clamp(26px,3.2vw,40px);line-height:1.05;letter-spacing:-.035em}
+  .pf-title > p:last-child{color:var(--muted);font-size:16.5px;max-width:62ch}
+  .pf-more{align-self:end;white-space:nowrap}
+  .pf-group .fig{margin:0}
+  .pf-group .snap{margin:0}
+  .pf-note{margin-top:-8px}
+
+  /* lab card covers, same as on /lab/ */
+  .bf-mini{background:#FAF8F5;border-radius:12px;padding:28px;display:grid;gap:8px;color:#14161A;box-shadow:var(--mock-shadow)}
+  .bf-mini b{font-size:22px;letter-spacing:-.02em}
+  .bf-mini span{color:#6A707A;font-size:14px}
+  .bf-mini i{display:block;width:110px;height:34px;border-radius:6px;background:#F05A28;margin-top:6px}
+  .path-mini{display:grid;gap:8px;max-width:260px;margin:auto}
+  .path-mini span{display:flex;gap:10px;align-items:center;font-size:14px;padding:8px 12px;border:1px solid var(--line-2);border-radius:8px;background:var(--bg)}
+  .path-mini i{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--dim)}
+
+  @media (max-width:760px){
+    .pf-head{grid-template-columns:auto minmax(0,1fr)}
+    .pf-more{grid-column:2;align-self:start;min-height:44px;display:inline-flex;align-items:center}
+    .pf-cats{flex-wrap:nowrap;overflow-x:auto;margin-inline:calc(var(--gutter) * -1);padding-inline:var(--gutter);scrollbar-width:none}
+    .pf-cats::-webkit-scrollbar{display:none}
+    .pf-cat{flex:none}
+  }
+</style>
