@@ -1,303 +1,222 @@
 ---
-// Covers for the Work cards: drawn SVGs instead of screenshots.
-// One family: each cover is a corner of a Figma canvas, with named frames, one frame selected in
-// blue, blue prototype wires between frames, and the designer's cursor. Colours come from the
-// site's tokens (styles in global.css, ".wa"), so the covers follow light and dark mode.
-//   product  a product screen being designed (Altrum AI web app)
-//   merge    two Webflow sites wired into one site built in code (Aligne AI)
-//   cms      CMS collections feeding a Webflow page (World of Gears)
-//   site     the site pages feeding a SaaS product page with its dashboard in the hero (Altrum AI website)
+// Covers for the Work cards: drawn, not screenshots, but drawn to look like the real thing.
+// Each cover is a light product screen with real words on it and the people who use it: a teammate's
+// comment, an editor's name, the designer's cursor. No neon, no grid: a calm, human scene.
+// Sample names and numbers only; no real customer data.
+//   product  the Altrum AI web app: a dashboard a risk lead opens in the morning
+//   merge    two Webflow sites (altrum.ai, aligne.ai) becoming one site built in code
+//   cms      World of Gears: a CMS entry and the page it fills
+//   site     the Altrum AI product page, with the app in its hero
+// Styles: ".wh" below (always light, like a real screen, in both themes).
 interface Props { kind: 'product' | 'merge' | 'cms' | 'site' }
 const { kind } = Astro.props;
-
-/** Four selection handles for a frame at x, y with width w and height h. */
-const handles = (x: number, y: number, w: number, h: number) =>
-  [[x, y], [x + w, y], [x, y + h], [x + w, y + h]].map(([cx, cy]) => ({ x: cx - 3, y: cy - 3 }));
-
-// Light for the dark theme (switched on in global.css): a soft glow behind the selected frame, and a
-// glow filter for wires and the selection. Ids carry the kind, so two covers on a page never clash.
-const glow = `url(#wa-glow-${kind})`;
-const halo = { product: [192, 128, 215, 135], merge: [289, 134, 150, 135], cms: [271, 134, 170, 135], site: [262, 134, 175, 135] }[kind];
+const id = `wh-${kind}`;
 ---
-<svg class="wa" viewBox="0 0 400 250" aria-hidden="true" focusable="false">
+<svg class="wa wh" viewBox="0 0 400 250" aria-hidden="true" focusable="false">
   <defs>
-    <radialGradient id={`wa-halo-${kind}`}><stop offset="0" stop-color="#2E3BFF" stop-opacity=".36" /><stop offset="1" stop-color="#2E3BFF" stop-opacity="0" /></radialGradient>
-    <filter id={`wa-glow-${kind}`} filterUnits="userSpaceOnUse" x="0" y="0" width="400" height="250" color-interpolation-filters="sRGB">
-      <feGaussianBlur stdDeviation="3" result="b" />
-      <feComponentTransfer in="b" result="g"><feFuncA type="linear" slope="1.5" /></feComponentTransfer>
-      <feMerge><feMergeNode in="g" /><feMergeNode in="SourceGraphic" /></feMerge>
+    <filter id={`${id}-sh`} x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="#0B1030" flood-opacity=".22" />
+    </filter>
+    <filter id={`${id}-sh2`} x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3.5" flood-color="#0B1030" flood-opacity=".25" />
     </filter>
   </defs>
-  <ellipse class="wa-halo" cx={halo[0]} cy={halo[1]} rx={halo[2]} ry={halo[3]} fill={`url(#wa-halo-${kind})`} />
+
   {kind === 'product' && (
     <>
-      <text class="on" x="48" y="33">Dashboard</text>
-      <rect class="wa-fr" x="48" y="40" width="288" height="176" />
-
+      <g filter={`url(#${id}-sh)`}>
+        <rect class="wh-win" x="26" y="20" width="348" height="214" rx="8" />
+      </g>
+      {/* window bar */}
+      <circle cx="38" cy="31" r="2.6" fill="#FF6159" /><circle cx="46" cy="31" r="2.6" fill="#FFBD2E" /><circle cx="54" cy="31" r="2.6" fill="#28C941" />
+      <rect class="wh-url" x="140" y="26" width="120" height="10" rx="5" /><text class="wh-u" x="200" y="33.4" text-anchor="middle">app.altrum.ai/overview</text>
+      <line class="wh-ln" x1="26" y1="42" x2="374" y2="42" />
       {/* sidebar */}
-      <rect class="wa-g0" x="48.5" y="40.5" width="57.5" height="175" />
-      <path class="wa-ln" d="M106 40v176" />
-      <rect class="wa-k" x="58" y="50" width="10" height="10" rx="2.5" />
-      <rect class="wa-g2" x="73" y="52.5" width="22" height="5" rx="2.5" />
-      <rect class="wa-bt" x="53" y="70" width="48" height="14" rx="3.5" />
-      <rect class="wa-b" x="58" y="74" width="6" height="6" rx="1.5" />
-      <rect class="wa-b" x="69" y="74.5" width="24" height="5" rx="2.5" />
-      {[[92, 28], [108, 20], [124, 26]].map(([y, w]) => (
+      <rect class="wh-side" x="26" y="42" width="78" height="192" />
+      <rect x="35" y="51" width="9" height="9" rx="2.5" fill="#2E3BFF" /><text class="wh-b" x="49" y="58.6">Altrum AI</text>
+      {['Overview', 'AI systems', 'Assessments', 'Policies', 'Incidents'].map((t, i) => (
         <>
-          <rect class="wa-g2" x="58" y={y} width="6" height="6" rx="1.5" />
-          <rect class="wa-g2" x="69" y={y + 0.5} width={w} height="5" rx="2.5" />
+          {i === 0 && <rect x="31" y="68" width="68" height="13" rx="3" fill="#E8EAFF" />}
+          <text class={i === 0 ? 'wh-nav on' : 'wh-nav'} x="38" y={77 + i * 16}>{t}</text>
         </>
       ))}
-      <circle class="wa-g2" cx="63" cy="202" r="5" />
-      <rect class="wa-g2" x="73" y="199.5" width="22" height="5" rx="2.5" />
-
-      {/* header: page title and the primary button */}
-      <rect class="wa-k" x="118" y="51" width="58" height="8.5" rx="2" />
-      <rect class="wa-g2" x="118" y="64.5" width="88" height="4.5" rx="2.25" />
-      <rect class="wa-b" x="284" y="50" width="40" height="15" rx="4" />
-      <rect class="wa-w" x="293" y="55.5" width="22" height="4" rx="2" />
-
-      {/* three stat tiles: the first one is the blue focal point */}
-      <rect class="wa-b" x="118" y="80" width="64" height="38" rx="5" />
-      <rect class="wa-w" x="126" y="88" width="24" height="4" rx="2" opacity=".7" />
-      <rect class="wa-w" x="126" y="99" width="34" height="10" rx="2" />
-      <rect class="wa-cd" x="189.5" y="80.5" width="63" height="37" rx="5" />
-      <rect class="wa-g2" x="197" y="88" width="24" height="4" rx="2" />
-      <rect class="wa-k" x="197" y="99" width="28" height="10" rx="2" />
-      <rect class="wa-cd" x="260.5" y="80.5" width="63" height="37" rx="5" />
-      <rect class="wa-g2" x="268" y="88" width="24" height="4" rx="2" />
-      <rect class="wa-k" x="268" y="99" width="38" height="10" rx="2" />
-
-      {/* chart */}
-      <rect class="wa-cd" x="118.5" y="126.5" width="134" height="77" rx="5" />
-      <rect class="wa-g2" x="126" y="134" width="40" height="4.5" rx="2.25" />
-      <path class="wa-ln" d="M126 154.5h119M126 170.5h119M126 186.5h119" />
-      <path class="wa-bt" d="M126 188 143 180 160 184 177 168 194 172 211 156 228 160 245 146V196H126z" />
-      <path class="wa-line wa-glow" filter={glow} d="M126 188 143 180 160 184 177 168 194 172 211 156 228 160 245 146" />
-      <path class="wa-spark" pathLength="100" d="M126 188 143 180 160 184 177 168 194 172 211 156 228 160 245 146" />
-      <circle class="wa-port" cx="245" cy="146" r="3.4" />
-
-      {/* list */}
-      <rect class="wa-cd" x="260.5" y="126.5" width="63" height="77" rx="5" />
-      {[[140, 38, true], [156, 30, false], [172, 36, false], [188, 26, false]].map(([y, w, on]) => (
+      <circle cx="40" cy="220" r="5.5" fill="#E9B78F" /><text class="wh-s" x="50" y="222.5">Priya S.</text>
+      {/* page */}
+      <text class="wh-h" x="114" y="62">Good morning, Priya</text>
+      <text class="wh-s" x="114" y="73">3 systems need a review this week</text>
+      <rect x="312" y="53" width="52" height="15" rx="4" fill="#2E3BFF" /><text class="wh-btn" x="338" y="63" text-anchor="middle">Add system</text>
+      {[['AI systems', '24', ''], ['Open risks', '3', 'up'], ['Policies', '12', '']].map(([k, v, f], i) => (
         <>
-          <circle class={on ? 'wa-b' : 'wa-g2'} cx="270" cy={y} r="2.5" />
-          <rect class="wa-g2" x="277" y={Number(y) - 2.25} width={w} height="4.5" rx="2.25" />
+          <rect class="wh-card" x={114 + i * 84} y="83" width="76" height="40" rx="5" />
+          <text class="wh-s" x={122 + i * 84} y="96">{k}</text>
+          <text class="wh-num" x={122 + i * 84} y="115" fill={f ? '#D93A2B' : undefined}>{v}</text>
         </>
       ))}
-
-      {/* the frame is selected: bounding box and handles */}
-      <rect class="wa-sel wa-glow" filter={glow} x="48" y="40" width="288" height="176" />
-      {handles(48, 40, 288, 176).map((h) => <rect class="wa-h" x={h.x} y={h.y} width="6" height="6" />)}
-
-      <g transform="translate(316 158)"><g class="wa-cur">
-        <path d="M0 0 4.3 13 6.7 7.3 12.6 5.3z" />
-        <rect class="wa-b" x="9" y="12" width="43" height="15" rx="3.5" />
-        <text x="30.5" y="22.6" text-anchor="middle">Sidhant</text>
-      </g></g>
+      {/* table */}
+      <rect class="wh-card" x="114" y="131" width="250" height="92" rx="5" />
+      <text class="wh-th" x="122" y="144">System</text><text class="wh-th" x="236" y="144">Owner</text><text class="wh-th" x="306" y="144">Risk</text>
+      {[['Loan triage model', 'Credit team', 'High', '#FDE4E1', '#B42318'], ['Support chatbot', 'Customer care', 'Low', '#DCF5E6', '#127A3E'], ['Fraud alerts', 'Risk office', 'Medium', '#FFF1D6', '#9A5B00'], ['HR screening', 'People ops', 'Review', '#E8EAFF', '#2E3BFF']].map(([s, o, r, bg, fg], i) => (
+        <>
+          <line class="wh-ln" x1="122" y1={150 + i * 18} x2="356" y2={150 + i * 18} />
+          <text class="wh-t" x="122" y={162 + i * 18}>{s}</text>
+          <text class="wh-s" x="236" y={162 + i * 18}>{o}</text>
+          <rect x="304" y={154 + i * 18} width="34" height="11" rx="5.5" fill={bg} />
+          <text class="wh-pill" x="321" y={162 + i * 18} text-anchor="middle" fill={fg}>{r}</text>
+        </>
+      ))}
+      {/* a teammate's comment on the design */}
+      <g filter={`url(#${id}-sh2)`}>
+        <rect class="wh-note" x="286" y="192" width="106" height="38" rx="7" />
+      </g>
+      <circle cx="297" cy="203" r="5.5" fill="#B9845C" /><text class="wh-b" x="306" y="205.5">Rahul · Team lead</text>
+      <text class="wh-t" x="294" y="221">Show risk first, nice.</text>
+      <g class="wh-cur" transform="translate(250 106)">
+        <path d="M0 0 4.3 13 6.7 7.3 12.6 5.3z" fill="#2E3BFF" stroke="#fff" stroke-width="1.2" stroke-linejoin="round" />
+        <rect x="9" y="12" width="40" height="14" rx="4" fill="#2E3BFF" /><text class="wh-btn" x="29" y="21.8" text-anchor="middle">Sidhant</text>
+      </g>
     </>
   )}
 
   {kind === 'merge' && (
     <>
-      {/* before: two separate sites, both built in Webflow */}
-      <text x="24" y="37">altrum.ai · Webflow</text>
-      <rect class="wa-fr" x="24" y="44" width="120" height="74" />
-      <rect class="wa-k" x="32" y="52" width="6" height="6" rx="1.5" />
-      {[96, 110, 124].map((x) => <rect class="wa-g2" x={x} y="53.5" width="10" height="3" rx="1.5" />)}
-      <rect class="wa-k" x="32" y="68" width="56" height="6" rx="1.5" />
-      <rect class="wa-k" x="32" y="78" width="38" height="6" rx="1.5" />
-      <rect class="wa-g2" x="32" y="90" width="48" height="3.5" rx="1.75" />
-      <rect class="wa-k" x="32" y="100" width="24" height="9" rx="2.5" />
-      <rect class="wa-g1" x="98" y="66" width="38" height="44" rx="3" />
-
-      <text x="24" y="143">aligne.ai · Webflow</text>
-      <rect class="wa-fr" x="24" y="150" width="120" height="74" />
-      <rect class="wa-k" x="32" y="158" width="6" height="6" rx="1.5" />
-      {[96, 110, 124].map((x) => <rect class="wa-g2" x={x} y="159.5" width="10" height="3" rx="1.5" />)}
-      <rect class="wa-k" x="32" y="173" width="66" height="6" rx="1.5" />
-      <rect class="wa-g2" x="32" y="184" width="44" height="3.5" rx="1.75" />
-      {[32, 68, 104].map((x) => <rect class="wa-g1" x={x} y="195" width="32" height="21" rx="3" />)}
-
-      {/* two wires, one arrow: both sites flow into the new one */}
-      <g class="wa-glow" filter={glow}>
-        <path class="wa-wire" d="M144 81C174 81 166 134 193 134" />
-        <path class="wa-wire" d="M144 187C174 187 166 134 193 134" />
+      {/* before: two Webflow sites */}
+      {[['altrum.ai', 'Govern every AI', 'in your company', 28], ['aligne.ai', 'Responsible AI,', 'done properly', 136]].map(([u, h1, h2, y]) => (
+        <>
+          <g filter={`url(#${id}-sh2)`}><rect class="wh-win" x="20" y={y} width="124" height="86" rx="6" /></g>
+          <rect class="wh-url" x="44" y={+y + 5} width="76" height="8" rx="4" /><text class="wh-u" x="82" y={+y + 11.2} text-anchor="middle">{u}</text>
+          <text class="wh-h2" x="30" y={+y + 32}>{h1}</text><text class="wh-h2" x="30" y={+y + 43}>{h2}</text>
+          <text class="wh-s" x="30" y={+y + 55}>Built in Webflow</text>
+          <rect x="30" y={+y + 62} width="38" height="12" rx="3.5" fill="#14161A" /><text class="wh-btn" x="49" y={+y + 70.4} text-anchor="middle">Book a demo</text>
+        </>
+      ))}
+      <path class="wh-arrow" d="M146 71C172 71 166 125 190 125M146 179C172 179 166 125 190 125" />
+      <path d="M197 125l-8-4.6v9.2z" fill="#2E3BFF" />
+      {/* after: one site, in code */}
+      <g filter={`url(#${id}-sh)`}><rect class="wh-win" x="200" y="22" width="182" height="206" rx="8" /></g>
+      <rect class="wh-url" x="246" y="28" width="90" height="10" rx="5" /><text class="wh-u" x="291" y="35.4" text-anchor="middle">aligne.ai</text>
+      <line class="wh-ln" x1="200" y1="44" x2="382" y2="44" />
+      <text class="wh-b" x="210" y="57">Aligne AI</text>
+      {['Altrum', 'Services', 'Insights'].map((t, i) => <text class="wh-s" x={268 + i * 30} y="57">{t}</text>)}
+      <text class="wh-h" x="210" y="80">Responsible AI</text><text class="wh-h" x="210" y="93">for enterprises</text>
+      <text class="wh-s" x="210" y="106">Consulting and the Altrum platform, in one place.</text>
+      <rect x="210" y="113" width="46" height="14" rx="4" fill="#2E3BFF" /><text class="wh-btn" x="233" y="122.6" text-anchor="middle">Book a demo</text>
+      <rect class="wh-card" x="260" y="113" width="44" height="14" rx="4" /><text class="wh-t" x="282" y="122.6" text-anchor="middle">Our work</text>
+      {[['Altrum platform', 'Govern every AI system'], ['Advisory', 'Policy, risk and audits']].map(([a, b], i) => (
+        <>
+          <rect class="wh-card" x={210 + i * 86} y="138" width="80" height="44" rx="5" />
+          <rect x={217 + i * 86} y="145" width="9" height="9" rx="2.5" fill={i ? '#14161A' : '#2E3BFF'} />
+          <text class="wh-t" x={217 + i * 86} y="166">{a}</text><text class="wh-s" x={217 + i * 86} y="176">{b}</text>
+        </>
+      ))}
+      <rect x="210" y="192" width="162" height="26" rx="5" fill="#F3F1EC" />
+      <text class="wh-s" x="218" y="203">New post published by Maya, sales</text>
+      <text class="wh-t" x="218" y="213">“How banks audit AI models”</text>
+      <g class="wh-cur" transform="translate(330 150)">
+        <path d="M0 0 4.3 13 6.7 7.3 12.6 5.3z" fill="#2E3BFF" stroke="#fff" stroke-width="1.2" stroke-linejoin="round" />
+        <rect x="9" y="12" width="40" height="14" rx="4" fill="#2E3BFF" /><text class="wh-btn" x="29" y="21.8" text-anchor="middle">Sidhant</text>
       </g>
-      <path class="wa-spark" pathLength="100" d="M144 81C174 81 166 134 193 134" />
-      <path class="wa-spark" pathLength="100" d="M144 187C174 187 166 134 193 134" />
-      <path class="wa-b" d="M203 134l-10-5.8v11.6z" />
-      <circle class="wa-port" cx="144" cy="81" r="4.2" />
-      <circle class="wa-port" cx="144" cy="187" r="4.2" />
-
-      {/* after: one site, built in code */}
-      <text class="on" x="204" y="43">aligne.ai · Claude Code</text>
-      <rect class="wa-fr" x="204" y="50" width="170" height="168" />
-      <rect class="wa-k" x="214" y="60" width="7" height="7" rx="1.75" />
-      {[294, 311, 328].map((x) => <rect class="wa-g2" x={x} y="62" width="12" height="3" rx="1.5" />)}
-      <rect class="wa-b" x="346" y="58.5" width="18" height="10" rx="3" />
-      <rect class="wa-k" x="214" y="84" width="98" height="8.5" rx="2" />
-      <rect class="wa-k" x="214" y="97" width="70" height="8.5" rx="2" />
-      <rect class="wa-g2" x="214" y="113" width="112" height="3.5" rx="1.75" />
-      <rect class="wa-g2" x="214" y="120.5" width="86" height="3.5" rx="1.75" />
-      <rect class="wa-b" x="214" y="132" width="36" height="12" rx="3.5" />
-      <rect class="wa-o" x="254.5" y="132.5" width="31" height="11" rx="3.5" />
-      {/* the two products, now side by side under one roof */}
-      <rect class="wa-cd" x="214.5" y="156.5" width="71" height="49" rx="4" />
-      <rect class="wa-b" x="222" y="164" width="9" height="9" rx="2.25" />
-      <rect class="wa-k" x="222" y="180" width="38" height="5" rx="1.5" />
-      <rect class="wa-g2" x="222" y="189.5" width="52" height="3.5" rx="1.75" />
-      <rect class="wa-g2" x="222" y="196" width="36" height="3.5" rx="1.75" />
-      <rect class="wa-cd" x="292.5" y="156.5" width="71" height="49" rx="4" />
-      <rect class="wa-k" x="300" y="164" width="9" height="9" rx="2.25" />
-      <rect class="wa-k" x="300" y="180" width="44" height="5" rx="1.5" />
-      <rect class="wa-g2" x="300" y="189.5" width="48" height="3.5" rx="1.75" />
-      <rect class="wa-g2" x="300" y="196" width="30" height="3.5" rx="1.75" />
-
-      <rect class="wa-sel wa-glow" filter={glow} x="204" y="50" width="170" height="168" />
-      {handles(204, 50, 170, 168).map((h) => <rect class="wa-h" x={h.x} y={h.y} width="6" height="6" />)}
-
-      <g transform="translate(330 178)"><g class="wa-cur">
-        <path d="M0 0 4.3 13 6.7 7.3 12.6 5.3z" />
-        <rect class="wa-b" x="9" y="12" width="43" height="15" rx="3.5" />
-        <text x="30.5" y="22.6" text-anchor="middle">Sidhant</text>
-      </g></g>
     </>
   )}
 
   {kind === 'cms' && (
     <>
-      {/* the CMS: a list of collections, one of them picked */}
-      <text x="24" y="43">CMS Collections</text>
-      <rect class="wa-fr" x="24" y="50" width="108" height="150" rx="5" />
-      <rect class="wa-k" x="34" y="60" width="40" height="6" rx="1.5" />
-      <rect class="wa-g1" x="112" y="59" width="10" height="8" rx="2" />
-      {[[80, 46], [128, 38], [152, 44], [176, 30]].map(([y, w]) => (
+      {/* the CMS: an entry being edited by the client's team */}
+      <g filter={`url(#${id}-sh)`}><rect class="wh-win" x="18" y="30" width="146" height="190" rx="7" /></g>
+      <text class="wh-b" x="28" y="46">Case studies</text><text class="wh-s" x="128" y="46">12 items</text>
+      <line class="wh-ln" x1="18" y1="53" x2="164" y2="53" />
+      {['Supplier audit, Vietnam', 'Carbon baseline, Germany', 'ESG toolbox launch', 'Factory visit playbook'].map((t, i) => (
         <>
-          <rect class="wa-g2" x="34" y={y} width="9" height="9" rx="2" />
-          <rect class="wa-g2" x="49" y={y + 2} width={w} height="5" rx="2.5" />
-          <rect class="wa-g1" x="110" y={y + 2} width="12" height="5" rx="2.5" />
+          {i === 1 && <rect x="22" y={58 + i * 22} width="138" height="20" rx="4" fill="#E8EAFF" />}
+          <rect x="28" y={63 + i * 22} width="10" height="10" rx="2.5" fill={['#7FB685', '#2E3BFF', '#E9B44C', '#C9CDD6'][i]} />
+          <text class={i === 1 ? 'wh-t on' : 'wh-t'} x="44" y={71 + i * 22}>{t}</text>
         </>
       ))}
-      <rect class="wa-b" x="29" y="99" width="98" height="19" rx="4" />
-      <rect class="wa-w" x="34" y="104" width="9" height="9" rx="2" />
-      <rect class="wa-w" x="49" y="106" width="52" height="5" rx="2.5" />
-      <rect class="wa-w" x="110" y="106" width="12" height="5" rx="2.5" opacity=".6" />
-
-      {/* the page it feeds, built in Webflow */}
-      <text class="on" x="166" y="43">worldofgears.com · Webflow</text>
-      <rect class="wa-fr" x="166" y="50" width="210" height="168" />
-      <circle class="wa-k" cx="179.5" cy="63.5" r="3.5" />
-      {[296, 313, 330].map((x) => <rect class="wa-g2" x={x} y="62" width="12" height="3" rx="1.5" />)}
-      <rect class="wa-o" x="349.5" y="58.5" width="18" height="10" rx="3" />
-      <rect class="wa-g0" x="174" y="76" width="194" height="60" rx="4" />
-      <rect class="wa-k" x="184" y="88" width="80" height="7.5" rx="2" />
-      <rect class="wa-k" x="184" y="99.5" width="58" height="7.5" rx="2" />
-      <rect class="wa-g2" x="184" y="113" width="70" height="3.5" rx="1.75" />
-      <rect class="wa-k" x="184" y="122" width="26" height="8" rx="2.5" />
-      {/* two gears, for World of Gears */}
-      <clipPath id="wa-band"><rect x="174" y="76" width="194" height="60" rx="4" /></clipPath>
-      <g clip-path="url(#wa-band)">
-        <g class="wa-b" transform="translate(331 103)">
-          <circle r="18" />
-          {[0, 45, 90, 135].map((a) => <rect x="-4.5" y="-25" width="9" height="50" rx="1.5" transform={`rotate(${a})`} />)}
-        </g>
-        <circle class="wa-g0" cx="331" cy="103" r="7" />
-        <g class="wa-k" transform="translate(301 123) rotate(22.5)">
-          <circle r="10" />
-          {[0, 45, 90, 135].map((a) => <rect x="-3" y="-14.5" width="6" height="29" rx="1" transform={`rotate(${a})`} />)}
-        </g>
-        <circle class="wa-g0" cx="301" cy="123" r="4" />
-      </g>
-      {/* three cards; the first one is filled from the CMS */}
-      <rect class="wa-bo" x="174.75" y="146.75" width="58.5" height="58.5" rx="4" />
-      <rect class="wa-bt" x="180" y="152" width="48" height="24" rx="2.5" />
-      <rect class="wa-k" x="180" y="182" width="36" height="4.5" rx="1.5" />
-      <rect class="wa-g2" x="180" y="190.5" width="46" height="3.5" rx="1.75" />
-      <rect class="wa-g2" x="180" y="197" width="30" height="3.5" rx="1.75" />
-      {[241, 308].map((x) => (
+      <line class="wh-ln" x1="18" y1="152" x2="164" y2="152" />
+      <circle cx="31" cy="168" r="6" fill="#D9A27C" />
+      <text class="wh-t" x="42" y="166">Anna, marketing</text><text class="wh-s" x="42" y="176">Published 2 hours ago</text>
+      <rect x="28" y="190" width="54" height="15" rx="4" fill="#127A3E" /><text class="wh-btn" x="55" y="200" text-anchor="middle">Published</text>
+      {/* the page it fills */}
+      <path class="wh-arrow" d="M160 90C184 90 178 158 200 158" /><path d="M206 158l-8-4.6v9.2z" fill="#2E3BFF" />
+      <g filter={`url(#${id}-sh)`}><rect class="wh-win" x="208" y="20" width="176" height="210" rx="8" /></g>
+      <rect class="wh-url" x="248" y="26" width="96" height="10" rx="5" /><text class="wh-u" x="296" y="33.4" text-anchor="middle">worldofgears.com</text>
+      <rect x="208" y="42" width="176" height="62" fill="#1F3B2D" />
+      <text x="218" y="66" class="wh-hw">Sustainability</text><text x="218" y="80" class="wh-hw">Toolbox</text>
+      <text x="218" y="94" class="wh-sw">Practical guides for supply chains in 17 countries</text>
+      <text class="wh-b" x="218" y="120">Case studies</text>
+      {[['Carbon baseline,', 'Germany', '#2E3BFF'], ['Supplier audit,', 'Vietnam', '#7FB685']].map(([a, b, c], i) => (
         <>
-          <rect class="wa-cd" x={x + 0.5} y="146.5" width="59" height="59" rx="4" />
-          <rect class="wa-g1" x={x + 6} y="152" width="48" height="24" rx="2.5" />
-          <rect class="wa-k" x={x + 6} y="182" width="32" height="4.5" rx="1.5" />
-          <rect class="wa-g2" x={x + 6} y="190.5" width="46" height="3.5" rx="1.75" />
-          <rect class="wa-g2" x={x + 6} y="197" width="26" height="3.5" rx="1.75" />
+          <rect class={i === 0 ? 'wh-card hi' : 'wh-card'} x={218 + i * 82} y="128" width="76" height="90" rx="5" />
+          <rect x={223 + i * 82} y="133" width="66" height="40" rx="3" fill={c} opacity=".18" />
+          <circle cx={256 + i * 82} cy="153" r="9" fill={c} opacity=".55" />
+          <text class="wh-t" x={224 + i * 82} y="187">{a}</text><text class="wh-t" x={224 + i * 82} y="197">{b}</text>
+          <text class="wh-s" x={224 + i * 82} y="210">Read the story →</text>
         </>
       ))}
-
-      <rect class="wa-sel wa-glow" filter={glow} x="166" y="50" width="210" height="168" />
-      {handles(166, 50, 210, 168).map((h) => <rect class="wa-h" x={h.x} y={h.y} width="6" height="6" />)}
-
-      {/* the wire from the picked collection to the card it fills */}
-      <path class="wa-wire wa-glow" filter={glow} d="M127 108.5C152 108.5 144 176 164 176" />
-      <path class="wa-spark" pathLength="100" d="M127 108.5C152 108.5 144 176 164 176" />
-      <path class="wa-b" d="M174 176l-10-5.8v11.6z" />
-      <circle class="wa-port" cx="127" cy="108.5" r="4.2" />
-
-      <g transform="translate(106 116)"><g class="wa-cur">
-        <path d="M0 0 4.3 13 6.7 7.3 12.6 5.3z" />
-        <rect class="wa-b" x="9" y="12" width="43" height="15" rx="3.5" />
-        <text x="30.5" y="22.6" text-anchor="middle">Sidhant</text>
-      </g></g>
     </>
   )}
+
   {kind === 'site' && (
     <>
-      {/* the site's pages; the product page is picked */}
-      <text x="24" y="43">Pages</text>
-      <rect class="wa-fr" x="24" y="50" width="100" height="150" rx="5" />
-      {[[62, 30], [86, 0], [110, 36], [134, 26], [158, 34]].map(([y, w]) => w > 0 && (
-        <>
-          <rect class="wa-g2" x="34" y={y} width="9" height="9" rx="2" />
-          <rect class="wa-g2" x="49" y={y + 2} width={w} height="5" rx="2.5" />
-        </>
-      ))}
-      <rect class="wa-b" x="29" y="81" width="90" height="19" rx="4" />
-      <rect class="wa-w" x="34" y="86" width="9" height="9" rx="2" />
-      <rect class="wa-w" x="49" y="88" width="44" height="5" rx="2.5" />
-
-      {/* the product page: headline, call to action and the product's dashboard in the hero */}
-      <text class="on" x="152" y="43">altrum.ai · Webflow</text>
-      <rect class="wa-fr" x="152" y="50" width="224" height="168" />
-      <circle class="wa-k" cx="165.5" cy="63.5" r="3.5" />
-      {[290, 307, 324].map((x) => <rect class="wa-g2" x={x} y="62" width="12" height="3" rx="1.5" />)}
-      <rect class="wa-b" x="345" y="58.5" width="22" height="10" rx="3" />
-      <rect class="wa-k" x="162" y="84" width="74" height="7.5" rx="2" />
-      <rect class="wa-k" x="162" y="96" width="58" height="7.5" rx="2" />
-      <rect class="wa-g2" x="162" y="110" width="66" height="3.5" rx="1.75" />
-      <rect class="wa-g2" x="162" y="117" width="48" height="3.5" rx="1.75" />
-      <rect class="wa-b" x="162" y="127" width="30" height="10" rx="3" />
-      <rect class="wa-o" x="196.5" y="127.5" width="27" height="9" rx="3" />
-      {/* the dashboard */}
-      <rect class="wa-cd" x="244.5" y="78.5" width="122" height="66" rx="4" />
-      <rect class="wa-g1" x="250" y="84" width="22" height="55" rx="2" />
-      {[278, 307, 336].map((x, i) => <rect class={i === 0 ? 'wa-b' : 'wa-g1'} x={x} y="84" width="25" height="14" rx="2" />)}
-      <path class="wa-line wa-glow" filter={glow} d="M279 132l12-9 10 5 13-12 12 6 14-11 18-4" />
-      <path class="wa-spark" pathLength="100" d="M279 132l12-9 10 5 13-12 12 6 14-11 18-4" />
-      {/* logo strip, then three features */}
-      {[162, 196, 230, 264, 298, 332].map((x) => <rect class="wa-g1" x={x} y="153" width="26" height="5" rx="2.5" />)}
-      {[162, 234, 306].map((x, i) => (
-        <>
-          <rect class={i === 0 ? 'wa-bo' : 'wa-cd'} x={x + 0.5} y="166.5" width="61" height="43" rx="4" />
-          <rect class={i === 0 ? 'wa-b' : 'wa-g2'} x={x + 7} y="173" width="9" height="9" rx="2.25" />
-          <rect class="wa-k" x={x + 7} y="188" width="34" height="4.5" rx="1.5" />
-          <rect class="wa-g2" x={x + 7} y="196.5" width="44" height="3.5" rx="1.75" />
-        </>
-      ))}
-
-      <rect class="wa-sel wa-glow" filter={glow} x="152" y="50" width="224" height="168" />
-      {handles(152, 50, 224, 168).map((h) => <rect class="wa-h" x={h.x} y={h.y} width="6" height="6" />)}
-
-      {/* the wire from the picked page to the page itself */}
-      <path class="wa-wire wa-glow" filter={glow} d="M119 90.5C136 90.5 132 84 150 84" />
-      <path class="wa-spark" pathLength="100" d="M119 90.5C136 90.5 132 84 150 84" />
-      <circle class="wa-port" cx="119" cy="90.5" r="4.2" />
-
-      <g transform="translate(330 128)"><g class="wa-cur">
-        <path d="M0 0 4.3 13 6.7 7.3 12.6 5.3z" />
-        <rect class="wa-b" x="9" y="12" width="43" height="15" rx="3.5" />
-        <text x="30.5" y="22.6" text-anchor="middle">Sidhant</text>
-      </g></g>
+      <g filter={`url(#${id}-sh)`}><rect class="wh-win" x="22" y="18" width="356" height="216" rx="8" /></g>
+      <circle cx="34" cy="29" r="2.6" fill="#FF6159" /><circle cx="42" cy="29" r="2.6" fill="#FFBD2E" /><circle cx="50" cy="29" r="2.6" fill="#28C941" />
+      <rect class="wh-url" x="150" y="24" width="100" height="10" rx="5" /><text class="wh-u" x="200" y="31.4" text-anchor="middle">altrum.ai</text>
+      <line class="wh-ln" x1="22" y1="40" x2="378" y2="40" />
+      <rect x="32" y="49" width="9" height="9" rx="2.5" fill="#2E3BFF" /><text class="wh-b" x="45" y="56.6">Altrum AI</text>
+      {['Platform', 'Use cases', 'Pricing'].map((t, i) => <text class="wh-s" x={210 + i * 40} y="56.6">{t}</text>)}
+      <rect x="330" y="48" width="38" height="12" rx="3.5" fill="#2E3BFF" /><text class="wh-btn" x="349" y="56.4" text-anchor="middle">Get a demo</text>
+      <text class="wh-h" x="32" y="86">Know every AI</text><text class="wh-h" x="32" y="100">your company uses</text>
+      <text class="wh-s" x="32" y="114">Register, assess and control AI systems,</text>
+      <text class="wh-s" x="32" y="123">with an audit trail your regulator trusts.</text>
+      <rect x="32" y="131" width="50" height="15" rx="4" fill="#2E3BFF" /><text class="wh-btn" x="57" y="141" text-anchor="middle">Book a demo</text>
+      <rect class="wh-card" x="87" y="131" width="50" height="15" rx="4" /><text class="wh-t" x="112" y="141" text-anchor="middle">See how</text>
+      {/* the app, shown in the hero */}
+      <g filter={`url(#${id}-sh2)`}><rect class="wh-card" x="196" y="70" width="172" height="90" rx="6" /></g>
+      <text class="wh-s" x="204" y="82">AI systems · this quarter</text>
+      <path d="M206 140l18-12 16 6 18-16 18 7 20-15 26-6" fill="none" stroke="#2E3BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M206 140l18-12 16 6 18-16 18 7 20-15 26-6V152H206z" fill="#2E3BFF" opacity=".08" />
+      <rect x="306" y="76" width="54" height="13" rx="6.5" fill="#DCF5E6" /><text class="wh-pill" x="333" y="85" text-anchor="middle" fill="#127A3E">All reviewed</text>
+      {/* trust line and a quote from a customer */}
+      <line class="wh-ln" x1="32" y1="172" x2="368" y2="172" />
+      <text class="wh-th" x="32" y="186">TRUSTED BY RISK TEAMS AT</text>
+      {['Northwind Bank', 'Fabrikam', 'Contoso Group'].map((t, i) => <text class="wh-logo" x={32 + i * 74} y="202">{t}</text>)}
+      <g filter={`url(#${id}-sh2)`}><rect class="wh-note" x="262" y="180" width="106" height="44" rx="7" /></g>
+      <circle cx="273" cy="192" r="5.5" fill="#8D5A3B" /><text class="wh-b" x="282" y="194.5">Head of Risk</text>
+      <text class="wh-t" x="270" y="208">“Our first audit took</text><text class="wh-t" x="270" y="218">days, not months.”</text>
+      <g class="wh-cur" transform="translate(150 150)">
+        <path d="M0 0 4.3 13 6.7 7.3 12.6 5.3z" fill="#2E3BFF" stroke="#fff" stroke-width="1.2" stroke-linejoin="round" />
+        <rect x="9" y="12" width="40" height="14" rx="4" fill="#2E3BFF" /><text class="wh-btn" x="29" y="21.8" text-anchor="middle">Sidhant</text>
+      </g>
     </>
   )}
 </svg>
+
+<style is:global>
+  /* Real screens are light, in both themes */
+  .wa.wh text{font-family:var(--body);letter-spacing:0;fill:#14161A}
+  .wh .wh-win{fill:#FFFFFF}
+  .wh .wh-side{fill:#F7F7F9}
+  .wh .wh-card{fill:#FFFFFF;stroke:#E4E6EC;stroke-width:1}
+  .wh .wh-card.hi{stroke:#2E3BFF;stroke-width:1.4}
+  .wh .wh-note{fill:#FFFFFF}
+  .wh .wh-url{fill:#F1F2F5}
+  .wh .wh-ln{stroke:#ECEDF1;stroke-width:1}
+  .wh .wh-arrow{fill:none;stroke:#2E3BFF;stroke-width:1.6;stroke-dasharray:4 3;stroke-linecap:round}
+  .wa.wh .wh-u{font-family:var(--mono);font-size:6px;fill:#6B7080}
+  .wa.wh .wh-h{font-size:12.5px;font-weight:700;letter-spacing:-.02em}
+  .wa.wh .wh-h2{font-size:9.5px;font-weight:700;letter-spacing:-.01em}
+  .wa.wh .wh-hw{font-size:13px;font-weight:700;letter-spacing:-.02em;fill:#FFFFFF}
+  .wa.wh .wh-sw{font-size:5.6px;fill:#CFE3D6}
+  .wa.wh .wh-b{font-size:7px;font-weight:600}
+  .wa.wh .wh-t{font-size:6.6px;font-weight:500}
+  .wa.wh .wh-t.on{fill:#2E3BFF;font-weight:600}
+  .wa.wh .wh-s{font-size:5.8px;fill:#6B7080}
+  .wa.wh .wh-th{font-size:5.4px;font-weight:600;fill:#8A8F9C;letter-spacing:.04em}
+  .wa.wh .wh-nav{font-size:6.4px;fill:#5A5F6E}
+  .wa.wh .wh-nav.on{fill:#2E3BFF;font-weight:600}
+  .wa.wh .wh-num{font-size:14px;font-weight:700;letter-spacing:-.02em}
+  .wa.wh .wh-pill{font-size:5.4px;font-weight:600}
+  .wa.wh .wh-btn{font-size:5.8px;font-weight:600;fill:#FFFFFF}
+  .wa.wh .wh-logo{font-size:7.5px;font-weight:700;fill:#9CA0AC;letter-spacing:-.01em}
+  .wh .wh-cur{transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+  .case:hover .wh .wh-cur{transform:translate(7px,-5px)}
+</style>

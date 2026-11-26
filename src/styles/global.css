@@ -1153,3 +1153,9 @@ main::before{content:"";position:absolute;z-index:-1;left:0;right:0;top:-61px;he
 :root[data-theme] .sub-hero .tool{background:#fff;border-color:#fff;color:#0A0A0A}
 /* the resume photo keeps its selection frame, in white */
 :root[data-theme] .sub-hero .avatar::before{border-color:#fff;box-shadow:none}
+
+/* ---------- Work covers, drawn as real screens (components/WorkArt.astro, ".wh") ----------
+   A calm backdrop: soft and plain in both themes, no grid and no neon light behind the screen. */
+:root[data-theme] .case .mini.media:has(.wh),:root[data-theme] .glow-card:has(.wh){background:linear-gradient(160deg,#E9EBF2,#D9DDE8)}
+:root[data-theme="dark"] .case .mini.media:has(.wh),:root[data-theme="dark"] .glow-card:has(.wh){background:linear-gradient(160deg,#20222B,#15161C)}
+.case .mini.media .wh{padding:0}
