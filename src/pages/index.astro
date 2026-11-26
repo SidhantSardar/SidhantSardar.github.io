@@ -8,10 +8,12 @@ import Gap from '../components/Gap.astro';
 import JsonLd from '../components/JsonLd.astro';
 import Capabilities from '../components/Capabilities.astro';
 import ToolText from '../components/ToolText.astro';
+import Icon from '../components/Icon.astro';
 import RoleTitle from '../components/RoleTitle.astro';
 import { toolkit } from '../data/resume.mjs';
 import { Image } from 'astro:assets';
 import { asset } from '../data/images';
+import gaShot from '../assets/ga-prabuddha.png';
 import { LINKEDIN, YOUTUBE, EMAIL, PHONE_TEL } from '../data/profile';
 import { skills } from '../data/skills';
 
@@ -40,6 +42,36 @@ const schema = [
     publisher: { '@id': `${SITE}#person` },
   },
 ];
+
+// "Why not just AI?": what AI does well, and what Sidhant brings that it can't (from his own work).
+const aiDoes = [
+  'Writes pages and code in minutes',
+  'Knows every tool and framework',
+  'Makes a layout that looks fine',
+  'Gives you ten options to choose from',
+];
+const iBring = [
+  { icon: 'users-round', k: 'I know your buyer', line: 'I design for compliance and risk teams at Tier-1 banks. I know what a careful buyer needs to see before they trust you.' },
+  { icon: 'message-square-text', k: 'I decide, then get it agreed', line: 'Flows checked with your team and prototypes shown before anything is built, so what ships is what you signed off.' },
+  { icon: 'chart-line', k: 'I measure what brings enquiries', line: 'Key events in Google Analytics and a monthly dashboard: which pages bring clients, and what to fix next.' },
+  { icon: 'blocks', k: 'I build what your team can run', line: 'One design system and a CMS your marketing team publishes with, long after launch.' },
+  { icon: 'search-check', k: 'I test every path', line: 'I walk every flow end to end and fix what breaks before your clients find it.' },
+];
+
+// Proof: Prabuddha Pathak, Google Analytics 4, 1 Oct to 25 Nov 2026 (the site's data starts at the end of October).
+const proof = {
+  site: 'prabuddhapathak.com',
+  period: 'Oct – Nov 2026',
+  sessions: 110,
+  engagement: '84%',
+  time: '2m 37s',
+  sources: [
+    { name: 'ChatGPT', n: 71, icon: 'sparkles' },
+    { name: 'Direct', n: 37, icon: 'link' },
+    { name: 'Google', n: 2, icon: 'search-check' },
+  ],
+};
+const aiShare = Math.round((proof.sources[0].n / proof.sessions) * 100);
 
 // Home "Case studies" section: the four groups of the portfolio, each opening its group on /portfolio/.
 const caseCount = (await getCollection('portfolio')).length;
@@ -109,6 +141,44 @@ const services = [
 
   <Gap size={120} />
 
+  <!-- WHY NOT JUST AI: what AI does well, what I bring that it can't -->
+  <section id="why">
+    <div class="in">
+      <div class="section-head">
+        <h2 data-split>AI can make the page. I make it win clients.</h2>
+        <p data-reveal>Anyone can build a website with a prompt now. Whether it brings in clients depends on the judgement around it, and that is the part I do.</p>
+      </div>
+      <div class="why-grid" data-stagger>
+        <div class="why-ai glass">
+          <p class="why-k mono"><Icon name="sparkles" size={15} />What AI does well</p>
+          <ul>{aiDoes.map((t) => <li><Icon name="circle-check" size={17} /><span>{t}</span></li>)}</ul>
+          <p class="why-note">Useful. I use it every day, with Claude Code and Figma Make. But it doesn't know your buyer, and it doesn't answer for the result.</p>
+        </div>
+        <div class="why-me sub-hero">
+          <p class="why-k mono"><Icon name="user-round" size={15} />What I bring</p>
+          <ul>
+            {iBring.map((b) => (
+              <li>
+                <span class="why-i"><Icon name={b.icon} size={18} /></span>
+                <div><b>{b.k}</b><span>{b.line}</span></div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <div class="why-offer glass" data-reveal>
+        <div>
+          <p class="why-k mono"><Icon name="target" size={15} />Start here</p>
+          <h3>A conversion check of your website</h3>
+          <p>I go through your site, your analytics and your buyer's path, then send you what stops enquiries and what to fix first.</p>
+        </div>
+        <a class="btn primary magnetic" href="#contact" data-track="cta_click" data-track-cta="conversion_check" data-track-location="why">Ask for a conversion check <span class="ar">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <Gap size={120} />
+
   <!-- WORK: what I built. The product first, then the websites. Case studies live on /portfolio/. -->
   <section id="work">
     <div class="in">
@@ -122,6 +192,57 @@ const services = [
       <div class="section-foot" data-reveal><a class="btn primary magnetic" href="/work/">View all work <span class="ar">→</span></a></div>
     </div>
   </section>
+
+  <Gap size={120} />
+
+  <!-- PROOF: a real monthly dashboard, from a site I designed and built -->
+  <section id="proof">
+    <div class="in">
+      <div class="section-head">
+        <h2 data-split>Proof, not promises</h2>
+        <p data-reveal>Every site I build comes with a monthly dashboard. Here is a real one, from Prabuddha Pathak, a free archive I designed and built.</p>
+      </div>
+      <div class="proof-grid">
+        <figure class="dash glass" data-reveal>
+          <figcaption class="dash-top">
+            <span class="mono"><Icon name="ga4" size={14} />{proof.site} · Google Analytics</span>
+            <span class="mono dash-when">{proof.period}</span>
+          </figcaption>
+          <div class="dash-hero">
+            <b><span class="gt">{aiShare}%</span></b>
+            <p>of visits come from <strong>ChatGPT</strong>, not Google</p>
+          </div>
+          <ul class="dash-stats">
+            <li><b>{proof.sessions}</b><span>Visits</span></li>
+            <li><b>{proof.engagement}</b><span>Engaged</span></li>
+            <li><b>{proof.time}</b><span>Average time</span></li>
+          </ul>
+          <ul class="dash-bars" aria-label="Visits by source">
+            {proof.sources.map((x) => (
+              <li style={`--w:${Math.max(2, Math.round((x.n / proof.sessions) * 100))}%`}>
+                <span class="db-name"><Icon name={x.icon} size={14} />{x.name}</span>
+                <i aria-hidden="true"></i>
+                <span class="db-n mono">{x.n}</span>
+              </li>
+            ))}
+          </ul>
+        </figure>
+        <div class="proof-read">
+          <p class="why-k mono"><Icon name="search-check" size={15} />What I read in it</p>
+          <ol>
+            <li><b>AI assistants now send visitors.</b><span>I build pages that ChatGPT can read, trust and recommend, so the site is found where people now ask.</span></li>
+            <li><b>They arrive ready.</b><span>87% of ChatGPT visits engage, for about two and a half minutes each.</span></li>
+            <li><b>What to fix next.</b><span>No key event is set up yet, so the next step is a clear way to ask a question or subscribe, and to count it.</span></li>
+          </ol>
+          <a class="proof-shot" href={gaShot.src} target="_blank" rel="noopener">
+            <Image src={gaShot} alt="Google Analytics report for prabuddhapathak.com: sessions by source, October to November 2026" widths={[552]} sizes="280px" />
+            <span class="mono">The real report in Google Analytics <span class="ar">↗</span></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
 
   <Gap size={120} />
 
@@ -197,6 +318,69 @@ const services = [
   .cs-path{display:grid;gap:7px;width:62%!important;margin:auto}
   .cs-path span{display:flex;gap:10px;align-items:center;font-size:12.5px;padding:6px 10px;border:1px solid var(--line-2);border-radius:7px;background:var(--surface)}
   .cs-path i{font-style:normal;font-family:var(--mono);font-size:10.5px;color:var(--accent)}
+  /* ---------- AI can make the page ---------- */
+  #why .section-head h2{max-width:18ch}
+  .why-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:16px;align-items:stretch}
+  .why-k{display:flex;align-items:center;gap:8px;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .why-k :global(.ico){color:var(--accent)}
+  .why-ai{padding:clamp(20px,2.6vw,30px);display:grid;align-content:start;gap:4px}
+  .why-ai ul,.why-me ul,.proof-read ol{list-style:none;margin:0;padding:0}
+  .why-ai li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);color:var(--muted);font-size:16px}
+  .why-ai li :global(.ico){color:var(--dim)}
+  .why-note{margin-top:18px;color:var(--dim);font-size:14.5px;line-height:1.55}
+  .why-me{margin:0;padding:clamp(20px,2.6vw,30px);border-radius:16px;box-shadow:0 30px 60px -36px rgba(0,0,60,.8)}
+  .why-me .why-k{color:var(--hm)}
+  .why-me ul{display:grid;gap:16px}
+  .why-me li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:start}
+  .why-i{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:#fff;flex:none}
+  .why-me .why-i :global(.ico){color:#0000FF}
+  .why-me li > div b{display:block;font-size:17px;letter-spacing:-.01em}
+  .why-me li > div span{display:block;color:var(--hm);font-size:14.5px;line-height:1.5;margin-top:2px}
+  .why-offer{margin-top:16px;padding:clamp(20px,2.6vw,28px);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 32px}
+  .why-offer > div{display:grid;gap:6px;max-width:62ch}
+  .why-offer .why-k{margin-bottom:4px}
+  .why-offer h3{font-size:clamp(20px,2.2vw,26px);letter-spacing:-.025em}
+  .why-offer p:last-child{color:var(--muted);font-size:15.5px}
+
+  /* ---------- Proof: a real dashboard ---------- */
+  .proof-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(20px,4vw,56px);align-items:start}
+  .dash{margin:0;padding:clamp(18px,2.4vw,28px);display:grid;gap:22px}
+  .dash-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted)}
+  .dash-top .mono{display:inline-flex;align-items:center;gap:8px;font-size:12px}
+  .dash-when{color:var(--dim)}
+  .dash-hero{display:grid;gap:6px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+  .dash-hero b{font-family:var(--display);font-size:clamp(64px,8vw,112px);line-height:.9;letter-spacing:-.05em;font-weight:700}
+  .dash-hero p{color:var(--muted);font-size:18px}
+  .dash-hero strong{color:var(--ink);font-weight:600}
+  .dash-stats{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+  .dash-stats li{display:grid;gap:2px;padding-right:12px}
+  .dash-stats li+li{padding-left:16px;border-left:1px solid var(--line)}
+  .dash-stats b{font-family:var(--display);font-size:clamp(22px,2.4vw,30px);letter-spacing:-.03em}
+  .dash-stats span{color:var(--muted);font-size:13px}
+  .dash-bars{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+  .dash-bars li{display:grid;grid-template-columns:110px minmax(0,1fr) 34px;align-items:center;gap:12px}
+  .db-name{display:inline-flex;align-items:center;gap:8px;font-size:14px}
+  .db-name :global(.ico){color:var(--accent)}
+  .dash-bars i{display:block;height:10px;border-radius:6px;background:linear-gradient(90deg,var(--accent-fill),var(--accent)) 0 0/var(--w) 100% no-repeat,var(--line)}
+  .db-n{text-align:right;color:var(--muted)}
+  .proof-read{display:grid;gap:4px}
+  .proof-read ol{display:grid;gap:18px;counter-reset:r}
+  .proof-read li{display:grid;gap:4px;padding-left:40px;position:relative;counter-increment:r}
+  .proof-read li::before{content:counter(r);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--accent-fill);color:var(--on-accent);font-family:var(--mono);font-size:12px}
+  .proof-read li b{font-size:17px;letter-spacing:-.01em}
+  .proof-read li span{color:var(--muted);font-size:15px;line-height:1.55}
+  .proof-shot{margin-top:24px;display:grid;gap:8px;justify-items:start;text-decoration:none;color:var(--accent)}
+  .proof-shot :global(img){width:280px;max-width:100%;height:auto;border-radius:10px;border:1px solid var(--line-2);box-shadow:0 20px 40px -28px rgba(0,0,0,.6);transition:transform .25s}
+  .proof-shot:hover :global(img){transform:translateY(-3px)}
+  .proof-shot .mono{font-size:12px}
+
+  @media (max-width:900px){
+    .why-grid,.proof-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:480px){
+    .dash-bars li{grid-template-columns:92px minmax(0,1fr) 28px}
+    .dash-stats b{font-size:20px}
+  }
   @media (max-width:1100px){.cs-groups{grid-template-columns:repeat(2,minmax(0,1fr))}}
   @media (max-width:560px){.cs-groups{grid-template-columns:1fr}}
 </style>
