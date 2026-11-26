@@ -1,9 +1,12 @@
 // One source for the resume: the web page (src/pages/resume.astro), the PDF and the Word file
 // (scripts/resume-files.mjs) all read from here. Edit text here, then run `npm run resume:files`.
 
-export const tagline = 'Product Designer (UI/UX) · Webflow Developer · Claude Code · GA4';
-export const headline = ['Product designer', 'who also builds and measures the website.'];
-export const profile = 'Product designer (UI/UX) with 3.5+ years of remote experience designing an AI-powered B2B SaaS platform end to end for enterprises and Tier-1 banks, making complex workflows simple and intuitive. I own the full process (user flows, wireframes, prototypes, dashboards and high-fidelity Figma UI on a shared design system) and work closely with product and development teams. I also design and build the marketing websites in Webflow and Claude Code, measured with Google Analytics.';
+export const tagline = 'UI/UX Designer · Webflow Developer · Claude Code · GA4';
+// The headline: what I am, then what I also build. The web pages show the last part one word at a time
+// (components/RoleTitle.astro); the PDF and Word files print the whole sentence.
+export const builds = { lead: 'who also builds', words: ['websites', 'web applications', 'design systems'] };
+export const headline = ['UX designer', `${builds.lead} ${builds.words.slice(0, -1).join(', ')} and ${builds.words.at(-1)}.`];
+export const profile = 'User experience (UI/UX) designer with 3.5+ years of remote experience designing an AI-powered B2B SaaS platform end to end for enterprises and Tier-1 banks, making complex workflows simple and intuitive. I own the full process (user flows, wireframes, prototypes, dashboards and high-fidelity Figma UI on a shared design system) and work closely with product and development teams. I also design and build the marketing websites in Webflow and Claude Code, measured with Google Analytics.';
 export const education = { title: 'Graduation', org: 'Nagpur University', year: '2015' };
 
 export const skills = [
@@ -18,7 +21,7 @@ export const skills = [
 // Experience, newest first. **word** marks a skill: highlighted on the page and in the PDF, bold in Word.
 export const jobs = [
   {
-    role: 'Product Designer (UI/UX) & Webflow Developer',
+    role: 'UI/UX Designer & Webflow Developer',
     org: 'Aligne AI (Aligne Technologies Ltd)',
     note: 'Responsible AI governance for 50+ enterprises, including HSBC, MUFG, Vodafone, BP, Moody’s and Infosys',
     start: '2023-05',
@@ -88,7 +91,7 @@ export const span = (start, end) => {
 
 // Featured projects, in this order.
 export const projects = [
-  { featured: 'Featured · Product design', caseStudy: '/work/altrum-product-design/', name: 'Altrum AI web app', type: 'AI-powered B2B SaaS product', role: 'Product designer · Figma', body: 'Designed the full product end to end: every screen for policy enforcement, audit logging, no-code governance, incident detection and dashboards, on one design system, then tested it end to end to find and fix issues.' },
+  { featured: 'Featured · Product design', caseStudy: '/work/altrum-product-design/', name: 'Altrum AI web app', type: 'AI-powered B2B SaaS product', role: 'UX designer · Figma', body: 'Designed the full product end to end: every screen for policy enforcement, audit logging, no-code governance, incident detection and dashboards, on one design system, then tested it end to end to find and fix issues.' },
   { name: 'Altrum AI website', type: 'AI governance product site', role: 'UI/UX designer · Webflow developer', body: 'Designed and built the full Webflow CMS website for Altrum AI. When Altrum became part of Aligne, the site was merged into aligne.ai.' },
   { name: 'Aligne AI', type: 'Responsible AI consulting & platform', role: 'UI/UX designer · Webflow developer → code', body: 'Designed and built as a full Webflow CMS site, then rebuilt in code with Claude Code as one site for Aligne and Altrum, with GA4 tracking.', url: 'https://aligne.ai' },
   { name: 'World of Gears', type: 'Sustainability consultancy', role: 'UI/UX designer · Webflow developer', body: 'A clean, editorial website for a supply-chain consultancy, with CMS structures for case studies and insights.' },

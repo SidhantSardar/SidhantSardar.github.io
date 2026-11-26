@@ -7,12 +7,13 @@ import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import WorkArt from '../components/WorkArt.astro';
 import ToolText from '../components/ToolText.astro';
+import RoleTitle from '../components/RoleTitle.astro';
 import ResumeSheet from '../components/ResumeSheet.astro';
 import { Image } from 'astro:assets';
 import { asset } from '../data/images';
 import { EMAIL, PHONE, LINKEDIN, YOUTUBE } from '../data/profile';
 import {
-  skills, jobs, projects, fmt, span, tagline, headline, education, icons, contactList, kwHtml,
+  skills, jobs, projects, fmt, span, tagline, education, icons, contactList, kwHtml,
   lead, toolset, toolkit, loop, loopBack, glance, jobCards, projectArt, skillIcons, bringsShort,
 } from '../data/resume.mjs';
 
@@ -26,7 +27,7 @@ const career = [...jobs].reverse().map((j, i, all) => ({
   j,
   months: (j.end ? ym(j.end) : today) - ym(j.start) + 1,
   gap: i ? ym(j.start) - ym(all[i - 1].end) - 1 : 0,
-  // "Product Designer (UI/UX) & Webflow Developer" → "Product Designer"
+  // "UI/UX Designer & Webflow Developer" → "UI/UX Designer"
   role: j.role.split(/ \(| & /)[0],
   org: j.org.split(' (')[0],
 }));
@@ -47,7 +48,7 @@ const career = [...jobs].reverse().map((j, i, all) => ({
           </div>
         </div>
         <p class="eyebrow">Resume · 3.5+ years remote</p>
-        <h1 class="cv-title"><span class="hard gt">{headline[0]}</span> <span class="soft gt">{headline[1]}</span></h1>
+        <h1 class="cv-title"><RoleTitle /></h1>
         <p class="cv-lead">{lead}</p>
         <div class="actions">
           <a class="btn primary" href="/sidhant-sardar-resume.pdf" download data-track="resume_download" data-track-format="pdf" data-track-location="resume">Download PDF <span class="ar">↓</span></a>
@@ -307,8 +308,6 @@ const career = [...jobs].reverse().map((j, i, all) => ({
   .rs-id{display:grid;gap:16px;justify-items:start;min-width:0}
   .rs-id .intro-id{margin-bottom:12px}
   .cv-title{font-size:clamp(36px,4.5vw,64px);line-height:.98;letter-spacing:-.045em}
-  .cv-title span{display:block}
-  .cv-title .soft{color:var(--accent);max-width:17ch}
   .cv-lead{color:var(--muted);font-size:17px;line-height:1.55;max-width:50ch}
   .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
   /* small label used inside cards */
@@ -495,7 +494,6 @@ const career = [...jobs].reverse().map((j, i, all) => ({
     .rs-head{grid-template-columns:1fr}
     /* one column: the title has the full width, so it can be larger */
     .cv-title{font-size:clamp(34px,7.4vw,60px)}
-    .cv-title .soft{max-width:none}
   }
   @media (max-width:900px){
     /* finger-sized links */

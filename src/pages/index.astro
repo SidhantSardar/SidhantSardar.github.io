@@ -7,6 +7,8 @@ import Gap from '../components/Gap.astro';
 import JsonLd from '../components/JsonLd.astro';
 import Capabilities from '../components/Capabilities.astro';
 import ToolText from '../components/ToolText.astro';
+import RoleTitle from '../components/RoleTitle.astro';
+import { toolkit } from '../data/resume.mjs';
 import { Image } from 'astro:assets';
 import { asset } from '../data/images';
 import { LINKEDIN, YOUTUBE, EMAIL, PHONE_TEL } from '../data/profile';
@@ -19,7 +21,7 @@ const schema = [
     '@type': 'Person',
     '@id': `${SITE}#person`,
     name: 'Sidhant Sardar',
-    jobTitle: 'Web designer and Webflow developer',
+    jobTitle: 'UX designer and Webflow developer',
     url: SITE,
     image: `${SITE}sidhant.jpg`,
     email: `mailto:${EMAIL}`,
@@ -79,12 +81,13 @@ const services = [
     <div class="in">
       <div class="intro">
         <p class="eyebrow hero-eyebrow" data-reveal><ToolText text="Designed in Figma · Built in Webflow or code" mono /></p>
-        <h1 data-split><span class="hard gt">Websites for B2B consultancies</span> <span class="soft gt">and AI companies</span></h1>
-        <p class="hero-sub" data-reveal>With a monthly dashboard that shows which pages bring in clients.</p>
-        <p class="lede" data-reveal>I design the site, build it with a CMS your marketing and sales people update themselves, and set up the tracking behind the dashboard. One person does all of it, so what ships matches what you signed off.</p>
+        <h1 data-split><RoleTitle /></h1>
+        <p class="hero-sub" data-reveal>For B2B consultancies and AI companies, with a monthly dashboard that shows which pages bring in clients.</p>
+        <p class="lede" data-reveal>I design web apps and websites in Figma, build the sites with a CMS your team updates themselves, and set up the tracking behind the dashboard. One person does all of it, so what ships matches what you signed off.</p>
         <div class="facts" data-stagger>
-          <div><b>2023 →</b><span><ToolText text="AltrumAI web app UX in Figma" mono /></span></div>
-          <div><b data-count="3">3</b><span><ToolText text="Websites, in Webflow and code" mono /></span></div>
+          <div><b>2023 →</b><span>Working as a UX designer</span></div>
+          {/* the number of tools in the resume toolkit, so the two always agree */}
+          <div><b><span data-count={toolkit.length}>{toolkit.length}</span> <small>tools</small></b><span><ToolText text="From Figma to Power BI" mono /></span></div>
           <div><b class="accent">Code</b><span><ToolText text="Astro sites on Cloudflare" mono /></span></div>
         </div>
         <div class="cta" data-reveal>

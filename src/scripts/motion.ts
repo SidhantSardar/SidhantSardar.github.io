@@ -145,7 +145,14 @@ function splitWords(el: Element) {
       });
       node.replaceWith(frag);
     } else if (node.nodeType === Node.ELEMENT_NODE) {
-      splitWords(node as Element);
+      const e = node as HTMLElement;
+      if (e.dataset.swap !== undefined) {
+        // a word that changes in place (swapWords) rises in as one piece and is not cut up
+        const outer = document.createElement('span');
+        outer.className = 'split-w';
+        e.replaceWith(outer);
+        outer.append(e);
+      } else if (!e.classList.contains('vh')) splitWords(e);
     }
   });
 }
@@ -172,11 +179,15 @@ function gradientWords(el: HTMLElement) {
   new ResizeObserver(place).observe(el);
 }
 
-/* A reveal waits until its element is scrolled into view. An element that is already on the first
-   screen when the page opens must not wait for a scroll (on a short laptop screen the hero's buttons sit
-   near the bottom edge and would stay hidden), so it gets no scroll trigger and plays at once. */
-const waitForScroll = (el: Element, start: string) =>
-  (el.getBoundingClientRect().top < innerHeight ? {} : { scrollTrigger: { trigger: el, start, once: true } });
+/* A reveal plays when its element is scrolled into view: when its top passes a line a little above the
+   bottom of the window (`start`, for example "top 88%"). Anything that sits on the first screen when the
+   page opens must not wait for a scroll (on a short laptop screen the hero's buttons sit near the bottom
+   edge and would stay hidden), so for those the line is the bottom of the window itself, which they have
+   already passed. The start is a function, so it is worked out again whenever the layout settles
+   (ScrollTrigger.refresh, called below once the fonts and the page have loaded). */
+const waitForScroll = (el: Element, start: string) => ({
+  scrollTrigger: { trigger: el, once: true, start: () => (el.getBoundingClientRect().top + scrollY < innerHeight ? 'top bottom' : start) },
+});
 
 function headings() {
   $$('[data-split]').forEach((el) => {
@@ -491,6 +502,42 @@ function story() {
   });
 }
 
+/* ---------- a word that changes in place: "builds websites" → "builds web applications" → … ----------
+   <span class="swap" data-swap='["websites","web applications"]'><span class="swap-w">websites</span></span>
+   Every few seconds the word rolls up and out and the next one rolls in from below. It only runs while
+   the word is on screen and the tab is in front. Screen readers are given the whole list once instead:
+   the changing word is hidden from them and the hidden text after it (.swap-rest) is set to the full list. */
+function swapWords() {
+  $$('[data-swap]').forEach((el) => {
+    let words: string[] = [];
+    try { words = JSON.parse(el.dataset.swap || '[]'); } catch { return; }
+    let cur = $('.swap-w', el);
+    if (words.length < 2 || !cur) return;
+    const line = el.closest('.soft') ?? el.parentElement;
+    const rest = line ? $('.swap-rest', line) : null;
+    if (rest?.dataset.all) { el.setAttribute('aria-hidden', 'true'); rest.textContent = rest.dataset.all; }
+    let i = 0;
+    const next = () => {
+      i = (i + 1) % words.length;
+      const old = cur!;
+      const nu = old.cloneNode(false) as HTMLElement;
+      nu.removeAttribute('style');
+      nu.textContent = words[i];
+      el.append(nu);
+      // both move together, like a reel: the new word follows right under the old one, so they never overlap
+      const roll = { duration: 0.7, ease: 'power3.inOut' };
+      gsap.fromTo(nu, { yPercent: 112, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, ...roll });
+      gsap.to(old, { yPercent: -112, autoAlpha: 0, ...roll, onComplete: () => old.remove() });
+      cur = nu;
+    };
+    let timer = 0;
+    new IntersectionObserver(([entry]) => {
+      clearInterval(timer);
+      if (entry.isIntersecting) timer = window.setInterval(() => { if (!document.hidden) next(); }, 2600);
+    }).observe(el);
+  });
+}
+
 /* ---------- the grid behind the top of the page lights up around the pointer ---------- */
 function gridLight() {
   const m = $('main');
@@ -534,9 +581,11 @@ if (!reduce) {
   diagrams();
   magnetic();
   spotlight();
+  swapWords();
   gridLight();
   story();
   nav();
 }
 protoWires(); // wires draw for everyone; only the motion respects reduced-motion
 addEventListener('load', () => ScrollTrigger.refresh());
+document.fonts?.ready.then(() => ScrollTrigger.refresh());
