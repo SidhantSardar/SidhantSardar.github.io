@@ -9,11 +9,15 @@ import { work, alsoBuilt } from '../../data/work';
 const isThisSite = (url: string) => url.includes('sidhantsardar.com');
 ---
 <Base title="Work · Sidhant Sardar" description="What I've built: the Altrum AI web app (product design), the Aligne AI website (Webflow, then Claude Code) and the World of Gears website (Webflow)." active="work">
+  <section class="sub-hero">
+    <div class="in">
+      <header class="page-head">
+        <h1>Work</h1>
+        <p class="sum">What I've built. The product I designed comes first, then the websites. Each one shows how I built it.</p>
+      </header>
+    </div>
+  </section>
   <div class="in">
-    <header class="page-head">
-      <h1>Work</h1>
-      <p class="sum">What I've built. The product I designed comes first, then the websites. Each one shows how I built it.</p>
-    </header>
 
     <div class="case-grid three work-grid">
       {work.map((w) => <WorkCard {...w} heading="h2" />)}

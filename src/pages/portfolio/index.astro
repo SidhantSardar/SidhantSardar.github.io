@@ -44,11 +44,15 @@ const groups = [
 const total = groups.reduce((n, g) => n + g.count, 0);
 ---
 <Base title="Portfolio · Sidhant Sardar" description="Case studies grouped by what I designed: the Altrum AI web application, B2B SaaS websites, a consultancy website and concept projects." active="portfolio" image="/og/portfolio.png" imageAlt="Portfolio: UX case studies">
+  <section class="sub-hero">
+    <div class="in">
+      <header class="page-head">
+        <h1>Portfolio</h1>
+        <p class="sum">Case studies, grouped by what I designed: a web application, B2B SaaS websites, a consultancy website and concept projects. Pick a group, or see them all.</p>
+      </header>
+    </div>
+  </section>
   <div class="in">
-    <header class="page-head">
-      <h1>Portfolio</h1>
-      <p class="sum">Case studies, grouped by what I designed: a web application, B2B SaaS websites, a consultancy website and concept projects. Pick a group, or see them all.</p>
-    </header>
 
     <nav class="pf-cats" aria-label="Case study groups">
       <button class="pf-cat" type="button" data-cat="all" aria-pressed="true"><span>All</span><small>{total}</small></button>
@@ -175,7 +179,7 @@ const total = groups.reduce((n, g) => n + g.count, 0);
 </script>
 
 <style>
-  .pf-cats{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 56px;scroll-margin-top:84px}
+  .pf-cats{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 56px;scroll-margin-top:84px}
   .pf-cat{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:8px 14px;border-radius:999px;border:1px solid var(--line-2);background:var(--surface);color:var(--muted);font-size:14px;line-height:1.2;transition:border-color .2s,color .2s,background-color .2s}
   .pf-cat :global(.ico){color:var(--accent)}
   .pf-cat small{font-family:var(--mono);font-size:11px;color:var(--dim);padding:1px 7px;border-radius:999px;border:1px solid var(--line-2)}

@@ -33,8 +33,9 @@ const career = [...jobs].reverse().map((j, i, all) => ({
 }));
 ---
 <Base active="resume" title="Resume · Sidhant Sardar" description="Sidhant Sardar: UI/UX designer, Webflow developer and AI-assisted developer (Claude Code). 3.5+ years of remote product and web design." image="/sidhant-full.jpg" imageAlt="Sidhant Sardar">
-  <div class="in cv">
-    <!-- Who, in one screen: name, headline, downloads, and how the work goes round -->
+  <!-- The blue hero: who, the headline, downloads, how the work goes round, contacts and four numbers -->
+  <section class="sub-hero">
+  <div class="in cv cv-hero">
     <header class="rs-head">
       <div class="rs-id">
         <div class="intro-id">
@@ -102,7 +103,10 @@ const career = [...jobs].reverse().map((j, i, all) => ({
         </li>
       ))}
     </ul>
+  </div>
+  </section>
 
+  <div class="in cv">
     <!-- Experience: the years as one bar, then a card per job -->
     <section class="rs-sec" aria-labelledby="exp-h">
       <h2 class="rs-h" id="exp-h"><Icon name="briefcase-business" size={16} /><span>Experience</span></h2>
@@ -299,6 +303,9 @@ const career = [...jobs].reverse().map((j, i, all) => ({
   /* This page's own tokens: tiles sit inside cards, chips sit inside tiles */
   .cv{--card-line:var(--line);--tile:#F7F7F8;--tile-line:var(--line);--chip:var(--surface);--chip-line:var(--line-2);--kw:rgba(0,0,255,.13);
     padding-block:40px 96px;display:grid;gap:clamp(52px,6.5vw,80px)}
+  /* the blue hero's own tones: chips and lines in see-through white */
+  :global(:root[data-theme]) .cv.cv-hero{--card-line:rgba(255,255,255,.22);--chip:rgba(255,255,255,.08);--chip-line:rgba(255,255,255,.35);padding-block:0;gap:clamp(36px,4.5vw,56px)}
+  .cv:not(.cv-hero){padding-top:0}
   :global(:root[data-theme="dark"]) .cv{--card-line:rgba(255,255,255,.08);--tile:rgba(255,255,255,.035);--tile-line:rgba(255,255,255,.07);--chip:rgba(255,255,255,.05);--chip-line:rgba(255,255,255,.12);--kw:rgba(143,155,255,.3)}
   .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
   ul,ol{list-style:none;margin:0;padding:0}
@@ -316,9 +323,8 @@ const career = [...jobs].reverse().map((j, i, all) => ({
   /* "How I work": three lit steps on one line, and the way back to the start */
   .loop{padding:clamp(18px,2.4vw,26px);display:grid;gap:20px}
   /* dark theme: a little blue light in the card's top corner, and on the lit steps */
-  :global(:root[data-theme="dark"]) .loop{background:radial-gradient(90% 70% at 100% 0%,rgba(92,104,255,.16),transparent 62%),linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02))}
-  :global(:root[data-theme="dark"]) .loop-step:not(.again) .loop-n{background:linear-gradient(180deg,#4652FF,#2632F0);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 8px 18px -10px rgba(46,59,255,.9)}
-  :global(:root[data-theme="dark"]) .loop-step.again .loop-n{background:#0C0C10}
+  /* on the blue hero: the step icons are white tiles with blue marks */
+  .loop-step:not(.again) .loop-n{box-shadow:0 8px 18px -10px rgba(0,0,60,.8)}
   .loop-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
   .loop-tag{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-family:var(--mono);font-size:11px}
   .loop-steps{position:relative;display:grid}

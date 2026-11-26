@@ -535,28 +535,6 @@ function swapWords() {
   });
 }
 
-/* ---------- the grid behind the top of the page lights up around the pointer ---------- */
-function gridLight() {
-  const m = $('main');
-  if (!finePointer || !m) return;
-  let frame = 0, x = 0, y = 0;
-  addEventListener('pointermove', (e) => {
-    x = e.clientX; y = e.clientY;
-    if (frame) return;
-    frame = requestAnimationFrame(() => {
-      frame = 0;
-      const r = m.getBoundingClientRect();
-      const gy = y - r.top + 61; // the grid starts 61px above <main>, behind the menu bar
-      const over = gy >= 0 && gy < 1000;
-      m.classList.toggle('grid-lit', over);
-      if (!over) return;
-      m.style.setProperty('--gx', `${Math.round(x - r.left)}px`);
-      m.style.setProperty('--gy', `${Math.round(gy)}px`);
-    });
-  }, { passive: true });
-  document.documentElement.addEventListener('pointerleave', () => m.classList.remove('grid-lit'));
-}
-
 function nav() {
   const n = $('.site-nav');
   if (!n) return;
@@ -579,7 +557,6 @@ if (!reduce) {
   magnetic();
   spotlight();
   swapWords();
-  gridLight();
   story();
   nav();
 }
