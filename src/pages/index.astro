@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import WorkCard from '../components/WorkCard.astro';
+import WorkArt from '../components/WorkArt.astro';
 import { work } from '../data/work';
 import Gap from '../components/Gap.astro';
 import JsonLd from '../components/JsonLd.astro';
@@ -40,14 +41,14 @@ const schema = [
   },
 ];
 
-// Home "Case studies" section: the user journey the UX case studies cover, in order.
+// Home "Case studies" section: the four groups of the portfolio, each opening its group on /portfolio/.
 const caseCount = (await getCollection('portfolio')).length;
-const journey = [
-  { name: 'Register', line: 'List every AI system in use', icon: '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/>' },
-  { name: 'Assess', line: 'Answer a guided risk check', icon: '<path d="M5 6h14v9H9l-4 4z"/><path d="M9 10h6"/>' },
-  { name: 'Control', line: 'Apply guardrails and policies', icon: '<path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M9 12l2 2 4-4"/>' },
-  { name: 'Monitor', line: 'Track usage, cost and risk', icon: '<path d="M4 19V5M4 19h16"/><path d="M8 15l3-4 3 2 4-6"/>' },
-];
+const caseGroups = [
+  { id: 'web-app', label: 'Web application', count: caseCount, line: 'UX case studies from the Altrum AI web app.', art: 'product' },
+  { id: 'saas', label: 'B2B SaaS websites', count: 2, line: 'Product sites for AI software companies.', art: 'site' },
+  { id: 'consultancy', label: 'Consultancy website', count: 1, line: 'A service-led site for a consultancy.', art: 'cms' },
+  { id: 'concept', label: 'Concept projects', count: 2, line: 'A made-up product, built end to end in public.', art: '' },
+] as const;
 
 // Services are hidden for now (they'll get their own page). Flip to true to show them again.
 const SHOW_SERVICES = false;
@@ -154,31 +155,31 @@ const services = [
 
   <Gap size={120} />
 
-  <!-- CASE STUDIES: title, description and button on the left; the user journey the case studies
-       cover on the right, drawn as a square Figma-style prototype flow. Full list on /portfolio/. -->
+  <!-- CASE STUDIES: the four groups of the portfolio. Each card opens its group on /portfolio/. -->
   <section id="case-studies">
-    <div class="in cs-wrap">
-      <div class="cs-text">
+    <div class="in">
+      <div class="section-head">
         <h2 data-split>Case studies</h2>
-        <p data-reveal>UX case studies from the Altrum AI web app, which I've designed in Figma since 2023. Each one takes a single problem, such as onboarding, a guided risk check or the design system, and shows how I solved it in screens and diagrams.</p>
-        <div data-reveal><a class="btn primary magnetic" href="/portfolio">See the case studies <span class="ar">→</span></a></div>
+        <p data-reveal>The decisions behind the work, grouped by what I designed: a web application, B2B SaaS websites, a consultancy website and concept projects.</p>
       </div>
-      <figure class="cs-fig" data-reveal>
-        <div class="cs-square">
-          <div class="cs-flow" id="cs-flow">
-            <ol class="cs-ring">
-              {journey.map((s, i) => (
-                <li class:list={['cs-step', { on: i === 0 }]}>
-                  <span class="cs-node"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={s.icon} /></span>
-                  <span class="cs-label"><b><i aria-hidden="true">{String(i + 1).padStart(2, '0')}</i>{s.name}</b><span>{s.line}</span></span>
-                </li>
-              ))}
-            </ol>
-            <span class="cs-dot" aria-hidden="true"></span>
-          </div>
-        </div>
-        <figcaption>The user journey the case studies cover.</figcaption>
-      </figure>
+      <div class="case-grid cs-groups" data-stagger>
+        {caseGroups.map((g) => (
+          <a class="case" href={`/portfolio/#${g.id}`}>
+            <div class="mini media">
+              {g.art
+                ? <WorkArt kind={g.art} />
+                : <div class="cs-path" aria-hidden="true">{['Idea', 'Product', 'Website', 'Client'].map((x, i) => <span><i>{i + 1}</i>{x}</span>)}</div>}
+              <span class="card-go" aria-hidden="true">→</span>
+            </div>
+            <div class="case-body">
+              <span class="n">{g.count} {g.count === 1 ? 'case study' : 'case studies'}</span>
+              <h3>{g.label}</h3>
+              <p>{g.line}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+      <div class="section-foot" data-reveal><a class="btn primary magnetic" href="/portfolio/">See all case studies <span class="ar">→</span></a></div>
     </div>
   </section>
 
@@ -186,3 +187,16 @@ const services = [
 
   <!-- Contact lives in the site footer (layouts/Base.astro), on every page: #contact -->
 </Base>
+
+<style>
+  /* Case studies: four group cards in a row on wide screens */
+  .cs-groups{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+  .cs-groups .case-body{padding:16px 18px 20px}
+  .cs-groups .case-body h3{font-size:19px;line-height:1.15;letter-spacing:-.02em}
+  .cs-groups .case-body p{color:var(--muted);font-size:14.5px}
+  .cs-path{display:grid;gap:7px;width:62%!important;margin:auto}
+  .cs-path span{display:flex;gap:10px;align-items:center;font-size:12.5px;padding:6px 10px;border:1px solid var(--line-2);border-radius:7px;background:var(--surface)}
+  .cs-path i{font-style:normal;font-family:var(--mono);font-size:10.5px;color:var(--accent)}
+  @media (max-width:1100px){.cs-groups{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:560px){.cs-groups{grid-template-columns:1fr}}
+</style>
