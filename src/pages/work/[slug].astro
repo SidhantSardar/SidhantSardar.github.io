@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import ToolText from '../../components/ToolText.astro';
 import JsonLd from '../../components/JsonLd.astro';
 import { Image } from 'astro:assets';
 import { asset } from '../../data/images';
@@ -38,7 +39,7 @@ const schema = {
   <div class="in">
     <header class="page-head">
       <a class="back" href="/work/">← Work</a>
-      <span class="spec">Case study / Website · <b>{d.stack}</b> · <span class={`kind ${d.kind}`}>{d.kind === 'client' ? 'Client project' : 'Practice project'}</span></span>
+      <span class="spec">Case study / Website · <b><ToolText text={d.stack} /></b> · <span class={`kind ${d.kind}`}>{d.kind === 'client' ? 'Client project' : 'Practice project'}</span></span>
       <span class="eyebrow">{d.eyebrow}</span>
       <h1>{d.title}</h1>
       <p class="sum">{d.summary}</p>

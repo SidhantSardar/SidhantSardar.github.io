@@ -1,0 +1,12 @@
+---
+// A short label with each tool's logo in front of its name:
+//   <ToolText text="Website · Webflow → Claude Code" />
+// The names and their logos are in data/tools.ts. `mono` draws the logos in the text colour.
+// Styles: ".tw" in styles/global.css.
+import Icon from './Icon.astro';
+import { splitTools } from '../data/tools';
+
+interface Props { text: string; size?: number; mono?: boolean }
+const { text, size = 13, mono = false } = Astro.props;
+---
+{splitTools(text).map((p) => (p.icon ? <span class="tw"><Icon name={p.icon} size={size} mono={mono} />{p.text}</span> : p.text))}

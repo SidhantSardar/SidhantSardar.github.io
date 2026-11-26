@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import ToolText from '../../components/ToolText.astro';
 
 export async function getStaticPaths() {
   const cases = (await getCollection('portfolio')).sort((a, b) => a.data.order - b.data.order);
@@ -18,7 +19,7 @@ const { Content } = await render(entry);
   <div class="in">
     <header class="page-head">
       <a class="back" href="/portfolio">← Portfolio</a>
-      <span class="spec">Case study <b>{String(d.order).padStart(2, '0')} / {String(total).padStart(2, '0')}</b> · UX · Figma</span>
+      <span class="spec">Case study <b>{String(d.order).padStart(2, '0')} / {String(total).padStart(2, '0')}</b> · UX · <ToolText text="Figma" /></span>
       <h1>{d.title}</h1>
       <p class="sum">{d.summary}</p>
       <div class="snap">{d.snapshot.map((s) => <div><span>{s.label}</span><b>{s.value}</b></div>)}</div>

@@ -6,6 +6,7 @@
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import WorkArt from '../components/WorkArt.astro';
+import ToolText from '../components/ToolText.astro';
 import ResumeSheet from '../components/ResumeSheet.astro';
 import { Image } from 'astro:assets';
 import { asset } from '../data/images';
@@ -192,7 +193,7 @@ const career = [...jobs].reverse().map((j, i, all) => ({
       <ul class="kit" data-stagger>
         {toolkit.map((k) => (
           <li class="kit-t glass">
-            <Icon name={toolset[k].icon} size={28} />
+            <Icon name={toolset[k].icon} size={32} />
             <b>{toolset[k].name}</b>
             {toolset[k].note && <small>{toolset[k].note}</small>}
           </li>
@@ -207,7 +208,7 @@ const career = [...jobs].reverse().map((j, i, all) => ({
         {skills.filter((s) => s.k !== 'Tools & build').map((s) => (
           <article class="sk glass">
             <header><span class="ico-tile"><Icon name={skillIcons[s.k]} size={18} /></span><h3>{s.k}</h3></header>
-            <ul class="tags">{s.v.map((v) => <li>{v}</li>)}</ul>
+            <ul class="tags">{s.v.map((v) => <li><ToolText text={v} size={13} /></li>)}</ul>
           </article>
         ))}
       </div>

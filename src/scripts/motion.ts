@@ -172,6 +172,12 @@ function gradientWords(el: HTMLElement) {
   new ResizeObserver(place).observe(el);
 }
 
+/* A reveal waits until its element is scrolled into view. An element that is already on the first
+   screen when the page opens must not wait for a scroll (on a short laptop screen the hero's buttons sit
+   near the bottom edge and would stay hidden), so it gets no scroll trigger and plays at once. */
+const waitForScroll = (el: Element, start: string) =>
+  (el.getBoundingClientRect().top < innerHeight ? {} : { scrollTrigger: { trigger: el, start, once: true } });
+
 function headings() {
   $$('[data-split]').forEach((el) => {
     splitWords(el);
@@ -181,7 +187,7 @@ function headings() {
     el.classList.add('is-split');
     gsap.from($$('.split-w > span', el), {
       yPercent: 110, duration: 0.9, ease: 'power4.out', stagger: 0.05,
-      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+      ...waitForScroll(el, 'top 88%'),
       onComplete: () => el.classList.add('split-done'),
     });
   });
@@ -190,15 +196,15 @@ function headings() {
 /* ---------- generic reveals ---------- */
 function reveals() {
   $$('[data-reveal]').forEach((el) => {
-    gsap.from(el, { autoAlpha: 0, y: 22, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%', once: true } });
+    gsap.from(el, { autoAlpha: 0, y: 22, duration: 0.8, ease: 'power3.out', ...waitForScroll(el, 'top 90%') });
   });
   $$('[data-stagger]').forEach((el) => {
-    gsap.from(Array.from(el.children), { autoAlpha: 0, y: 16, duration: 0.6, ease: 'power3.out', stagger: 0.08, scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
+    gsap.from(Array.from(el.children), { autoAlpha: 0, y: 16, duration: 0.6, ease: 'power3.out', stagger: 0.08, ...waitForScroll(el, 'top 88%') });
   });
   $$('[data-count]').forEach((el) => {
     const to = Number(el.dataset.count);
     const o = { v: 0 };
-    gsap.to(o, { v: to, duration: 1.2, ease: 'power2.out', onUpdate: () => (el.textContent = String(Math.round(o.v))), scrollTrigger: { trigger: el, start: 'top 90%', once: true } });
+    gsap.to(o, { v: to, duration: 1.2, ease: 'power2.out', onUpdate: () => (el.textContent = String(Math.round(o.v))), ...waitForScroll(el, 'top 90%') });
   });
 }
 

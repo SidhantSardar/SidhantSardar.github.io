@@ -3,6 +3,7 @@
 // Real screens stay private, so every picture here is a simplified diagram (components/StepArt.astro).
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import ToolText from '../../components/ToolText.astro';
 import JsonLd from '../../components/JsonLd.astro';
 import StepArt from '../../components/StepArt.astro';
 import { EMAIL } from '../../data/profile';
@@ -67,7 +68,7 @@ const schema = {
   <div class="in">
     <header class="page-head">
       <a class="back" href="/work/">← Work</a>
-      <span class="spec">Case study / Product design · <b>Figma · Figma Make · Claude Code</b> · <span class="kind">Client project</span></span>
+      <span class="spec">Case study / Product design · <b><ToolText text="Figma · Figma Make · Claude Code" /></b> · <span class="kind">Client project</span></span>
       <span class="eyebrow">Altrum AI web app · AI-powered B2B SaaS</span>
       <h1>Designing an AI governance product, end to end.</h1>
       <p class="sum">Altrum AI helps enterprises and Tier-1 banks govern their AI. I designed the whole web app: from learning the domain and choosing the colours, to mapping every flow, prototyping it and checking the build.</p>

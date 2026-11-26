@@ -5,6 +5,7 @@ import '@fontsource-variable/geist-mono';
 import geistLatin from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
 import '../styles/global.css';
 import Analytics from '../components/Analytics.astro';
+import ToolText from '../components/ToolText.astro';
 import { EMAIL, PHONE, PHONE_TEL, LINKEDIN, YOUTUBE, AVAILABILITY } from '../data/profile';
 
 interface Props {
@@ -150,7 +151,7 @@ const pages: { id: NonNullable<Props['active']>; label: string; href: string; hi
         </div>
         <div class="foot-bar">
           <span>© {new Date().getFullYear()} Sidhant Sardar</span>
-          <span>Designed in Figma · built with Claude Code + Astro</span>
+          <span><ToolText text="Designed in Figma · built with Claude Code + Astro" size={12} mono /></span>
         </div>
       </div>
     </footer>

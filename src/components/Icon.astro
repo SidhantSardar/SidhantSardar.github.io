@@ -1,15 +1,35 @@
 ---
-// One icon or tool logo from data/icons.ts, drawn inline so it takes the colour of the text around it.
+// One icon or tool logo from data/icons.ts, drawn inline.
+//   a tool (figma, webflow, claude…)  its official logo in its own colours
+//   the same tool with `mono`          its mark in one colour, taken from the text around it
+//                                      (for the blue hero and footer, where brand colours would clash)
+//   anything else                      a line icon in the colour of the text around it
 // Icons are decoration: the words next to them carry the meaning, so they are hidden from screen readers.
 // Styles: ".ico" in styles/global.css.
-import { icons, logos } from '../data/icons';
+import { icons, brands, logos, pictures } from '../data/icons';
+import { nextId } from '../data/uid';
 
-interface Props { name: string; size?: number; class?: string }
-const { name, size = 20, class: cls } = Astro.props;
-const logo = (logos as Record<string, string>)[name];
-const body = (icons as Record<string, string>)[name];
-if (!logo && !body) throw new Error(`Icon "${name}" is not in src/data/icons.ts`);
+interface Props { name: string; size?: number; class?: string; mono?: boolean }
+const { name, size = 20, class: cls, mono = false } = Astro.props;
+
+const line = (icons as Record<string, string>)[name];
+const one = logos[name];
+const picture = pictures[name];
+const brand = brands[name];
+if (!line && !one && !picture && !brand) throw new Error(`Icon "${name}" is not in src/data/icons.ts`);
+
+// A logo with gradients names them by id. The same logo can be on a page many times, so each copy gets its own ids.
+let body = '';
+if (brand && !(mono && one)) {
+  const id = `i${nextId()}`;
+  body = brand.body
+    .replace(/\bid="([^"]+)"/g, (_, x) => `id="${id}-${x}"`)
+    .replace(/url\(#([^)]+)\)/g, (_, x) => `url(#${id}-${x})`)
+    .replace(/href="#([^"]+)"/g, (_, x) => `href="#${id}-${x}"`);
+}
+const kind = mono && one ? 'one' : picture ? 'picture' : brand ? 'brand' : one ? 'one' : 'line';
 ---
-{logo
-  ? <svg class:list={['ico', 'ico-logo', cls]} viewBox="0 0 24 24" width={size} height={size} aria-hidden="true" focusable="false"><path d={logo} /></svg>
-  : <svg class:list={['ico', cls]} viewBox="0 0 24 24" width={size} height={size} aria-hidden="true" focusable="false" set:html={body} />}
+{kind === 'picture' && <img class:list={['ico', 'ico-pic', cls]} src={picture.src} width={size} height={size} alt="" aria-hidden="true" loading="lazy" decoding="async" />}
+{kind === 'brand' && <svg class:list={['ico', 'ico-brand', cls]} viewBox={brand.box} width={size} height={size} aria-hidden="true" focusable="false" set:html={body} />}
+{kind === 'one' && <svg class:list={['ico', 'ico-logo', cls]} viewBox="0 0 24 24" width={size} height={size} aria-hidden="true" focusable="false" set:html={one} />}
+{kind === 'line' && <svg class:list={['ico', cls]} viewBox="0 0 24 24" width={size} height={size} aria-hidden="true" focusable="false" set:html={line} />}

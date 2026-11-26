@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import ToolText from '../../components/ToolText.astro';
 import Wire from '../../components/Wire.astro';
 import Releases from '../../components/Releases.astro';
 import Gap from '../../components/Gap.astro';
@@ -15,7 +16,7 @@ const cases = (await getCollection('portfolio')).sort((a, b) => a.data.order - b
       <div class="snap">
         <div><span>Product</span><b>AI governance web app</b></div>
         <div><span>My role</span><b>UX + UI designer</b></div>
-        <div><span>Tool</span><b>Figma</b></div>
+        <div><span>Tool</span><b><ToolText text="Figma" size={16} /></b></div>
         <div><span>Timeline</span><b>2023 → now</b></div>
       </div>
     </header>

@@ -1,6 +1,7 @@
 ---
 import { skills, GROUPS } from '../data/skills';
 import Icon from './Icon.astro';
+import ToolText from './ToolText.astro';
 // one icon per group (data/icons.ts)
 const groupIcon: Record<string, string> = { Design: 'pen-tool', Webflow: 'webflow', Code: 'code-xml', Systems: 'component', Growth: 'trending-up' };
 const shown = skills.filter((s) => s.status === 'shown').length;
@@ -19,8 +20,8 @@ const shown = skills.filter((s) => s.status === 'shown').length;
             {skills.filter((s) => s.group === g).map((s) => (
               <li id={`skill-${s.id}`}>
                 {s.status === 'shown'
-                  ? <a href={s.proof[0].href}><span>{s.label}</span><small>{s.proof[0].title} →</small></a>
-                  : <span class="wip"><span>{s.label}</span><small>In progress</small></span>}
+                  ? <a href={s.proof[0].href}><span><ToolText text={s.label} size={15} /></span><small>{s.proof[0].title} →</small></a>
+                  : <span class="wip"><span><ToolText text={s.label} size={15} /></span><small>In progress</small></span>}
               </li>
             ))}
           </ul>

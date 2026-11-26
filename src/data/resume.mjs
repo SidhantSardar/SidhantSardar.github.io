@@ -133,21 +133,21 @@ export function contactList({ EMAIL, PHONE, LINKEDIN, YOUTUBE }) {
 /** One sentence under the page title (from the profile above). */
 export const lead = '3.5+ years remote. I design an AI-powered B2B SaaS platform end to end for enterprises and Tier-1 banks, and build and measure its marketing websites.';
 
-/** Tools and the icon each one gets: a logo from data/icons.ts, or a plain icon where there is no logo. */
+/** Tools and the icon each one gets: its official logo from data/icons.ts (SQL and custom code have none, so a plain icon). */
 export const toolset = {
   figma: { name: 'Figma', icon: 'figma', note: 'Expert' },
-  figjam: { name: 'FigJam', icon: 'sticky-note' },
-  make: { name: 'Figma Make', icon: 'wand-sparkles' },
+  figjam: { name: 'FigJam', icon: 'figjam' },
+  make: { name: 'Figma Make', icon: 'make' },
   webflow: { name: 'Webflow', icon: 'webflow', note: 'CMS · Interactions' },
   gsap: { name: 'GSAP', icon: 'gsap' },
-  spline: { name: 'Spline', icon: 'box' },
-  zapier: { name: 'Zapier', icon: 'zap', note: 'Automations' },
+  spline: { name: 'Spline', icon: 'spline' },
+  zapier: { name: 'Zapier', icon: 'zapier', note: 'Automations' },
   claude: { name: 'Claude Code', icon: 'claude' },
   html: { name: 'HTML / CSS', icon: 'html5' },
   notion: { name: 'Notion', icon: 'notion' },
   ga4: { name: 'Google Analytics 4', short: 'GA4', icon: 'ga4' },
   gsc: { name: 'Search Console', icon: 'gsc' },
-  powerbi: { name: 'Power BI', icon: 'chart-column' },
+  powerbi: { name: 'Power BI', icon: 'powerbi' },
   sql: { name: 'SQL', icon: 'database' },
   astro: { name: 'Astro', icon: 'astro' },
   code: { name: 'Custom code', icon: 'code-xml' },
@@ -177,7 +177,7 @@ export const jobCards = [
     mark: 'A',
     areas: [
       { icon: 'app-window', wide: true, sub: 'AI-powered B2B SaaS for enterprises and Tier-1 banks', tools: ['figma'], items: [
-        ['frame', 'Every screen, end to end in Figma'],
+        ['figma', 'Every screen, end to end in Figma'],
         ['workflow', 'User flows, wireframes and prototypes'],
         ['layout-dashboard', 'Data-rich dashboards'],
         ['mouse-pointer-click', 'Interaction logic for every screen'],
@@ -187,17 +187,17 @@ export const jobCards = [
         ['search-check', 'Tested end to end'],
       ] },
       { icon: 'panels-top-left', tools: ['webflow', 'gsap', 'spline', 'zapier', 'claude'], items: [
-        ['globe', 'Two CMS websites in Webflow'],
-        ['sparkles', 'Motion: Webflow Interactions and GSAP'],
-        ['box', '3D and animation from Spline'],
-        ['zap', 'Zapier automations'],
-        ['code-xml', 'aligne.ai rebuilt in code'],
+        ['webflow', 'Two CMS websites in Webflow'],
+        ['gsap', 'Motion: Webflow Interactions and GSAP'],
+        ['spline', '3D and animation from Spline'],
+        ['zapier', 'Zapier automations'],
+        ['claude', 'aligne.ai rebuilt with Claude Code'],
       ] },
       { icon: 'shield-check', sub: 'AI governance, learned by designing the platform', grid: [
         ['file-check-2', 'Policies'], ['triangle-alert', 'Risk'], ['list-checks', 'Audits'], ['siren', 'Incident detection'],
       ] },
       { icon: 'chart-line', tools: ['ga4'], items: [
-        ['chart-column', 'GA4 set up on both websites'],
+        ['ga4', 'GA4 set up on both websites'],
         ['mouse-pointer-click', 'Visitors and key events tracked'],
         ['trending-up', 'Pages improved for conversion'],
       ] },
@@ -207,7 +207,7 @@ export const jobCards = [
     mark: 'N',
     areas: [
       { icon: 'chart-column', title: 'Dashboards and data', tools: ['powerbi', 'sql'], items: [
-        ['layout-dashboard', 'Power BI dashboards from many data sources'],
+        ['powerbi', 'Power BI dashboards from many data sources'],
         ['database', 'Data modelling and SQL'],
         ['file-text', 'Business needs turned into specs and visuals'],
       ] },

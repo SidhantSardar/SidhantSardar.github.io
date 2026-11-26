@@ -3,6 +3,7 @@
 // Case studies (the detailed decisions) live on /portfolio/.
 import Base from '../../layouts/Base.astro';
 import WorkCard from '../../components/WorkCard.astro';
+import ToolText from '../../components/ToolText.astro';
 import { work, alsoBuilt } from '../../data/work';
 
 const isThisSite = (url: string) => url.includes('sidhantsardar.com');
@@ -24,7 +25,7 @@ const isThisSite = (url: string) => url.includes('sidhantsardar.com');
         {alsoBuilt.map((a) => (
           <li>
             <div class="also-name"><b>{a.name}</b><span>{a.type}</span></div>
-            <span class="also-role">{a.role}</span>
+            <span class="also-role"><ToolText text={a.role} /></span>
             {isThisSite(a.url)
               ? <span class="mono muted also-here">You're on it</span>
               : <a class="link-arrow" href={a.url} target="_blank" rel="noopener">Visit site <span class="ar">↗</span></a>}

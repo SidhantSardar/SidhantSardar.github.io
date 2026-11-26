@@ -6,6 +6,7 @@ import { work } from '../data/work';
 import Gap from '../components/Gap.astro';
 import JsonLd from '../components/JsonLd.astro';
 import Capabilities from '../components/Capabilities.astro';
+import ToolText from '../components/ToolText.astro';
 import { Image } from 'astro:assets';
 import { asset } from '../data/images';
 import { LINKEDIN, YOUTUBE, EMAIL, PHONE_TEL } from '../data/profile';
@@ -77,14 +78,14 @@ const services = [
   <header class="hero" id="about">
     <div class="in">
       <div class="intro">
-        <p class="eyebrow hero-eyebrow" data-reveal>Designed in Figma · Built in Webflow or code</p>
+        <p class="eyebrow hero-eyebrow" data-reveal><ToolText text="Designed in Figma · Built in Webflow or code" mono /></p>
         <h1 data-split><span class="hard gt">Websites for B2B consultancies</span> <span class="soft gt">and AI companies</span></h1>
         <p class="hero-sub" data-reveal>With a monthly dashboard that shows which pages bring in clients.</p>
         <p class="lede" data-reveal>I design the site, build it with a CMS your marketing and sales people update themselves, and set up the tracking behind the dashboard. One person does all of it, so what ships matches what you signed off.</p>
         <div class="facts" data-stagger>
-          <div><b>2023 →</b><span>AltrumAI web app UX in Figma</span></div>
-          <div><b data-count="3">3</b><span>Websites, in Webflow and code</span></div>
-          <div><b class="accent">Code</b><span>Astro sites on Cloudflare</span></div>
+          <div><b>2023 →</b><span><ToolText text="AltrumAI web app UX in Figma" mono /></span></div>
+          <div><b data-count="3">3</b><span><ToolText text="Websites, in Webflow and code" mono /></span></div>
+          <div><b class="accent">Code</b><span><ToolText text="Astro sites on Cloudflare" mono /></span></div>
         </div>
         <div class="cta" data-reveal>
           <a class="btn primary magnetic" href="#contact" data-track="cta_click" data-track-cta="start_project" data-track-location="hero">Start a project <span class="ar">↓</span></a>
@@ -135,7 +136,7 @@ const services = [
               <span class="n">{s.n}</span>
               <h3>{s.name}</h3>
               <p>{s.line}</p>
-              <div class="chips">{s.chips.map((c) => <span class="chip">{c}</span>)}</div>
+              <div class="chips">{s.chips.map((c) => <span class="chip"><ToolText text={c} size={12} /></span>)}</div>
               <span class="ref">{s.ref}</span>
             </article>
           ))}

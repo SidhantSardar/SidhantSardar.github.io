@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import ToolText from '../../components/ToolText.astro';
 import JsonLd from '../../components/JsonLd.astro';
 import tokens from '../../lab/brightfold/tokens.json';
 import { setsOf, resolve } from '../../lab/brightfold/tokens.mjs';
@@ -66,7 +67,7 @@ const schema = {
                 <div class="chap-top"><span class="mono">{c.n}</span><span class={`badge ${c.status}`}>{label[c.status]}</span></div>
                 <h4>{c.title}</h4>
                 <p>{c.proves}</p>
-                <div class="chips">{c.tools.map((t) => <span class="chip">{t}</span>)}</div>
+                <div class="chips">{c.tools.map((t) => <span class="chip"><ToolText text={t} size={11} /></span>)}</div>
                 {c.webflow && <span class="mono muted wf">In Webflow: {c.webflow}</span>}
               </article>
             ))}
