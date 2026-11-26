@@ -1,585 +1,280 @@
 ---
 // Pictures for the eight steps of the product design story (pages/work/altrum-product-design.astro).
-// Same family as the Work covers (WorkArt.astro): a corner of a Figma canvas, with named frames, one
-// thing selected in blue, blue wires and the designer's cursor. They reuse the ".wa" styles in
-// global.css and add a few of their own below (".sa-…"). Every picture is a simplified diagram:
-// no real screens and no real data.
-//   domain     who uses the product, and what it covers
-//   palette    colour, type and the first components
-//   layouts    three layouts, one navigation
-//   flow       the main path, the edge cases, and the sign-off
+// Same style as the Work covers (WorkArt.astro): light, real-looking work scenes with real words and the
+// people involved, on a calm backdrop. Styles: ".wh" in styles/global.css.
+// Sample names and data only; no real screens and no customer data.
+//   domain     a research board: who uses the product and what worries them
+//   palette    the styles page in Figma: colours, type and the first components
+//   layouts    three layouts sharing one navigation
+//   flow       the main flow, an edge case, and the sign-off from the team
 //   screens    one screen in its four states
-//   prototype  a clickable prototype, shown to the team
-//   check      the design next to the build
-//   loop       test, note, fix, and the list of observations
+//   prototype  the Figma Make prototype, demonstrated on a call
+//   check      design next to build, with a flagged gap
+//   loop       test notes turning into fixes for the next release
 type Kind = 'domain' | 'palette' | 'layouts' | 'flow' | 'screens' | 'prototype' | 'check' | 'loop';
 interface Props { kind: Kind }
 const { kind } = Astro.props;
-
-/** Arrowhead with its tip at x, y, pointing right, left, up or down. */
-const arrow = (x: number, y: number, dir: 'r' | 'l' | 'u' | 'd' = 'r') =>
-  ({ r: `M${x} ${y}l-9-5.2v10.4z`, l: `M${x} ${y}l9-5.2v10.4z`, u: `M${x} ${y}l-5.2 9h10.4z`, d: `M${x} ${y}l-5.2-9h10.4z` })[dir];
-/** A tick, centred on cx, cy. */
-const tick = (cx: number, cy: number) => `M${cx - 4.6} ${cy}l3.3 3.3 6-6.6`;
-/** Head and shoulders for an avatar centred on cx, cy. */
-const person = (cx: number, cy: number) => `M${cx - 5.5} ${cy + 6.6}a5.5 5.2 0 0 1 11 0z`;
-/** Four selection handles for a box at x, y with width w and height h. */
-const handles = (x: number, y: number, w: number, h: number) =>
-  [[x, y], [x + w, y], [x, y + h], [x + w, y + h]].map(([cx, cy]) => ({ x: cx - 3, y: cy - 3 }));
-
-// Per picture: the selected box, where the cursor sits, and where the soft glow goes (dark theme).
-const sel: Record<Kind, [number, number, number, number]> = {
-  domain: [154, 112, 92, 76], palette: [26, 90, 112, 44], layouts: [272, 52, 114, 148], flow: [302, 74, 78, 38],
-  screens: [14, 32, 178, 106], prototype: [14, 48, 112, 148], check: [218, 44, 168, 128], loop: [236, 52, 150, 196],
-};
-const cur: Record<Kind, [number, number]> = {
-  domain: [234, 180], palette: [130, 126], layouts: [338, 186], flow: [268, 230],
-  screens: [150, 118], prototype: [104, 180], check: [330, 128], loop: [322, 176],
-};
-const halo: Record<Kind, [number, number, number, number]> = {
-  domain: [200, 150, 150, 115], palette: [82, 112, 150, 105], layouts: [329, 126, 125, 125], flow: [341, 93, 125, 95],
-  screens: [103, 85, 155, 105], prototype: [70, 122, 130, 125], check: [302, 108, 145, 115], loop: [118, 150, 135, 125],
-};
-// How far each picture is nudged up or down so it sits in the middle of its panel.
-const vy: Record<Kind, number> = { domain: -9, palette: 0, layouts: 0, flow: 14, screens: -3, prototype: 2, check: -2, loop: -8 };
-const glow = `url(#sa-glow-${kind})`;
-const [sx, sy, sw, sh] = sel[kind];
-
-const users: [string, number][] = [['Compliance', 80], ['Risk', 150], ['Technical', 220]];
-const areas: [string, number, string][] = [
-  ['Policies', 60, 'M305 56h8M305 60h8M305 64h5'],
-  ['Risk', 120, 'M309 114.5l5.6 9.8h-11.2z'],
-  ['Audits', 180, 'M304.4 180l3.2 3.2 6-6.6'],
-  ['Incidents', 240, 'M310.6 234.4l-4.6 6.2h4l-1.5 5 4.6-6.2h-4z'],
-];
-const layoutX = [14, 143, 272];
-const states: [string, number, number][] = [['Default', 14, 32], ['Empty', 208, 32], ['Loading', 14, 172], ['Error', 208, 172]];
-const checks: [string, number, number, boolean][] = [
-  ['Matches the design', 14, 192, true], ['Every state built', 206, 192, true],
-  ['Interaction logic works', 14, 234, true], ['Gaps flagged early', 206, 234, false],
-];
-const notes: [string, string, number, number][] = [['Fixed', 'wa-b', 56, 40], ['Fixed', 'wa-b', 48, 52], ['Next', 'wa-bt', 60, 36], ['Noted', 'wa-g1', 44, 48]];
+const id = `sa-${kind}`;
+const sh = `url(#${id}-sh)`;
+const sh2 = `url(#${id}-sh2)`;
+const skin = ['#E9B78F', '#B9845C', '#8D5A3B', '#D9A27C', '#C68E6A'];
 ---
-<svg class="wa sa" viewBox={`0 ${vy[kind]} 400 300`} aria-hidden="true" focusable="false">
+<svg class="wa wh sa" viewBox="0 0 400 300" aria-hidden="true" focusable="false">
   <defs>
-    <radialGradient id={`sa-halo-${kind}`}><stop offset="0" stop-color="#2E3BFF" stop-opacity=".36" /><stop offset="1" stop-color="#2E3BFF" stop-opacity="0" /></radialGradient>
-    <filter id={`sa-glow-${kind}`} filterUnits="userSpaceOnUse" x="0" y="0" width="400" height="300" color-interpolation-filters="sRGB">
-      <feGaussianBlur stdDeviation="3" result="b" />
-      <feComponentTransfer in="b" result="g"><feFuncA type="linear" slope="1.5" /></feComponentTransfer>
-      <feMerge><feMergeNode in="g" /><feMergeNode in="SourceGraphic" /></feMerge>
-    </filter>
+    <filter id={`${id}-sh`} x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="#0B1030" flood-opacity=".2" /></filter>
+    <filter id={`${id}-sh2`} x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="3" stdDeviation="3.5" flood-color="#0B1030" flood-opacity=".22" /></filter>
   </defs>
-  <ellipse class="wa-halo" cx={halo[kind][0]} cy={halo[kind][1]} rx={halo[kind][2]} ry={halo[kind][3]} fill={`url(#sa-halo-${kind})`} />
 
   {kind === 'domain' && (
     <>
-      <text x="10" y="56">Who uses it</text>
-      <text class="on" x="154" y="104">The product</text>
-      <text x="290" y="30">What it covers</text>
-
-      {/* wires: the three teams into the product, the product out to the four areas */}
-      <g class="wa-glow" filter={glow}>
-        <path class="wa-wire" d="M114 80C132 80 127 150 145 150" />
-        <path class="wa-wire" d="M114 150H145" />
-        <path class="wa-wire" d="M114 220C132 220 127 150 145 150" />
-        <path class="wa-wire" d="M246 150C268 150 259 60 281 60" />
-        <path class="wa-wire" d="M246 150C266 150 262 120 281 120" />
-        <path class="wa-wire" d="M246 150C266 150 262 180 281 180" />
-        <path class="wa-wire" d="M246 150C268 150 259 240 281 240" />
-      </g>
-      <path class="wa-spark" pathLength="100" d="M114 80C132 80 127 150 145 150" />
-      <path class="wa-spark" pathLength="100" d="M114 220C132 220 127 150 145 150" />
-      <path class="wa-spark" pathLength="100" style="animation-delay:-1.1s" d="M246 150C268 150 259 60 281 60" />
-      <path class="wa-spark" pathLength="100" style="animation-delay:-1.1s" d="M246 150C266 150 262 180 281 180" />
-      <path class="wa-b" d={arrow(154, 150)} />
-      {areas.map(([, y]) => <path class="wa-b" d={arrow(290, y)} />)}
-
-      {users.map(([t, y]) => (
+      <g filter={sh}><rect class="wh-win" x="16" y="16" width="368" height="268" rx="10" /></g>
+      <text class="wh-b" x="30" y="36">Research board · AI governance</text><text class="wh-s" x="300" y="36">FigJam</text>
+      <line class="wh-ln" x1="16" y1="46" x2="384" y2="46" />
+      {[['Compliance lead', 'Are we breaking any rule?', '#FFE58F'], ['Risk analyst', 'Which AI is risky?', '#FFC7D9'], ['ML engineer', 'Don’t slow my releases', '#C9F0D2']].map(([who, q, c], i) => (
         <>
-          <rect class="wa-cd" x="10.5" y={y - 16} width="104" height="32" rx="16" />
-          <circle class="wa-g2" cx="27" cy={y} r="9.5" />
-          <circle class="sa-bg" cx="27" cy={y - 2.6} r="3.1" />
-          <path class="sa-bg" d={person(27, y)} />
-          <text class="sa-t sa-t11" x="43" y={y + 4}>{t}</text>
-          <circle class="wa-port" cx="114" cy={y} r="3.6" />
+          <circle cx={58 + i * 116} cy="70" r="9" fill={skin[i]} />
+          <text class="wh-t" x={72 + i * 116} y="68">{who}</text><text class="wh-s" x={72 + i * 116} y="78">{['Approves policies', 'Scores every system', 'Ships the models'][i]}</text>
+          <g filter={sh2}><rect x={34 + i * 116} y="92" width="100" height="56" rx="3" fill={c} /></g>
+          <text class="wh-hand" x={42 + i * 116} y="112">{q.split(' ').slice(0, 3).join(' ')}</text>
+          <text class="wh-hand" x={42 + i * 116} y="126">{q.split(' ').slice(3).join(' ')}</text>
         </>
       ))}
-
-      {/* the product, in the middle */}
-      <rect class="wa-b" x="154" y="112" width="92" height="76" rx="14" />
-      <path class="wa-w" d="M200 123.5l11 4.4v7.8c0 7.4-4.6 12.4-11 15.2-6.4-2.8-11-7.8-11-15.2v-7.8z" />
-      <path class="sa-tick-b" d="M195.2 137.4l3.5 3.5 6.3-6.9" />
-      <text class="sa-t sa-w" x="200" y="172" text-anchor="middle">AI governance</text>
-      <circle class="wa-port" cx="246" cy="150" r="3.6" />
-
-      {areas.map(([t, y, ico]) => (
-        <>
-          <rect class="wa-cd" x="290.5" y={y - 19.5} width="99" height="39" rx="8" />
-          <rect class="wa-bt" x="299" y={y - 10} width="20" height="20" rx="5" />
-          <path class="sa-ico" d={ico} />
-          <text class="sa-t sa-t11" x="327" y={y + 4}>{t}</text>
-        </>
+      <path class="wh-arrow" d="M84 152v18c0 14 14 18 116 18M200 152v36M316 152v18c0 14-14 18-116 18" />
+      <rect x="132" y="190" width="136" height="26" rx="13" fill="#2E3BFF" /><text class="wh-btn big" x="200" y="207" text-anchor="middle">One place to govern AI</text>
+      {['Policies', 'Risk', 'Audits', 'Incidents'].map((t, i) => (
+        <><rect class="wh-card" x={52 + i * 76} y="232" width="68" height="34" rx="6" /><text class="wh-t" x={86 + i * 76} y="253" text-anchor="middle">{t}</text></>
       ))}
     </>
   )}
 
   {kind === 'palette' && (
     <>
-      <text x="14" y="22">Colour</text>
-      <rect class="wa-fr" x="14" y="30" width="228" height="118" rx="10" />
-      {['#0A0A0A', '#525252', '#8A8A8A', '#D4D4D4', '#F4F4F4'].map((c, i) => <rect class="sa-sw" x={26 + i * 40} y="44" width="32" height="32" rx="8" fill={c} />)}
-      <rect class="wa-b" x="26" y="90" width="112" height="44" rx="9" />
-      <text class="sa-t" x="152" y="109">Accent</text>
-      <text x="152" y="124">calm · secure</text>
-
-      <text x="256" y="22">Type</text>
-      <rect class="wa-fr" x="256" y="30" width="130" height="118" rx="10" />
-      <text class="sa-aa" x="267" y="80">Aa</text>
-      {([[97, '32', 84, 7], [110, '24', 64, 5.6], [123, '16', 46, 4.6], [136, '13', 36, 3.6]] as [number, string, number, number][]).map(([y, n, w, h], i) => (
+      <g filter={sh}><rect class="wh-win" x="16" y="16" width="368" height="268" rx="10" /></g>
+      <text class="wh-b" x="30" y="36">Altrum · Foundations</text><text class="wh-s" x="306" y="36">Figma styles</text>
+      <line class="wh-ln" x1="16" y1="46" x2="384" y2="46" />
+      <text class="wh-th" x="30" y="64">COLOUR</text>
+      {[['Primary', '#2E3BFF', 'Accent'], ['Ink', '#14161A', 'Text'], ['Success', '#127A3E', 'Safe'], ['Warning', '#C27A00', 'Review'], ['Danger', '#C4320A', 'High risk']].map(([n, c, u], i) => (
         <>
-          <text x="268" y={y + 3.2}>{n}</text>
-          <rect class={i === 0 ? 'wa-k' : 'wa-g2'} x="290" y={y - h / 2} width={w} height={h} rx={h / 2} />
+          <rect x={30 + i * 68} y="72" width="60" height="40" rx="6" fill={c} />
+          {i === 0 && <rect x={28 + i * 68} y="70" width="64" height="44" rx="8" fill="none" stroke="#2E3BFF" stroke-width="1.5" />}
+          <text class="wh-t" x={30 + i * 68} y="126">{n}</text><text class="wh-s" x={30 + i * 68} y="136">{u}</text>
         </>
       ))}
-
-      <text x="14" y="168">Components</text>
-      <rect class="wa-fr" x="14" y="176" width="372" height="110" rx="10" />
-      <rect class="wa-b" x="26" y="190" width="88" height="30" rx="8" />
-      <text class="sa-t sa-w" x="70" y="209.2" text-anchor="middle">Button</text>
-      <rect class="wa-o" x="124.5" y="190.5" width="87" height="29" rx="8" />
-      <text class="sa-t" x="168" y="209.2" text-anchor="middle">Button</text>
-      <rect class="wa-o" x="222.5" y="190.5" width="151" height="29" rx="8" />
-      <circle class="sa-mag" cx="238" cy="204" r="4.2" />
-      <path class="sa-mag" d="M241.2 207.2l3.4 3.4" />
-      <text class="sa-s" x="251" y="208.6">Search</text>
-
-      <rect class="wa-b" x="26" y="238" width="38" height="22" rx="11" />
-      <circle class="wa-w" cx="53" cy="249" r="8" />
-      <rect class="wa-g2" x="74" y="238" width="38" height="22" rx="11" />
-      <circle class="wa-w" cx="85" cy="249" r="8" />
-      <rect class="wa-b" x="126" y="238" width="52" height="22" rx="11" />
-      <text class="sa-c sa-w" x="152" y="252.8" text-anchor="middle">High</text>
-      <rect class="wa-bt" x="186" y="238" width="66" height="22" rx="11" />
-      <text class="sa-c sa-a" x="219" y="252.8" text-anchor="middle">Medium</text>
-      <rect class="wa-g1" x="260" y="238" width="48" height="22" rx="11" />
-      <text class="sa-c" x="284" y="252.8" text-anchor="middle">Low</text>
-      <rect class="wa-b" x="322" y="239" width="20" height="20" rx="5" />
-      <path class="sa-tick" d={tick(332, 249)} />
-      <circle class="wa-o" cx="364" cy="249" r="9.5" />
-      <circle class="wa-b" cx="364" cy="249" r="4.6" />
+      <line class="wh-ln" x1="30" y1="150" x2="370" y2="150" />
+      <text class="wh-th" x="30" y="168">TYPE</text>
+      <text x="30" y="196" class="wh-aa">Aa</text>
+      <text class="wh-t" x="80" y="180">Heading · 24 / 32 · Bold</text><text class="wh-t" x="80" y="194">Body · 14 / 20 · Regular</text><text class="wh-s" x="80" y="207">Label · 12 / 16 · Medium</text>
+      <line class="wh-ln" x1="30" y1="222" x2="370" y2="222" />
+      <text class="wh-th" x="30" y="240">COMPONENTS</text>
+      <rect x="30" y="250" width="66" height="20" rx="5" fill="#2E3BFF" /><text class="wh-btn big" x="63" y="263.5" text-anchor="middle">Approve</text>
+      <rect class="wh-card" x="104" y="250" width="60" height="20" rx="5" /><text class="wh-t" x="134" y="263.5" text-anchor="middle">Cancel</text>
+      <rect x="174" y="254" width="38" height="13" rx="6.5" fill="#FDE4E1" /><text class="wh-pill" x="193" y="263" text-anchor="middle" fill="#B42318">High</text>
+      <rect x="218" y="254" width="38" height="13" rx="6.5" fill="#DCF5E6" /><text class="wh-pill" x="237" y="263" text-anchor="middle" fill="#127A3E">Low</text>
+      <rect class="wh-card" x="266" y="250" width="104" height="20" rx="5" /><text class="wh-s" x="274" y="263">Search AI systems…</text>
     </>
   )}
 
   {kind === 'layouts' && (
     <>
-      <text x="14" y="44">Table</text>
-      <text x="143" y="44">Dashboard</text>
-      <text class="on" x="272" y="44">Split view</text>
-
-      {/* one navigation under all three */}
-      <g class="wa-glow" filter={glow}>
-        <path class="wa-wire" d="M26 200V224Q26 232 34 232H276Q284 232 284 224V200" />
-        <path class="wa-wire" d="M155 200V232" />
-      </g>
-      <path class="wa-spark" pathLength="100" d="M26 200V224Q26 232 34 232H276Q284 232 284 224V200" />
-      <text class="sa-t" x="200" y="259" text-anchor="middle">Same navigation on every screen</text>
-
-      {layoutX.map((x, f) => (
-        <>
-          <rect class="wa-fr" x={x} y="52" width="114" height="148" rx="6" />
-          <rect class="wa-bt" x={x + 0.5} y="52.5" width="24" height="147" rx="5.5" />
-          <rect class="wa-b" x={x + 7} y="60" width="10" height="10" rx="2.5" />
-          {[80, 92, 104, 116].map((y, i) => <rect class={i === f ? 'wa-b' : 'wa-g2'} x={x + 6} y={y} width="12" height="4" rx="2" />)}
-          <circle class="wa-port" cx={x + 12} cy="200" r="3.6" />
-        </>
-      ))}
-
-      {/* table */}
-      <rect class="wa-k" x="46" y="62" width="34" height="6" rx="2" />
-      <rect class="wa-b" x="98" y="60" width="22" height="10" rx="3" />
-      <rect class="wa-g0" x="44" y="78" width="78" height="12" rx="3" />
-      <rect class="wa-bt" x="44" y="125" width="78" height="14" rx="3" />
-      {[98, 114, 130, 146, 162, 178].map((y, i) => (
-        <>
-          <rect class={i === 2 ? 'wa-k' : 'wa-g2'} x="48" y={y} width={[30, 24, 32, 26, 30, 22][i]} height="4" rx="2" />
-          <rect class="wa-g1" x="86" y={y} width="12" height="4" rx="2" />
-          <rect class={i === 2 ? 'wa-b' : 'wa-g1'} x="104" y={y - 1} width="14" height="6" rx="3" />
-        </>
-      ))}
-
-      {/* dashboard */}
-      <rect class="wa-k" x="175" y="62" width="30" height="6" rx="2" />
-      <rect class="wa-b" x="175" y="78" width="22" height="26" rx="4" />
-      <rect class="wa-w" x="179" y="84" width="10" height="3" rx="1.5" opacity=".7" />
-      <rect class="wa-w" x="179" y="92" width="14" height="6" rx="1.5" />
-      {[201, 227].map((x) => (
-        <>
-          <rect class="wa-cd" x={x + 0.5} y="78.5" width="21" height="25" rx="4" />
-          <rect class="wa-g2" x={x + 4} y="84" width="10" height="3" rx="1.5" />
-          <rect class="wa-k" x={x + 4} y="92" width="12" height="6" rx="1.5" />
-        </>
-      ))}
-      <rect class="wa-cd" x="175.5" y="112.5" width="73" height="50" rx="4" />
-      <path class="wa-ln" d="M181 130.5h62M181 142.5h62" />
-      <path class="wa-bt" d="M181 152 191 146 201 149 211 138 221 141 231 130 243 134V157H181z" />
-      <path class="wa-line" d="M181 152 191 146 201 149 211 138 221 141 231 130 243 134" />
-      <rect class="wa-cd" x="175.5" y="170.5" width="73" height="22" rx="4" />
-      <circle class="wa-b" cx="184" cy="181.5" r="2.5" />
-      <rect class="wa-g2" x="191" y="179.5" width="36" height="4" rx="2" />
-
-      {/* split view */}
-      <rect class="wa-k" x="304" y="62" width="28" height="6" rx="2" />
-      {[78, 102, 126, 150, 174].map((y, i) => (
-        <>
-          <rect class={i === 1 ? 'wa-bo' : 'wa-cd'} x="304.5" y={y + 0.5} width="29" height="19" rx="3.5" />
-          <rect class={i === 1 ? 'wa-b' : 'wa-g2'} x="308" y={y + 5.5} width="16" height="3.5" rx="1.75" />
-          <rect class="wa-g1" x="308" y={y + 11.5} width="21" height="3" rx="1.5" />
-        </>
-      ))}
-      <rect class="wa-cd" x="340.5" y="78.5" width="37" height="115" rx="4" />
-      <rect class="wa-k" x="345" y="85" width="22" height="5" rx="1.5" />
-      {[[96, 28], [103, 24], [110, 18]].map(([y, w]) => <rect class="wa-g2" x="345" y={y} width={w} height="3.5" rx="1.75" />)}
-      <rect class="wa-g1" x="345" y="120" width="28" height="34" rx="3" />
-      <rect class="wa-g2" x="345" y="161" width="26" height="3.5" rx="1.75" />
-      <rect class="wa-b" x="345" y="176" width="28" height="11" rx="3" />
+      {[['Table · scan a list', 0], ['Dashboard · see the state', 1], ['Split view · read and act', 2]].map(([label, i]) => {
+        const x = 16 + +i * 124;
+        return (
+          <>
+            <text class="wh-t wh-out" x={x} y="40">{label}</text>
+            <g filter={sh2}><rect class="wh-win" x={x} y="48" width="118" height="168" rx="7" /></g>
+            <rect class="wh-side" x={x} y="48" width="28" height="168" />
+            <rect x={x + 8} y="56" width="12" height="12" rx="3" fill="#2E3BFF" />
+            {[0, 1, 2, 3].map((k) => <rect x={x + 9} y={78 + k * 16} width="10" height="8" rx="2" fill={k === +i ? '#2E3BFF' : '#D5D8E0'} />)}
+            {+i === 0 && [0, 1, 2, 3, 4, 5].map((k) => (
+              <><rect x={x + 36} y={60 + k * 24} width="44" height="6" rx="3" fill="#D5D8E0" /><rect x={x + 86} y={59 + k * 24} width="22" height="9" rx="4.5" fill={['#FDE4E1', '#DCF5E6', '#FFF1D6'][k % 3]} /><line class="wh-ln" x1={x + 36} y1={74 + k * 24} x2={x + 110} y2={74 + k * 24} /></>
+            ))}
+            {+i === 1 && (
+              <>
+                {[0, 1].map((k) => <><rect class="wh-card" x={x + 36 + k * 38} y="58" width="34" height="32" rx="4" /><text class="wh-num sm" x={x + 42 + k * 38} y="82">{['24', '3'][k]}</text></>)}
+                <rect class="wh-card" x={x + 36} y="98" width="72" height="62" rx="4" />
+                <path d={`M${x + 42} 150l12-10 10 4 12-14 12 6 14-12`} fill="none" stroke="#2E3BFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                <rect class="wh-card" x={x + 36} y="168" width="72" height="38" rx="4" />
+              </>
+            )}
+            {+i === 2 && (
+              <>
+                {[0, 1, 2, 3, 4].map((k) => <rect x={x + 34} y={58 + k * 18} width="30" height="12" rx="3" fill={k === 1 ? '#E8EAFF' : '#EEF0F4'} />)}
+                <rect class="wh-card" x={x + 68} y="58" width="44" height="148" rx="4" />
+                <rect x={x + 73} y="64" width="30" height="6" rx="3" fill="#14161A" />
+                {[0, 1, 2].map((k) => <rect x={x + 73} y={78 + k * 10} width="32" height="4" rx="2" fill="#D5D8E0" />)}
+                <rect x={x + 73} y="186" width="34" height="12" rx="3" fill="#2E3BFF" />
+              </>
+            )}
+          </>
+        );
+      })}
+      <rect x="92" y="236" width="216" height="30" rx="15" fill="#FFFFFF" filter={sh2} />
+      <rect x="104" y="246" width="10" height="10" rx="3" fill="#2E3BFF" />
+      <text class="wh-t" x="122" y="254.5">Same navigation on every screen</text>
     </>
   )}
 
   {kind === 'flow' && (
     <>
-      <text class="on" x="14" y="62">Main path</text>
-      <text x="14" y="181">Edge cases</text>
-
-      <g class="wa-glow" filter={glow}>
-        <path class="wa-wire" d="M92 93H101M188 93H197M284 93H293" />
-      </g>
-      {[110, 206, 302].map((x) => <path class="wa-b" d={arrow(x, 93)} />)}
-
-      {/* what happens when the user changes their mind, or something fails */}
-      <path class="sa-dash" d="M230 112V177H215" />
-      <path class="sa-dash" d="M149 160V121" />
-      <path class="sa-dash" d="M341 112V151" />
-      <path class="sa-dash" d="M302 177H262V121" />
-      <path class="sa-dimf" d={arrow(206, 177, 'l')} />
-      <path class="sa-dimf" d={arrow(149, 112, 'u')} />
-      <path class="sa-dimf" d={arrow(341, 160, 'd')} />
-      <path class="sa-dimf" d={arrow(262, 112, 'u')} />
-      <text x="143" y="143" text-anchor="end">edit</text>
-      <text x="348" y="140">error</text>
-
-      {['Start', 'Choose', 'Review', 'Confirm'].map((t, i) => (
+      <g filter={sh}><rect class="wh-win" x="16" y="16" width="368" height="268" rx="10" /></g>
+      <text class="wh-b" x="30" y="36">Flow · Add an AI system</text><text class="wh-s" x="290" y="36">Confirmed 12 Mar</text>
+      <line class="wh-ln" x1="16" y1="46" x2="384" y2="46" />
+      {[['Add system', 30], ['Describe it', 102], ['Risk check', 174], ['Review', 246], ['Approved', 318]].map(([t, x], i) => (
         <>
-          <rect class={i === 3 ? 'wa-b' : 'wa-cd'} x={14.5 + i * 96} y="74.5" width="77" height="37" rx="10" />
-          <text class={i === 3 ? 'sa-t sa-w' : 'sa-t'} x={53 + i * 96} y="97.3" text-anchor="middle">{t}</text>
-          {i < 3 && <circle class="wa-port" cx={92 + i * 96} cy="93" r="3.6" />}
+          <rect x={x} y="78" width="58" height="30" rx="6" fill={i === 4 ? '#127A3E' : i === 0 ? '#2E3BFF' : '#FFFFFF'} stroke={i === 0 || i === 4 ? 'none' : '#D5D8E0'} />
+          <text class={i === 0 || i === 4 ? 'wh-btn big' : 'wh-t'} x={+x + 29} y="96.5" text-anchor="middle">{t}</text>
+          {i < 4 && <path d={`M${+x + 60} 93h10`} stroke="#2E3BFF" stroke-width="1.6" /> }
+          {i < 4 && <path d={`M${+x + 72} 93l-5-3v6z`} fill="#2E3BFF" />}
         </>
       ))}
-      <rect class="sa-dbox" x="134.5" y="160.5" width="71" height="33" rx="9" />
-      <text class="sa-t" x="170" y="181.3" text-anchor="middle">Edit</text>
-      <rect class="sa-dbox" x="302.5" y="160.5" width="77" height="33" rx="9" />
-      <text class="sa-t" x="341" y="181.3" text-anchor="middle">Error</text>
-
-      {/* the sign-off */}
-      <rect class="wa-cd" x="14.5" y="224.5" width="365" height="50" rx="10" />
-      {([[38, 'wa-g2'], [54, 'wa-g1'], [70, 'wa-bt']] as [number, string][]).map(([x, c]) => (
+      {/* edge cases */}
+      <path class="wh-arrow" d="M131 110v34h28M203 110v34" />
+      <rect x="161" y="134" width="84" height="22" rx="5" fill="#FFF1D6" /><text class="wh-t" x="203" y="148.5" text-anchor="middle">Missing info?</text>
+      <text class="wh-s" x="250" y="148.5">→ ask the owner, save draft</text>
+      <rect x="161" y="164" width="84" height="22" rx="5" fill="#FDE4E1" /><text class="wh-t" x="203" y="178.5" text-anchor="middle">High risk?</text>
+      <text class="wh-s" x="250" y="178.5">→ send to risk team</text>
+      <path class="wh-arrow" d="M203 156v8" />
+      {/* sign-off */}
+      <line class="wh-ln" x1="30" y1="204" x2="370" y2="204" />
+      <text class="wh-th" x="30" y="222">SIGNED OFF BEFORE ANY SCREEN IS DESIGNED</text>
+      {[['Rahul', 'Team lead'], ['Meera', 'Product'], ['Arjun', 'Developer']].map(([n, r], i) => (
         <>
-          <circle class={`${c} sa-ring`} cx={x} cy="249.5" r="11" />
-          <circle class="sa-bg" cx={x} cy="246.6" r="3.3" />
-          <path class="sa-bg" d={`M${x - 6} ${256.6}a6 5.4 0 0 1 12 0z`} />
+          <g filter={sh2}><rect class="wh-note" x={30 + i * 116} y="232" width="104" height="36" rx="7" /></g>
+          <circle cx={46 + i * 116} cy="250" r="8" fill={skin[i + 1]} />
+          <text class="wh-t" x={60 + i * 116} y="248">{n}</text><text class="wh-s" x={60 + i * 116} y="258">{r}</text>
+          <circle cx={120 + i * 116} cy="250" r="6" fill="#127A3E" /><path d={`M${117 + i * 116} 250l2 2 4-4`} fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
         </>
       ))}
-      <text class="sa-t" x="92" y="247">Confirmed with stakeholders</text>
-      <text x="92" y="261">before any screen is designed</text>
-      <circle class="wa-b" cx="356" cy="249.5" r="11" />
-      <path class="sa-tick" d={tick(356, 249.5)} />
     </>
   )}
 
   {kind === 'screens' && (
     <>
-      {states.map(([t, x, y], i) => (
-        <>
-          <text class={i === 0 ? 'on' : undefined} x={x} y={y - 8}>{t}</text>
-          <rect class="wa-fr" x={x} y={y} width="178" height="106" rx="6" />
-          <rect class="wa-k" x={x + 10} y={y + 9} width="44" height="6" rx="2" />
-          {i !== 2 && <rect class={i === 0 ? 'wa-b' : 'wa-g1'} x={x + 138} y={y + 6} width="30" height="12" rx="4" />}
-          <path class="wa-ln" d={`M${x} ${y + 24.5}h178`} />
-        </>
-      ))}
-
-      {/* default: the table, filled */}
-      {[68, 84, 100, 116].map((y, i) => (
-        <>
-          <rect class="wa-g1" x="24" y={y - 1} width="8" height="8" rx="2" />
-          <rect class="wa-g2" x="38" y={y + 0.5} width={[56, 44, 60, 48][i]} height="5" rx="2.5" />
-          <rect class="wa-g1" x="110" y={y + 0.5} width="26" height="5" rx="2.5" />
-          <rect class={['wa-b', 'wa-bt', 'wa-g1', 'wa-bt'][i]} x="154" y={y - 2} width="28" height="10" rx="5" />
-        </>
-      ))}
-
-      {/* empty: nothing yet, and one clear next step */}
-      <rect class="sa-dbox" x="285.5" y="64.5" width="23" height="23" rx="6" />
-      <path class="sa-ico" d="M297 71v10M292 76h10" />
-      <rect class="wa-k" x="267" y="96" width="60" height="5" rx="2.5" />
-      <rect class="wa-g2" x="257" y="106" width="80" height="4" rx="2" />
-      <rect class="wa-b" x="275" y="117" width="44" height="13" rx="4" />
-
-      {/* loading: the shape of the content, pulsing */}
-      <circle class="sa-spin" cx="167" cy="184" r="5" />
-      {[208, 224, 240, 256].map((y, i) => <rect class="wa-g1 sa-skel" x="24" y={y} width={[158, 120, 146, 90][i]} height="8" rx="4" style={`animation-delay:${i * 0.15}s`} />)}
-
-      {/* error: what went wrong, and a way back */}
-      <rect class="sa-err" x="218.5" y="204.5" width="157" height="26" rx="6" />
-      <circle class="wa-k" cx="232" cy="217.5" r="7" />
-      <path class="sa-bang" d="M232 213.6v4.2" />
-      <circle class="sa-bg" cx="232" cy="221.2" r="1.1" />
-      <rect class="wa-k" x="246" y="211" width="64" height="5" rx="2.5" />
-      <rect class="wa-g2" x="246" y="220" width="96" height="4" rx="2" />
-      <rect class="wa-o" x="218.5" y="240.5" width="55" height="15" rx="4.5" />
-      <rect class="wa-k" x="232" y="246" width="28" height="4" rx="2" />
-      <rect class="wa-g0" x="218" y="264" width="150" height="6" rx="3" />
-    </>
-  )}
-
-  {kind === 'prototype' && (
-    <>
-      <text class="on" x="14" y="40">Prototype · Figma Make</text>
-      <text x="296" y="40">Demo</text>
-
-      <g class="wa-glow" filter={glow}>
-        <path class="wa-wire" d="M116 175C142 175 132 112 151 112" />
-        <path class="wa-wire" d="M272 122H287" />
-      </g>
-      <path class="wa-spark" pathLength="100" d="M116 175C142 175 132 112 151 112" />
-      <path class="wa-b" d={arrow(160, 112)} />
-      <path class="wa-b" d={arrow(296, 122)} />
-
-      {/* screen one: a list and the button that is clicked */}
-      <rect class="wa-fr" x="14" y="48" width="112" height="148" rx="6" />
-      <rect class="wa-k" x="24" y="59" width="40" height="6" rx="2" />
-      {[76, 100, 124].map((y, i) => (
-        <>
-          <rect class="wa-cd" x="24.5" y={y + 0.5} width="91" height="17" rx="4" />
-          <rect class="wa-g2" x="31" y={y + 7} width={[44, 36, 50][i]} height="4" rx="2" />
-          <rect class="wa-g1" x="96" y={y + 6} width="14" height="6" rx="3" />
-        </>
-      ))}
-      <rect class="wa-b" x="24" y="164" width="92" height="22" rx="6" />
-      <rect class="wa-w" x="52" y="173" width="36" height="4" rx="2" />
-      <circle class="wa-port" cx="116" cy="175" r="4.2" />
-
-      {/* screen two: where the click leads */}
-      <rect class="wa-fr" x="160" y="48" width="112" height="148" rx="6" />
-      <rect class="wa-k" x="170" y="59" width="52" height="6" rx="2" />
-      <rect class="wa-cd" x="170.5" y="76.5" width="91" height="52" rx="4" />
-      <rect class="wa-g2" x="177" y="84" width="34" height="4" rx="2" />
-      {[[178, 14], [193, 22], [208, 18], [223, 26], [238, 32]].map(([x, h], i) => <rect class={i === 4 ? 'wa-b' : 'wa-g1'} x={x} y={123 - h} width="10" height={h} rx="2" />)}
-      <rect class="wa-bt" x="170" y="138" width="92" height="18" rx="5" />
-      <circle class="wa-b" cx="181" cy="147" r="4.5" />
-      <rect class="wa-b" x="190" y="145" width="44" height="4" rx="2" />
-      <rect class="wa-o" x="170.5" y="166.5" width="43" height="19" rx="5" />
-      <rect class="wa-b" x="218" y="166" width="44" height="20" rx="5" />
-      <circle class="wa-port" cx="272" cy="122" r="3.6" />
-      {[[262, 62, '1'], [252, 134, '2']].map(([x, y, n]) => (
-        <>
-          <circle class="wa-b sa-ring" cx={x} cy={y} r="8.5" />
-          <text class="sa-c sa-w" x={x} y={Number(y) + 3.8} text-anchor="middle">{n}</text>
-        </>
-      ))}
-
-      {/* the demo: who watched it */}
-      <rect class="wa-fr" x="296" y="48" width="92" height="148" rx="8" />
-      <circle class="wa-b" cx="309" cy="62" r="3.5" />
-      <text class="sa-s" x="317" y="65.6">Live</text>
-      {['Team lead', 'Developer', 'Developer'].map((t, i) => (
-        <>
-          <rect class="wa-cd" x="304.5" y={74.5 + i * 40} width="75" height="33" rx="6" />
-          <circle class={i === 0 ? 'wa-bt' : 'wa-g1'} cx="318" cy={91 + i * 40} r="8.5" />
-          <circle class={i === 0 ? 'wa-b' : 'wa-g2'} cx="318" cy={88.6 + i * 40} r="2.8" />
-          <path class={i === 0 ? 'wa-b' : 'wa-g2'} d={`M313 ${96.8 + i * 40}a5 4.6 0 0 1 10 0z`} />
-          <text class="sa-s sa-s95" x="331" y={94.4 + i * 40}>{t}</text>
-        </>
-      ))}
-
-      {/* what came back */}
-      <rect class="wa-cd" x="14.5" y="222.5" width="373" height="50" rx="10" />
-      {[[38, '1'], [62, '2']].map(([x, n]) => (
-        <>
-          <circle class="wa-b" cx={x} cy="247.5" r="10" />
-          <text class="sa-c sa-w" x={x} y="251.4" text-anchor="middle">{n}</text>
-        </>
-      ))}
-      <text class="sa-t" x="84" y="245">Feedback collected</text>
-      <text x="84" y="259">design adjusted before build</text>
-      <circle class="wa-b" cx="364" cy="247.5" r="11" />
-      <path class="sa-tick" d={tick(364, 247.5)} />
-    </>
-  )}
-
-  {kind === 'check' && (
-    <>
-      <text x="14" y="36">Design · Figma</text>
-      <text class="on" x="218" y="36">Build · browser</text>
-
-      <g class="wa-glow" filter={glow}>
-        <path class="wa-wire" d="M182 108H187M213 108H218" />
-      </g>
-
-      {[14, 218].map((x, b) => (
-        <>
-          <rect class="wa-fr" x={x} y="44" width="168" height="128" rx="6" />
-          <rect class="wa-g0" x={x + 0.5} y="44.5" width="167" height="15" rx="5.5" />
-          {b === 0
-            ? [8, 18, 28].map((d) => <rect class="wa-g2" x={x + d} y="49" width="6" height="6" rx="1.5" />)
-            : (
-              <>
-                {[9, 17, 25].map((d) => <circle class="wa-g2" cx={x + d} cy="52" r="2.5" />)}
-                <rect class="wa-g1" x={x + 38} y="47.5" width="96" height="9" rx="4.5" />
-              </>
-            )}
-          <rect class="wa-k" x={x + 10} y="69" width="46" height="6" rx="2" />
-          {[118, 134, 150].map((d) => <rect class="wa-g2" x={x + d} y="70.2" width="10" height="3.5" rx="1.75" />)}
-          <rect class="wa-g0" x={x + 10} y="84" width="148" height="34" rx="5" />
-          <rect class="wa-k" x={x + 18} y="91" width="60" height="5" rx="2" />
-          <rect class="wa-g2" x={x + 18} y="100" width="44" height="3.5" rx="1.75" />
-          <rect class="wa-b" x={x + 18} y="107" width="26" height="7" rx="2.5" />
-          {[10, 62, 114].map((d, i) => {
-            // In the build, the middle card sits a little off: that is the gap being flagged.
-            const off = b === 1 && i === 1 ? 3 : 0;
-            return (
-              <>
-                <rect class="wa-cd" x={x + d + 0.5 + off} y={126.5 + off} width="43" height="39" rx="4" />
-                <rect class="wa-g1" x={x + d + 5 + off} y={131 + off} width="34" height="14" rx="2.5" />
-                <rect class="wa-k" x={x + d + 5 + off} y={150 + off} width="22" height="4" rx="1.5" />
-                <rect class="wa-g2" x={x + d + 5 + off} y={157 + off} width="30" height="3" rx="1.5" />
-              </>
-            );
-          })}
-        </>
-      ))}
-      <rect class="sa-flag" x="277.5" y="122.5" width="52" height="48" rx="6" />
-      <circle class="wa-b sa-ring" cx="329" cy="123" r="8.5" />
-      <path class="sa-tick" d="M329 118.8v4.6" />
-      <circle class="wa-w" cx="329" cy="127" r="1.2" />
-
-      {/* the compare mark between the two */}
-      <circle class="wa-b" cx="200" cy="108" r="13" />
-      <rect class="wa-w" x="194.5" y="103.4" width="11" height="2.6" rx="1.3" />
-      <rect class="wa-w" x="194.5" y="110" width="11" height="2.6" rx="1.3" />
-
-      {checks.map(([t, x, y, ok]) => (
-        <>
-          <rect class="wa-cd" x={x + 0.5} y={y + 0.5} width="179" height="33" rx="9" />
-          <circle class="wa-b" cx={x + 19} cy={y + 17} r="9" />
-          {ok
-            ? <path class="sa-tick" d={tick(x + 19, y + 17)} />
-            : (
-              <>
-                <path class="sa-tick" d={`M${x + 19} ${y + 12.6}v4.8`} />
-                <circle class="wa-w" cx={x + 19} cy={y + 21.2} r="1.2" />
-              </>
-            )}
-          <text class="sa-t sa-t11" x={x + 36} y={y + 21}>{t}</text>
-        </>
-      ))}
-    </>
-  )}
-
-  {kind === 'loop' && (
-    <>
-      <text class="on" x="236" y="44">Observations</text>
-
-      {/* the loop: test, note, fix, and round again */}
-      <g class="wa-glow" filter={glow}>
-        <path class="wa-wire" d="M118 74a76 76 0 1 1-.01 0" />
-        <path class="wa-wire" d="M215 188H227" />
-      </g>
-      <path class="wa-spark" pathLength="100" d="M118 74a76 76 0 1 1-.01 0" />
-      <path class="wa-b" d="M4.5 0l-9-5.2v10.4z" transform="translate(183.8 112) rotate(60)" />
-      <path class="wa-b" d="M4.5 0l-9-5.2v10.4z" transform="translate(118 226) rotate(180)" />
-      <path class="wa-b" d="M4.5 0l-9-5.2v10.4z" transform="translate(52.2 112) rotate(-60)" />
-      <path class="wa-b" d={arrow(236, 188)} />
-      <text class="sa-t" x="118" y="147" text-anchor="middle">Next</text>
-      <text class="sa-t" x="118" y="162" text-anchor="middle">release</text>
-
-      <rect class="wa-b" x="87" y="59" width="62" height="30" rx="15" />
-      <text class="sa-t sa-w" x="118" y="78.3" text-anchor="middle">Test</text>
-      <rect class="wa-cd" x="153.5" y="173.5" width="61" height="29" rx="14.5" />
-      <text class="sa-t" x="184" y="192.3" text-anchor="middle">Note</text>
-      <rect class="wa-cd" x="21.5" y="173.5" width="61" height="29" rx="14.5" />
-      <text class="sa-t" x="52" y="192.3" text-anchor="middle">Fix</text>
-      <circle class="wa-port" cx="215" cy="188" r="3.6" />
-
-      {/* what the testing found, and what happened to it */}
-      <rect class="wa-fr" x="236" y="52" width="150" height="196" rx="8" />
-      {notes.map(([t, c, w1, w2], i) => {
-        const y = 62 + i * 46;
+      {[['Default', 0], ['Empty', 1], ['Loading', 2], ['Error', 3]].map(([label, i]) => {
+        const x = 16 + (+i % 2) * 188, y = 24 + Math.floor(+i / 2) * 138;
         return (
           <>
-            <rect class="wa-cd" x="244.5" y={y + 0.5} width="133" height="37" rx="6" />
-            {i < 2
-              ? (
-                <>
-                  <circle class="wa-b" cx="258" cy={y + 19} r="7.5" />
-                  <path class="sa-tick" d={`M${254.4} ${y + 19}l2.6 2.6 4.8-5.2`} />
-                </>
-              )
-              : <circle class={i === 2 ? 'wa-bo' : 'wa-o'} cx="258" cy={y + 19} r="7" />}
-            <rect class="wa-k" x="272" y={y + 11} width={w1} height="5" rx="2.5" />
-            <rect class="wa-g2" x="272" y={y + 22} width={w2} height="4" rx="2" />
-            <rect class={c} x="338" y={y + 12} width="34" height="14" rx="7" />
-            <text class={`sa-chip ${i < 2 ? 'sa-w' : i === 2 ? 'sa-a' : ''}`} x="355" y={y + 22} text-anchor="middle">{t}</text>
+            <text class="wh-t wh-out" x={x} y={y + 6}>{label}</text>
+            <g filter={sh2}><rect class="wh-win" x={x} y={y + 14} width="180" height="108" rx="6" /></g>
+            <text class="wh-b" x={x + 10} y={y + 32}>AI systems</text>
+            <line class="wh-ln" x1={x} y1={y + 40} x2={x + 180} y2={y + 40} />
+            {+i === 0 && [['Loan triage model', 'High', '#FDE4E1', '#B42318'], ['Support chatbot', 'Low', '#DCF5E6', '#127A3E'], ['Fraud alerts', 'Medium', '#FFF1D6', '#9A5B00']].map(([n, r, bg, fg], k) => (
+              <><text class="wh-t" x={x + 10} y={y + 58 + k * 20}>{n}</text><rect x={x + 130} y={y + 50 + k * 20} width="38" height="11" rx="5.5" fill={bg} /><text class="wh-pill" x={x + 149} y={y + 58 + k * 20} text-anchor="middle" fill={fg}>{r}</text></>
+            ))}
+            {+i === 1 && (
+              <>
+                <circle cx={x + 90} cy={y + 64} r="10" fill="#E8EAFF" /><text class="wh-b" x={x + 90} y={y + 67} text-anchor="middle" fill="#2E3BFF">+</text>
+                <text class="wh-t" x={x + 90} y={y + 88} text-anchor="middle">No AI systems yet</text>
+                <rect x={x + 60} y={y + 96} width="60" height="15" rx="4" fill="#2E3BFF" /><text class="wh-btn" x={x + 90} y={y + 106} text-anchor="middle">Add your first</text>
+              </>
+            )}
+            {+i === 2 && [0, 1, 2].map((k) => (
+              <><rect x={x + 10} y={y + 52 + k * 20} width="90" height="8" rx="4" fill="#EEF0F4" /><rect x={x + 130} y={y + 51 + k * 20} width="38" height="10" rx="5" fill="#EEF0F4" /></>
+            ))}
+            {+i === 3 && (
+              <>
+                <rect x={x + 10} y={y + 52} width="160" height="36" rx="5" fill="#FDE4E1" />
+                <text class="wh-t" x={x + 20} y={y + 67} fill="#B42318">Couldn’t load your systems</text>
+                <text class="wh-s" x={x + 20} y={y + 79}>Check your connection</text>
+                <rect class="wh-card" x={x + 10} y={y + 96} width="48" height="15" rx="4" /><text class="wh-t" x={x + 34} y={y + 106} text-anchor="middle">Try again</text>
+              </>
+            )}
           </>
         );
       })}
     </>
   )}
 
-  {/* the selected box, and the designer's cursor */}
-  <rect class="wa-sel wa-glow" filter={glow} x={sx} y={sy} width={sw} height={sh} />
-  {handles(sx, sy, sw, sh).map((h) => <rect class="wa-h" x={h.x} y={h.y} width="6" height="6" />)}
-  <g transform={`translate(${cur[kind][0]} ${cur[kind][1]})`}><g class="wa-cur">
-    <path d="M0 0 4.3 13 6.7 7.3 12.6 5.3z" />
-    <rect class="wa-b" x="9" y="12" width="43" height="15" rx="3.5" />
-    <text x="30.5" y="22.6" text-anchor="middle">Sidhant</text>
-  </g></g>
-</svg>
+  {kind === 'prototype' && (
+    <>
+      <g filter={sh}><rect class="wh-win" x="16" y="16" width="368" height="268" rx="10" fill="#1B1D24" /></g>
+      <rect x="16" y="16" width="368" height="268" rx="10" fill="#1B1D24" />
+      <text class="wh-b light" x="30" y="36">Demo · Altrum prototype</text>
+      <circle cx="356" cy="33" r="4" fill="#E5484D" /><text class="wh-s light" x="312" y="36">Live</text>
+      {/* the prototype being shared */}
+      <rect x="30" y="48" width="236" height="168" rx="6" fill="#FFFFFF" />
+      <rect x="30" y="48" width="236" height="16" rx="6" fill="#F1F2F5" /><text class="wh-u" x="148" y="59" text-anchor="middle">Figma Make · Add an AI system</text>
+      <text class="wh-h" x="42" y="86">Describe the system</text>
+      <text class="wh-s" x="42" y="98">Step 2 of 4</text>
+      {['Name', 'Owner', 'What does it decide?'].map((t, k) => (
+        <><text class="wh-s" x="42" y={116 + k * 26}>{t}</text><rect class="wh-card" x="42" y={120 + k * 26} width="150" height="14" rx="3" /></>
+      ))}
+      <text class="wh-t" x="48" y="130">Loan triage model</text>
+      <rect x="196" y="194" width="58" height="15" rx="4" fill="#2E3BFF" /><text class="wh-btn" x="225" y="204" text-anchor="middle">Continue →</text>
+      <g class="wh-cur" transform="translate(220 196)"><path d="M0 0 4.3 13 6.7 7.3 12.6 5.3z" fill="#14161A" stroke="#fff" stroke-width="1.2" stroke-linejoin="round" /></g>
+      {/* people on the call */}
+      {[['Rahul', 'Team lead'], ['Arjun', 'Developer'], ['Neha', 'Developer']].map(([n, r], i) => (
+        <>
+          <rect x="276" y={48 + i * 58} width="94" height="52" rx="6" fill="#2A2D36" />
+          <circle cx="323" cy={68 + i * 58} r="11" fill={skin[i + 1]} />
+          <text class="wh-s light" x="282" y={94 + i * 58}>{n} · {r}</text>
+        </>
+      ))}
+      {/* a question from the team */}
+      <g filter={sh2}><rect class="wh-note" x="30" y="226" width="236" height="44" rx="7" /></g>
+      <circle cx="44" cy="241" r="6" fill={skin[2]} /><text class="wh-b" x="54" y="243.5">Arjun · Developer</text>
+      <text class="wh-t" x="40" y="260">Can step 2 save a draft if the owner is unknown?</text>
+      <rect x="276" y="232" width="94" height="32" rx="6" fill="#2E3BFF" /><text class="wh-btn big" x="323" y="251" text-anchor="middle">Noted for v2</text>
+    </>
+  )}
 
-<style is:global>
-  /* Step pictures: the few styles they add to the ".wa" family in global.css */
-  .wa.sa>text{font-size:9.5px}
-  .wa.sa .sa-t{font-family:var(--body);font-size:12px;font-weight:600;letter-spacing:-.005em;fill:var(--ink)}
-  .wa.sa .sa-t11{font-size:11px}
-  .wa.sa .sa-s{font-family:var(--body);font-size:10px;font-weight:400;letter-spacing:0;fill:var(--muted)}
-  .wa.sa .sa-s95{font-size:9.5px}
-  .wa.sa .sa-c{font-family:var(--body);font-size:10.5px;font-weight:600;letter-spacing:0;fill:var(--muted)}
-  .wa.sa .sa-chip{font-size:8px;fill:var(--muted)}
-  .wa.sa .sa-aa{font-family:var(--display);font-size:36px;font-weight:700;letter-spacing:-.04em;fill:var(--ink)}
-  .wa.sa .sa-w{fill:#fff}
-  .wa.sa .sa-a{fill:var(--accent)}
-  .wa .sa-bg{fill:var(--surface)}
-  .wa .sa-dimf{fill:var(--dim)}
-  .wa .sa-sw{stroke:rgba(128,128,128,.45);stroke-width:1}
-  .wa .sa-ring{stroke:var(--surface);stroke-width:2}
-  .wa .sa-tick{fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-  .wa .sa-tick-b{fill:none;stroke:var(--accent-fill);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .wa .sa-bang{fill:none;stroke:var(--surface);stroke-width:1.8;stroke-linecap:round}
-  .wa .sa-ico{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-  .wa .sa-mag{fill:none;stroke:var(--dim);stroke-width:1.4;stroke-linecap:round}
-  .wa .sa-dash{fill:none;stroke:var(--dim);stroke-width:1.5;stroke-linecap:round;stroke-dasharray:4 4}
-  .wa .sa-dbox{fill:var(--surface);stroke:var(--dim);stroke-width:1.2;stroke-dasharray:4 3}
-  .wa .sa-err{fill:var(--surface);stroke:var(--ink);stroke-width:1.2}
-  .wa .sa-flag{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-dasharray:4 3}
-  /* loading state: the placeholder bars breathe and the spinner turns, once the step is reached */
-  .wa .sa-spin{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-dasharray:20 12;transform-box:fill-box;transform-origin:center}
-  .story-step.on .wa .sa-spin{animation:saSpin 1s linear infinite}
-  .story-step.on .wa .sa-skel{animation:saPulse 1.3s ease-in-out infinite}
-  @keyframes saSpin{to{transform:rotate(360deg)}}
-  @keyframes saPulse{50%{opacity:.35}}
-  /* dark theme: the same shapes on black */
-  :root[data-theme="dark"] .wa .sa-bg{fill:#15151B}
-  :root[data-theme="dark"] .wa .sa-dbox,:root[data-theme="dark"] .wa .sa-err{fill:#15151B}
-  :root[data-theme="dark"] .wa .sa-ring{stroke:#0E0E13}
-  :root[data-theme="dark"] .wa .sa-flag{stroke:#8F9BFF}
-  :root[data-theme="dark"] .wa .sa-tick-b{stroke:#2632F0}
-</style>
+  {kind === 'check' && (
+    <>
+      {[['Design · Figma', 16], ['Build · staging', 206]].map(([label, x], i) => (
+        <>
+          <text class="wh-t wh-out" x={x} y="34">{label}</text>
+          <g filter={sh2}><rect class="wh-win" x={x} y="42" width="178" height="150" rx="7" /></g>
+          <text class="wh-b" x={+x + 12} y="62">AI systems</text>
+          <rect x={+x + 120} y="52" width="46" height="15" rx="4" fill="#2E3BFF" /><text class="wh-btn" x={+x + 143} y="62" text-anchor="middle">Add system</text>
+          {[['Loan triage model', 'High', '#FDE4E1', '#B42318'], ['Support chatbot', 'Low', '#DCF5E6', '#127A3E'], ['Fraud alerts', 'Medium', '#FFF1D6', '#9A5B00']].map(([n, r, bg, fg], k) => {
+            const gap = i === 1 && k === 1 ? 5 : 0;
+            return (
+              <>
+                <line class="wh-ln" x1={+x + 12} y1={78 + k * 22} x2={+x + 166} y2={78 + k * 22} />
+                <text class="wh-t" x={+x + 12} y={93 + k * 22 + gap}>{n}</text>
+                <rect x={+x + 124} y={85 + k * 22 + gap} width="38" height="11" rx="5.5" fill={bg} /><text class="wh-pill" x={+x + 143} y={93 + k * 22 + gap} text-anchor="middle" fill={fg}>{r}</text>
+              </>
+            );
+          })}
+          {i === 1 && <rect x={+x + 6} y="102" width="166" height="24" rx="4" fill="none" stroke="#E5484D" stroke-width="1.5" stroke-dasharray="3 2" />}
+          <rect x={+x + 12} y="160" width="70" height="20" rx="4" fill="#EEF0F4" /><text class="wh-s" x={+x + 20} y="173">{i === 0 ? 'Empty state ✓' : 'Empty state —'}</text>
+        </>
+      ))}
+      {/* the review */}
+      <g filter={sh2}><rect class="wh-note" x="16" y="206" width="368" height="72" rx="8" /></g>
+      <circle cx="32" cy="224" r="7" fill={skin[0]} /><text class="wh-b" x="44" y="226.5">Sidhant · Design review</text><text class="wh-s" x="300" y="226.5">2 gaps found</text>
+      <circle cx="36" cy="246" r="4" fill="#E5484D" /><text class="wh-t" x="46" y="249">Row 2 spacing is 13px, design says 8px</text>
+      <circle cx="36" cy="264" r="4" fill="#E5484D" /><text class="wh-t" x="46" y="267">Empty state is missing on staging</text>
+      <rect x="296" y="252" width="76" height="18" rx="4" fill="#2E3BFF" /><text class="wh-btn big" x="334" y="264.5" text-anchor="middle">Send to dev</text>
+    </>
+  )}
+
+  {kind === 'loop' && (
+    <>
+      <g filter={sh}><rect class="wh-win" x="16" y="16" width="230" height="268" rx="10" /></g>
+      <text class="wh-b" x="30" y="36">Test notes · v1.4</text><text class="wh-s" x="196" y="36">8 found</text>
+      <line class="wh-ln" x1="16" y1="46" x2="246" y2="46" />
+      {[['Filters reset after going back', 'Fixed', '#DCF5E6', '#127A3E'], ['Risk score has no explanation', 'Fixed', '#DCF5E6', '#127A3E'], ['Owner field hard to find', 'In v1.5', '#E8EAFF', '#2E3BFF'], ['Long names cut off in table', 'In v1.5', '#E8EAFF', '#2E3BFF'], ['Export takes too many clicks', 'Noted', '#F1F2F5', '#5A5F6E']].map(([n, s, bg, fg], k) => (
+        <>
+          <circle cx="36" cy={66 + k * 42} r="7" fill={skin[k % 5]} />
+          <text class="wh-t" x="50" y={64 + k * 42}>{n}</text>
+          <text class="wh-s" x="50" y={75 + k * 42}>{['Flow: review', 'Flow: risk check', 'Flow: add system', 'Screen: AI systems', 'Flow: audit log'][k]}</text>
+          <rect x="186" y={58 + k * 42} width="48" height="13" rx="6.5" fill={bg} /><text class="wh-pill" x="210" y={67 + k * 42} text-anchor="middle" fill={fg}>{s}</text>
+          {k < 4 && <line class="wh-ln" x1="30" y1={84 + k * 42} x2="234" y2={84 + k * 42} />}
+        </>
+      ))}
+      {/* the loop */}
+      <g filter={sh}><rect class="wh-win" x="254" y="30" width="130" height="160" rx="10" /></g>
+      <circle cx="318" cy="120" r="52" fill="none" stroke="#D5D8E0" stroke-width="10" />
+      <path d="M318 68a52 52 0 0 1 45 78" fill="none" stroke="#2E3BFF" stroke-width="10" stroke-linecap="round" />
+      <text class="wh-num" x="318" y="118" text-anchor="middle">v1.5</text><text class="wh-s" x="318" y="131" text-anchor="middle">next release</text>
+      {[['Test', 318, 56], ['Note', 380, 158], ['Fix', 256, 158]].map(([t, x, y]) => (
+        <><rect x={+x - 20} y={+y - 9} width="40" height="16" rx="8" fill="#FFFFFF" filter={sh2} /><text class="wh-t" x={x} y={+y + 2.5} text-anchor="middle">{t}</text></>
+      ))}
+      <g filter={sh2}><rect class="wh-note" x="262" y="200" width="122" height="60" rx="8" /></g>
+      <text class="wh-s" x="274" y="218">Fixed this release</text>
+      <text class="wh-num" x="274" y="243">2 of 8</text>
+      <rect x="330" y="232" width="44" height="8" rx="4" fill="#EEF0F4" /><rect x="330" y="232" width="11" height="8" rx="4" fill="#127A3E" />
+    </>
+  )}
+</svg>

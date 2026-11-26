@@ -1154,6 +1154,47 @@ main::before{content:"";position:absolute;z-index:-1;left:0;right:0;top:-61px;he
 /* the resume photo keeps its selection frame, in white */
 :root[data-theme] .sub-hero .avatar::before{border-color:#fff;box-shadow:none}
 
+/* ---------- Real-screen drawings: shared styles (WorkArt.astro and StepArt.astro, ".wh") ---------- */
+/* Real screens are light, in both themes */
+.wa.wh text{font-family:var(--body);letter-spacing:0;fill:#14161A}
+.wh .wh-win{fill:#FFFFFF}
+.wh .wh-side{fill:#F7F7F9}
+.wh .wh-card{fill:#FFFFFF;stroke:#E4E6EC;stroke-width:1}
+.wh .wh-card.hi{stroke:#2E3BFF;stroke-width:1.4}
+.wh .wh-note{fill:#FFFFFF}
+.wh .wh-url{fill:#F1F2F5}
+.wh .wh-ln{stroke:#ECEDF1;stroke-width:1}
+.wh .wh-arrow{fill:none;stroke:#2E3BFF;stroke-width:1.6;stroke-dasharray:4 3;stroke-linecap:round}
+.wa.wh .wh-u{font-family:var(--mono);font-size:6px;fill:#6B7080}
+.wa.wh .wh-h{font-size:12.5px;font-weight:700;letter-spacing:-.02em}
+.wa.wh .wh-h2{font-size:9.5px;font-weight:700;letter-spacing:-.01em}
+.wa.wh .wh-hw{font-size:13px;font-weight:700;letter-spacing:-.02em;fill:#FFFFFF}
+.wa.wh .wh-sw{font-size:5.6px;fill:#CFE3D6}
+.wa.wh .wh-b{font-size:7px;font-weight:600}
+.wa.wh .wh-t{font-size:6.6px;font-weight:500}
+.wa.wh .wh-t.on{fill:#2E3BFF;font-weight:600}
+.wa.wh .wh-s{font-size:5.8px;fill:#6B7080}
+.wa.wh .wh-th{font-size:5.4px;font-weight:600;fill:#8A8F9C;letter-spacing:.04em}
+.wa.wh .wh-nav{font-size:6.4px;fill:#5A5F6E}
+.wa.wh .wh-nav.on{fill:#2E3BFF;font-weight:600}
+.wa.wh .wh-num{font-size:14px;font-weight:700;letter-spacing:-.02em}
+.wa.wh .wh-pill{font-size:5.4px;font-weight:600}
+.wa.wh .wh-btn{font-size:5.8px;font-weight:600;fill:#FFFFFF}
+.wa.wh .wh-logo{font-size:7.5px;font-weight:700;fill:#9CA0AC;letter-spacing:-.01em}
+.wh .wh-cur{transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.case:hover .wh .wh-cur{transform:translate(7px,-5px)}
+.wa.wh .wh-hand{font-size:8.6px;font-weight:600;fill:#3A2E12}
+.wa.wh .wh-aa{font-size:30px;font-weight:700;letter-spacing:-.03em}
+.wa.wh .wh-num.sm{font-size:11px}
+.wa.wh .wh-btn.big{font-size:7px}
+.wa.wh .light{fill:#E6E8EF}
+/* labels that sit on the backdrop, outside a screen */
+.wa.wh .wh-out{fill:#3A3F4D}
+:root[data-theme="dark"] .wa.wh .wh-out{fill:#C9CDD8}
+/* the step pictures sit on the same calm backdrop as the Work covers */
+:root[data-theme] .pd-art.glow-card:has(.wh){border-color:transparent}
+.pd-art .wa.sa.wh{padding:clamp(6px,2%,14px)!important}
+
 /* ---------- Work covers, drawn as real screens (components/WorkArt.astro, ".wh") ----------
    A calm backdrop: soft and plain in both themes, no grid and no neon light behind the screen. */
 :root[data-theme] .case .mini.media:has(.wh),:root[data-theme] .glow-card:has(.wh){background:linear-gradient(160deg,#E9EBF2,#D9DDE8)}
