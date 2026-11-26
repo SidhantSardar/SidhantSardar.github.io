@@ -817,10 +817,10 @@ a.chip:hover{color:var(--ink);border-color:var(--ink)}
 .hero-photo figcaption{display:grid;justify-items:center;gap:6px;margin-top:14px}
 .hero-photo figcaption b{font-family:var(--display);font-size:26px;font-weight:700;letter-spacing:-.02em}
 .hero-photo .status{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:12px}
-/* The photo is "selected", the way a frame looks in Figma: a blue bounding box with a handle on
-   each corner. Used for the hero photo and the resume photo. */
-.hero-portrait::before,.avatar::before{content:"";position:absolute;inset:-1px;border:1.5px solid var(--accent-fill);pointer-events:none;z-index:1}
-.hero-portrait.corners::after,.avatar.corners::after{inset:-4.5px;z-index:2;background:
+/* The resume photo is "selected", the way a frame looks in Figma: a blue bounding box with a handle
+   on each corner. The hero photo has no frame: just the picture on its shadow. */
+.avatar::before{content:"";position:absolute;inset:-1px;border:1.5px solid var(--accent-fill);pointer-events:none;z-index:1}
+.avatar.corners::after{inset:-4.5px;z-index:2;background:
   linear-gradient(var(--bg),var(--bg)) 1.5px 1.5px/5px 5px no-repeat,linear-gradient(var(--accent-fill),var(--accent-fill)) 0 0/8px 8px no-repeat,
   linear-gradient(var(--bg),var(--bg)) calc(100% - 1.5px) 1.5px/5px 5px no-repeat,linear-gradient(var(--accent-fill),var(--accent-fill)) 100% 0/8px 8px no-repeat,
   linear-gradient(var(--bg),var(--bg)) 1.5px calc(100% - 1.5px)/5px 5px no-repeat,linear-gradient(var(--accent-fill),var(--accent-fill)) 0 100%/8px 8px no-repeat,
@@ -1014,10 +1014,10 @@ main.grid-lit::after{opacity:1}
 :root[data-theme="dark"] main .btn.primary{background:linear-gradient(180deg,#4652FF,#2632F0);border-color:#5F6AFF;box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 1px 2px rgba(0,0,0,.5),0 10px 24px -14px rgba(46,59,255,.8)}
 :root[data-theme="dark"] main .btn.primary:hover{background:linear-gradient(180deg,#5661FF,#323EFF);border-color:#8690FF;box-shadow:inset 0 1px 0 rgba(255,255,255,.34),0 1px 2px rgba(0,0,0,.5),0 14px 30px -14px rgba(46,59,255,.95)}
 
-/* hero: the selected photo stands on a soft blue shadow (the headline's colour is in "Titles") */
+/* hero: the photo stands on a soft blue shadow (the headline's colour is in "Titles") */
 .split-done .split-w{overflow:visible}
 :root[data-theme="dark"] .hero-portrait{box-shadow:0 44px 90px -50px rgba(46,59,255,.75),0 30px 60px -40px rgba(0,0,0,.9)}
-:root[data-theme="dark"] .hero-portrait::before,:root[data-theme="dark"] .avatar::before{border-color:#6B76FF;box-shadow:0 0 14px -2px rgba(46,59,255,.45)}
+:root[data-theme="dark"] .avatar::before{border-color:#6B76FF;box-shadow:0 0 14px -2px rgba(46,59,255,.45)}
 
 /* cards (.case) and art panels (.glow-card): dark glass, a hairline edge that is brighter at the top,
    and a light that follows the pointer, on the surface (::before) and along the edge (::after) */
@@ -1106,7 +1106,7 @@ main.grid-lit::after{opacity:1}
    in the top-left corner, deeper in the bottom-right) with a bright line along its lower edge, the
    mirror of the line along the footer's upper edge.
    Inside the hero the site's colour tokens are swapped for white ones, so every part (label, text,
-   facts, photo frame, focus ring, selection) follows without rules of its own.
+   facts, focus ring, selection) follows without rules of its own.
    The grid is drawn on the blue in white (::before) and lights up around the pointer (::after). */
 .hero{--hb:#0000FF;--hm:rgba(255,255,255,.86);--hl:rgba(255,255,255,.28);
   --ink:#fff;--muted:var(--hm);--dim:var(--hm);--line:var(--hl);--line-2:rgba(255,255,255,.5);
@@ -1139,9 +1139,8 @@ main.grid-lit .hero::after{opacity:1}
 :root[data-theme] main .hero .btn:hover{border-color:#fff;background:rgba(255,255,255,.12)}
 :root[data-theme] main .hero .btn.primary{background:#fff;border-color:#fff;color:var(--hb);font-weight:600;box-shadow:0 12px 28px -16px rgba(0,0,60,.9)}
 :root[data-theme] main .hero .btn.primary:hover{background:#E6E6FF;border-color:#E6E6FF}
-/* the photo: a white frame with white handles, on a deep blue shadow */
+/* the photo: no frame, on a deep blue shadow */
 :root[data-theme] .hero .hero-portrait{box-shadow:0 44px 80px -44px rgba(0,0,50,.9)}
-:root[data-theme] .hero .hero-portrait::before{border-color:#fff;box-shadow:none}
 .hero .hero-photo .status i{box-shadow:0 0 0 4px rgba(74,222,128,.25);background:#4ADE80}
 /* on paper the blue is not printed, so the hero goes back to black on white */
 @media print{.hero{background:none!important;color:#000;--ink:#0A0A0A;--muted:#525252;--dim:#6B6B6B;--line:#E8E8E8;--line-2:#D4D4D4;--accent:#0000FF;--accent-fill:#0000FF;--on-accent:#fff;--bg:#fff}.hero::before,.hero::after{display:none}}
