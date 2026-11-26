@@ -133,6 +133,8 @@ main:focus{outline:none}
    and let the old and the new word sit side by side while they change) */
 .swap,.split-w>.swap{display:inline-grid;vertical-align:bottom;overflow:hidden;white-space:nowrap;padding-bottom:.14em;margin-bottom:-.14em}
 .swap-w{grid-area:1/1;display:inline-block}
+/* the word itself is drawn from data-w, so it is not part of the heading's text (see the component) */
+.swap-w::after{content:attr(data-w)}
 /* text for screen readers and search engines only */
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .hero .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
@@ -969,14 +971,15 @@ a.chip:hover{color:var(--ink);border-color:var(--ink)}
     /* room for the tails of g, p and y, which hang below a tight line */
     padding-bottom:.14em;margin-bottom:-.14em}
   .gt.soft{--g:var(--soft-grad)}
-  .swap-w.gt{--g:var(--word-grad)}
-  .is-split .gt:not(.swap-w){background-image:none}
+  .is-split .gt{background-image:none}
+  /* the changing word carries its own accent gradient */
+  .swap-w::after{background-image:var(--word-grad);background-repeat:no-repeat;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
   .is-split .gt .split-w>span{background-image:var(--g);background-repeat:no-repeat;background-size:var(--gw,100%) calc(var(--gh,100%) + .3em);background-position:var(--gx,0) var(--gy,0);
     -webkit-background-clip:text;background-clip:text;padding-bottom:.14em;margin-bottom:-.14em}
   .gt::selection,.gt *::selection,.page-head h1::selection{-webkit-text-fill-color:var(--on-accent)}
   /* on paper, and where the system forces its own colours, titles go back to one plain colour */
-  @media print{.gt,.gt *,.page-head h1{background-image:none!important;-webkit-text-fill-color:currentColor!important}}
-  @media (forced-colors:active){.gt,.gt *,.page-head h1{background-image:none!important;-webkit-text-fill-color:currentColor!important}}
+  @media print{.gt,.gt *,.page-head h1,.swap-w::after{background-image:none!important;-webkit-text-fill-color:currentColor!important}}
+  @media (forced-colors:active){.gt,.gt *,.page-head h1,.swap-w::after{background-image:none!important;-webkit-text-fill-color:currentColor!important}}
 }
 
 /* ============ The grid behind the top of every page (both themes) ============

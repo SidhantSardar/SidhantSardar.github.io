@@ -503,26 +503,23 @@ function story() {
 }
 
 /* ---------- a word that changes in place: "builds websites" → "builds web applications" → … ----------
-   <span class="swap" data-swap='["websites","web applications"]'><span class="swap-w">websites</span></span>
-   Every few seconds the word rolls up and out and the next one rolls in from below. It only runs while
-   the word is on screen and the tab is in front. Screen readers are given the whole list once instead:
-   the changing word is hidden from them and the hidden text after it (.swap-rest) is set to the full list. */
+   <span class="swap" data-swap='["websites","web applications"]'><span class="swap-w" data-w="websites"></span></span>
+   Every few seconds the word rolls up and out and the next one rolls in from below. Each word is an empty
+   <span> whose text CSS draws from data-w, so the heading's own text never changes (components/RoleTitle.astro).
+   It only runs while the word is on screen and the tab is in front. */
 function swapWords() {
   $$('[data-swap]').forEach((el) => {
     let words: string[] = [];
     try { words = JSON.parse(el.dataset.swap || '[]'); } catch { return; }
     let cur = $('.swap-w', el);
     if (words.length < 2 || !cur) return;
-    const line = el.closest('.soft') ?? el.parentElement;
-    const rest = line ? $('.swap-rest', line) : null;
-    if (rest?.dataset.all) { el.setAttribute('aria-hidden', 'true'); rest.textContent = rest.dataset.all; }
     let i = 0;
     const next = () => {
       i = (i + 1) % words.length;
       const old = cur!;
-      const nu = old.cloneNode(false) as HTMLElement;
-      nu.removeAttribute('style');
-      nu.textContent = words[i];
+      const nu = document.createElement('span');
+      nu.className = 'swap-w';
+      nu.dataset.w = words[i];
       el.append(nu);
       // both move together, like a reel: the new word follows right under the old one, so they never overlap
       const roll = { duration: 0.7, ease: 'power3.inOut' };

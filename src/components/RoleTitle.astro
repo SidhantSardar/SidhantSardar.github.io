@@ -2,13 +2,16 @@
 // The headline that says what Sidhant is, with its last word changing in place:
 //   UX designer / who also builds / websites → web applications → design systems
 // It goes inside the <h1> of the home page and of the resume page. The words are in data/resume.mjs.
-// Without scripts, or with reduced motion, it reads "UX designer who also builds websites". The rest of
-// the list follows as hidden text, so search engines and screen readers get the whole sentence once.
+//
+// The word on screen is drawn by CSS from data-w and is hidden from screen readers. The text of the
+// heading itself is the whole sentence, written once as hidden text: "UX designer who also builds
+// websites, web applications and design systems." So search engines, screen readers and copy-and-paste
+// always get the same clean sentence, whichever word is showing.
+// Without scripts, or with reduced motion, the first word stays.
 // Styles: ".swap" in styles/global.css. Motion: swapWords() in scripts/motion.ts.
 import { headline, builds } from '../data/resume.mjs';
 
-const [first, ...others] = builds.words;
 const list = (w: string[]) => (w.length > 1 ? `${w.slice(0, -1).join(', ')} and ${w[w.length - 1]}` : w[0]);
 ---
 <span class="hard gt"><span class="ln">{headline[0]}</span> <span class="ln">{builds.lead}</span></span>
-<span class="soft"><span class="swap" data-swap={JSON.stringify(builds.words)}><span class="swap-w gt">{first}</span></span><span class="vh swap-rest" data-all={`${list(builds.words)}.`}>, {list(others)}.</span></span>
+<span class="soft"><span class="swap" data-swap={JSON.stringify(builds.words)} aria-hidden="true"><span class="swap-w" data-w={builds.words[0]}></span></span><span class="vh">{list(builds.words)}.</span></span>
