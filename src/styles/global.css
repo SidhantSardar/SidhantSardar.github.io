@@ -830,8 +830,9 @@ a.chip:hover{color:var(--ink);border-color:var(--ink)}
 
 /* ---------- hero photo (right column) ---------- */
 .hero-photo{margin:0;display:grid;gap:22px;justify-items:center;align-content:center}
-.hero-portrait{position:relative;width:min(100%,440px);aspect-ratio:4/5;border-radius:16px}
-.hero-portrait .portrait-img{border-radius:16px;object-position:50% 25%}
+/* the frame has the photo's own shape (3:4), so the whole photo shows and nothing is cropped */
+.hero-portrait{position:relative;width:min(100%,440px);aspect-ratio:3/4;border-radius:16px}
+.hero-portrait .portrait-img{border-radius:16px;object-position:50% 50%}
 .hero-photo figcaption{display:grid;justify-items:center;gap:6px;margin-top:14px}
 .hero-photo figcaption b{font-family:var(--display);font-size:26px;font-weight:700;letter-spacing:-.02em}
 .hero-photo .status{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:12px}
@@ -1134,7 +1135,7 @@ main::before{content:"";position:absolute;z-index:-1;left:0;right:0;top:-61px;he
 @media print{.hero,.sub-hero{background:none!important;color:#000;--ink:#0A0A0A;--muted:#525252;--dim:#6B6B6B;--line:#E8E8E8;--line-2:#D4D4D4;--accent:#0000FF;--accent-fill:#0000FF;--on-accent:#fff;--bg:#fff}}
 /* short laptop screens: the hero closes up, and the photo gets a little smaller with the screen, so the
    two buttons stay on the first screen */
-@media (min-width:901px) and (max-height:760px){.hero{padding-block:16px 40px}.hero h1{font-size:clamp(44px,min(6.6vw,10.2vh),88px)}.hero .lede{margin-top:16px}.hero .hero-portrait{width:min(100%,440px,calc((100vh - 230px) * .8))}}
+@media (min-width:901px) and (max-height:760px){.hero{padding-block:16px 40px}.hero h1{font-size:clamp(44px,min(6.6vw,10.2vh),88px)}.hero .lede{margin-top:16px}.hero .hero-portrait{width:min(100%,440px,calc((100vh - 230px) * .75))}}
 /* phones: the label above the headline is a little smaller, so it keeps to one line where it can */
 @media (max-width:480px){.hero .hero-eyebrow{font-size:10.5px;letter-spacing:.06em}}
 
